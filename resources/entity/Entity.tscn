@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://by8f7mfnathye"]
+
+[ext_resource type="Script" uid="uid://c48sol1km4y6r" path="res://resources/entity/Entity.gd" id="1_a7qsu"]
+[ext_resource type="PackedScene" uid="uid://cfdvm6q5tp67i" path="res://resources/overlap/Hutrbox.tscn" id="2_qr4yg"]
+
+[node name="Entity" type="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_a7qsu")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Hutrbox" parent="." instance=ExtResource("2_qr4yg")]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="InvincibilityTimer" type="Timer" parent="."]
+wait_time = 0.2
+
+[connection signal="area_entered" from="Hutrbox" to="." method="_on_hutrbox_area_entered"]
+
+[editable path="Hutrbox"]
