@@ -315,6 +315,7 @@ texture = ExtResource("1_djito")
 sources/0 = SubResource("TileSetAtlasSource_4liql")
 
 [node name="OutsideMapLayer" type="Node2D"]
+position = Vector2(0, 1)
 script = ExtResource("1_aa5ui")
 
 [node name="Background" type="TileMapLayer" parent="."]

@@ -1,5 +1,7 @@
 extends Node2D
 
+var TreeEntity := preload("res://resources/entity/environment/Trees/Tree.tscn")
+
 @onready var BACKGROUND_SCENE: TileMapLayer = $Background
 @onready var GRASS_SCENE: TileMapLayer = $Grass
 @onready var ENVIRONMENT_SCENE: TileMapLayer = $Environment
@@ -18,6 +20,9 @@ extends Node2D
 
 @export var CHUNK_WIDTH_FOR_DECORATIONS: int = 8
 @export var CHUNK_HEIGHT_FOR_DECORATIONS: int = 3
+
+@export var CHUNK_WIDTH_FOR_ENVIRONMENTS: int = 8
+@export var CHUNK_HEIGHT_FOR_ENVIRONMENTS: int = 1
 
 @export var MAX_CHUNKS: int = 10
 
@@ -51,6 +56,13 @@ func _ready() -> void:
 	for i in range(MAX_CHUNKS):
 		draw_chunk_background(i)
 		draw_chunk_decorations(i)
+		draw_chunk_environments(i)
+
+func spawn_new_entity_at(entity: PackedScene, new_position: Vector2i) -> Node2D:
+	var new_entity = entity.instantiate()
+	add_child(new_entity)
+	new_entity.global_position = new_position
+	return new_entity
 
 # Backgound generation
 func draw_chunk_background(current_chunk: int) -> void:
@@ -99,3 +111,19 @@ func draw_chunk_decorations(current_chunk: int) -> void:
 			var coords = Vector2i(start_x + x, start_y_for_decorations + y)
 			
 			DECORATIONS_SCENE.set_cell(coords + Vector2i(0, 0), DECORATIONS_ATLAS_SOURCE_ID, top_left)
+
+func draw_chunk_environments(current_chunk: int) -> void:
+	var tile_position_index_1 = randi() % CHUNK_WIDTH_FOR_ENVIRONMENTS
+	var tile_position_index_2 = randi() % CHUNK_WIDTH_FOR_ENVIRONMENTS
+	var start_x = (current_chunk + 1) * CHUNK_WIDTH * 16
+	var start_y = 64
+	var random_tile_position_1 = -16 * tile_position_index_1
+	var random_tile_position_2 = -16 * tile_position_index_2
+	
+	for x in range(CHUNK_WIDTH_FOR_ENVIRONMENTS):
+		if randi() % 4 == random_tile_position_1 % 4:
+			spawn_new_entity_at(TreeEntity, Vector2i(start_x + random_tile_position_1, start_y))
+			spawn_new_entity_at(TreeEntity, Vector2i(start_x + random_tile_position_1, start_y + 72))
+		if randi() % 4 == random_tile_position_2 % 4:
+			spawn_new_entity_at(TreeEntity, Vector2i(start_x + random_tile_position_2, start_y))
+			spawn_new_entity_at(TreeEntity, Vector2i(start_x + random_tile_position_2, start_y + 72))
