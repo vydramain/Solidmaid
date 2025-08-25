@@ -1,63 +1,60 @@
 # Solidmaid
 
-**Описание**  
+**Description**  
 
-Описание проекта которое я напишу когда-нибудь, но не сегодня...
-
----
-
-##  Содержание
-
-- [Установка](#установка)  
-- [Использование](#использование)  
-- [Фичи](#фичи)  
-- [Требования](#требования)  
-- [Примеры](#примеры)  
-- [Автор](#автор)  
-- [Лицензия](#лицензия)
+Description of game that i'll write some day
 
 ---
 
-## Установка
+##  Content
 
-1. Клонируйте репозиторий:
+- [Installation](#Installation)  
+- [Features](#Features)  
+- [Requirements](#Requirements)  
+- [Author](#Author)
+- [License](#License)
+
+---
+
+## Installation
+
+1. Clone repository:
 
 ```bash
    git clone https://github.com/vydramain/Solidmaid.git
 
-   # Перейдите в папку проекта:
+   # Go to project directory
 
    cd Solidmaid
 
-    # (Если нужно) Установите зависимости:
+    # (If needed) Install prerequisites:
 
-    # <команда установки>
+    # <istallation command>
 ```
 
-## Использование
+---
 
-Опишите, как запускать или применять проект:
+## Features
 
-<пример команды или инструкции>
+Don't have any for now
 
-Фичи
+---
 
-    Фича 1 — краткое пояснение
+## Requirements
 
-    Фича 2 — краткое пояснение
+- Godot Engine ver. 4.4.1
 
-    (Добавьте то, что актуально для вашего проекта)
+---
 
-**Требования**
+## Author
 
-- Godot Engine (версия, если важна)
-- Любые другие зависимости (уточните версии при необходимости)
+- My name
+- My email: my_email@example.com
 
-## Автор
+---
 
-- Ваше имя или псевдоним
-- Контакт: ваш_email@example.com
+## License
 
-## Лицензия
+This project is licensed under the MIT License. See the LICENSE file.
 
-Этот проект лицензирован под MIT License. См. файл LICENSE.
+---
