@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://d15ok0rjcr3m"]
 
-[ext_resource type="Texture2D" uid="uid://b2805u8mskuvj" path="res://assets/textures/outside/grass.png" id="1_3og0o"]
-[ext_resource type="Script" uid="uid://dv1wi8vlxpv7n" path="res://resources/levels/outside/decorations/Grass.gd" id="1_t6dn5"]
+[ext_resource type="Texture2D" uid="uid://kanl2givy2vn" path="res://assets/textures/outside/grass.png" id="1_3og0o"]
+[ext_resource type="Script" uid="uid://dv1wi8vlxpv7n" path="res://resources/entity/environment/grass/Grass.gd" id="1_t6dn5"]
 
 [sub_resource type="Animation" id="Animation_t6dn5"]
 length = 0.001

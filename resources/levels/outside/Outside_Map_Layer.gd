@@ -1,11 +1,11 @@
 extends Node2D
 
-var GrassScene := preload("res://resources/levels/outside/decorations/Grass.tscn")
-var TreeEntityScene := preload("res://resources/entity/environment/Trees/Tree.tscn")
+var GrassScene := preload("res://resources/entity/environment/grass/Grass.tscn")
+var TreeEntityScene := preload("res://resources/entity/environment/trees/Tree.tscn")
 
 @onready var BACKGROUND_SCENE: TileMapLayer = $Background
-@onready var GRASS_SCENE: TileMapLayer = $Grass
 @onready var ENVIRONMENT_SCENE: TileMapLayer = $Environment
+@onready var GRASS_SCENE: TileMapLayer = $Grass
 @onready var DECORATIONS_SCENE: TileMapLayer = $Decorations
 
 @export var TILE_SIZE: int = 8

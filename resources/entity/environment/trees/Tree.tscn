@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://nb0trdq6a2oo"]
 
 [ext_resource type="PackedScene" uid="uid://cqpxy3pumpgkn" path="res://resources/entity/environment/Environment.tscn" id="1_stjlo"]
-[ext_resource type="Script" uid="uid://7bo7x2eo0cwq" path="res://resources/entity/environment/Trees/Tree.gd" id="2_f57ga"]
-[ext_resource type="Texture2D" uid="uid://bottmmn8ysffk" path="res://assets/textures/outside/tree.png" id="2_mwon1"]
+[ext_resource type="Script" uid="uid://7bo7x2eo0cwq" path="res://resources/entity/environment/trees/Tree.gd" id="2_f57ga"]
+[ext_resource type="Texture2D" uid="uid://c2cp3g3wwliyr" path="res://assets/textures/outside/tree.png" id="2_mwon1"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f57ga"]
 radius = 3.0
