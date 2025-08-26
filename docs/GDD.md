@@ -1,88 +1,88 @@
-# Game Design Document: Алколдун Василиусавич
+# Game Design Document: Solidmaid: Alkoldun Vasiliusavich
 
 ## 1. Overview
 ### Title
-Алколдун Василиусавич: Путь на Завод
+Solidmaid: Alkoldun Vasiliusavich
 
 ### Genre
-2D Pixel Art Beat'em Up с элементами Roguelite, Procedural Generation и Mini-Games.
+2D Pixel Art Beat'em Up with Roguelite elements, Procedural Generation, and Mini-Games.
 
 ### Platform
-PC (Windows/Linux/Mac), возможно Mobile/Console (Godot export).
+PC (Windows/Linux/Mac), potentially Mobile/Console (via Godot export).
 
 ### Target Audience
-Взрослые 18+ (юмор про алкоголь), фанаты ретро-игр (Double Dragon), инди с культурным уклоном (как Cuphead с русским твистом).
+Adults 18+ (due to alcohol-themed humor), fans of retro games (e.g., Double Dragon), and indie games with a cultural twist (similar to Cuphead with a Russian spin).
 
 ### Core Loop
-1. **Preparation:** В квартире — баффы алкоголем/закуской, экипировка.
-2. **Travel:** Procedural улица вправо, бои у столбов.
-3. **Boss/Work:** Арена на заводе — бой + сбор столба.
-4. **Reward:** Валюта, новый столб, возврат домой.
+1. **Preparation**: In the apartment — buff up with alcohol/snacks, equip items.
+2. **Travel**: Procedurally generated street, moving right, with combat at lampposts.
+3. **Boss/Work**: Factory arena — fight a boss while assembling a lamppost.
+4. **Reward**: Earn currency, gain a new lamppost, return home.
 
-Цикличная структура: уровни повторяют loop с прогрессом через снаряжение.
+The game is cyclical: levels repeat the loop with progression through equipment.
 
 ### Unique Selling Points
-- Сатира на Россию 90-х + фольклор.
-- Алкоголь как тактическая механика с рисками/наградами.
-- Procedural уровни для replay.
-- Инновации: алко-комбо, upgradeable столбы, multitasking на заводе, алко-алхимия, алко-ритм, фольклорный микс, replayability boosters.
+- Satire of 1990s Russia blended with folklore.
+- Alcohol as a tactical mechanic with risks and rewards.
+- Procedural levels for replayability.
+- Innovations: alcohol combos, upgradeable lampposts, multitasking at the factory, alcohol alchemy, rhythm-based mechanics, folklore mashups, and replayability boosters.
 
 ## 2. Story and Setting
-Альтернативная Россия 90-х: хаос перестройки, смешанный с сказками. Герой — Алколдун Василиусавич, маг-алкоголик, работающий на заводе фонарных столбов. Каждый день — борьба за выживание, чтобы "собрать" жизнь по кусочкам.
+Set in an alternate 1990s Russia, a chaotic mix of post-Soviet grit and Russian fairy tales. The protagonist, Alkoldun Vasiliusavich, is a mystical alcoholic working at a lamppost factory. Each day is a struggle to survive and "piece together" his life.
 
-Нарратив: Минимальный, через диалоги/анимации. Финал кампании — "большой босс" (директор завода как Змей Горыныч).
+Narrative: Minimal, delivered through dialogues and animations. The campaign ends with a "big boss" (factory director as a Zmey Gorynych, a mythical dragon).
 
 ## 3. Gameplay Mechanics
 ### Controls
-- Движение: Только вправо (авто-scroll), прыжок/уклон.
-- Атаки: Кидание предметов (кирпичи/бутылки) у столбов.
-- Баффы: В доме — выбор напитков/закуски (UI меню).
+- Movement: Rightward auto-scroll, jump/dodge.
+- Attacks: Throwing items (bricks/bottles) at lampposts.
+- Buffs: In the apartment — select drinks/snacks via UI menu.
 
 ### Preparation Phase (Home)
-- Баффы: Напитки дают stats (сила, скорость, HP). Закуска — стабилизация.
-- Инновация: Алко-алхимия (mixing mini-game).
-- Экипировка: Столбы как weapons/upgrades.
+- Buffs: Drinks provide stats (strength, speed, HP). Snacks stabilize effects.
+- Innovation: Alcohol Alchemy mini-game for mixing buffs.
+- Equipment: Lampposts as weapons/upgrades.
 
 ### Travel Phase (Street)
-- Procedural gen: Улица с рандомными сегментами (дома, парки), врагами (гопники, лешие-дачницы).
-- Бои: Только у столбов (trigger zone). Атаки — ranged throws.
-- Инновация: Размещение своих столбов для тактики.
+- Procedural Generation: Street with random segments (houses, parks) and enemies (gopniks, leshy-dachnitsy).
+- Combat: Triggered only at lampposts (combat zones). Attacks are ranged throws.
+- Innovation: Place upgraded lampposts for tactical advantages.
 
 ### Boss/Work Phase (Factory)
-- Арена: Босс (e.g., робот-начальник) + конвейер для сборки столба.
-- Механика: Throw attacks на босса + timing-based сбор (QTE).
-- Инновация: Алко-ритм — баффы влияют на тайминги.
+- Arena: Fight a boss (e.g., robotic foreman) while assembling a lamppost on a conveyor.
+- Mechanics: Throw attacks at the boss + timing-based assembly (QTE).
+- Innovation: Alcohol Rhythm — buffs affect timing mechanics.
 
 ### Progression
-- Валюта: За врагов/боссов — покупка напитков/закуски.
-- Снаряжение: Столбы — новые abilities (e.g., AOE, heal).
-- Уровни: 8 для кампании (эскалация врагов/боссов), бесконечный (score-based).
+- Currency: Earned from enemies/bosses, used to buy drinks/snacks.
+- Equipment: Lampposts unlock new abilities (e.g., AOE attacks, healing).
+- Levels: 8 for the campaign (escalating enemies/bosses), endless mode (score-based).
 
 ### Enemies and Bosses
-- Враги: Гопники (melee), Лешие (ranged), Дачницы (traps).
-- Боссы: Тематические (e.g., Уровень 1: Сторож как Баба Яга).
+- Enemies: Gopniks (melee), Leshies (ranged), Dachnitsy (traps).
+- Bosses: Thematic (e.g., Level 1: Guard as Baba Yaga).
 
 ### Audio/Visual
 - Art: Pixel art, 16-bit style.
-- Sound: Чиптюн + фольклорные мотивы, SFX (бутылки, удары).
+- Sound: Chiptune with folklore motifs, SFX (bottles, hits).
 
 ### Innovative Mechanics and Player Satisfaction Details
-Чтобы сделать игру запоминающейся и satisfying, добавь инновации, фокусируясь на replayability, юморе и тактике. Вот предложения (основаны на core loop: prepare -> travel -> boss/work -> reward):
+To make the game memorable and satisfying, incorporate innovations focusing on replayability, humor, and tactics. These are tied to the core loop (prepare -> travel -> boss/work -> reward):
 
-- **Алкоголь как динамическая система баффов с рисками:** Не просто статические баффы — введи "алко-комбо". Смешивай напитки (пиво + водка = speed boost, но шанс "похмелья" с дебаффом). Закуска нейтрализует риски (например, соленый огурец стабилизирует). Инновация: "Алко-алхимия" — мини-игра в доме, где игрок экспериментирует, открывая скрытые эффекты (e.g., самогон + ягоды = временная неуязвимость, но размытое зрение). Удовлетворение: эксперименты, как в roguelikes (Binding of Isaac), с рандомом для replay.
-- **Фонарные столбы как тактические хабы:** Не просто катализаторы — сделай их upgradeable. Собранные столбы (из завода) устанавливаются на улице в будущих уровнях, создавая "безопасные зоны". Инновация: procedural улица генерируется с "столб-слотами", где игрок размещает свои столбы заранее (в доме). У столбов эффекты (e.g., один притягивает врагов, другой дает AOE-атаки). Удовлетворение: стратегическое планирование, как в tower defense, но в beat'em up.
-- **Параллельный геймплей на заводе с "мультитаскингом":** Босс-файт + работа — сделай это как ритм-игру. Собирай столб по конвейеру (timing-based), пока уклоняешься от босса. Инновация: "Алко-ритм" — эффекты от баффов влияют на тайминги (e.g., пиво ускоряет конвейер). Если соберешь идеально, бонус-атака на босса. Удовлетворение: flow-state, как в Celeste или Rhythm Heaven, с юмористическими фейлами (герой спотыкается).
-- **Культурный колорит с вариациями:** Враги эволюционируют по уровням (гопники -> лешие-гопники). Инновация: "Фольклорный микс" — рандомные события, где враги "сливаются" (e.g., дачница с гопником = hybrid с новыми атаками). Бесконечный режим: эскалация с "культурными волнами" (90-е мемы vs сказки). Удовлетворение: юмор, discovery, как в Hades с нарративом.
-- **Replayability boosters:** Достижения за стили (e.g., "Трезвый вызов" без алкоголя). Моды снаряжения (столбы с attachments). Социал: share procedural seeds для уровней. Удовлетворение: mastery, community.
+- **Alcohol as a Dynamic Buff System with Risks**: Beyond static buffs, introduce "alcohol combos." Mix drinks (e.g., beer + vodka = speed boost, but chance of a "hangover" debuff). Snacks neutralize risks (e.g., salted cucumber stabilizes). **Innovation**: "Alcohol Alchemy" — a mini-game in the apartment where players experiment, unlocking hidden effects (e.g., moonshine + berries = temporary invulnerability but blurred vision). **Satisfaction**: Experimentation like in roguelikes (e.g., Binding of Isaac), with randomization for replayability.
+- **Lampposts as Tactical Hubs**: Not just catalysts — make them upgradeable. Lampposts collected from the factory can be placed on future streets, creating "safe zones." **Innovation**: Procedurally generated streets include "lamppost slots" where players pre-place lampposts (in the apartment). Lampposts have effects (e.g., one attracts enemies, another grants AOE attacks). **Satisfaction**: Strategic planning, blending tower defense tactics into a beat'em up.
+- **Multitasking Factory Gameplay**: Boss fights + work become a rhythm game. Assemble lampposts on a conveyor (timing-based) while dodging the boss. **Innovation**: "Alcohol Rhythm" — buffs affect conveyor timing (e.g., beer speeds it up). Perfect assembly grants a bonus attack on the boss. **Satisfaction**: Flow-state gameplay like Celeste or Rhythm Heaven, with humorous fails (e.g., Vasiliusavich stumbles).
+- **Cultural Flavor with Variations**: Enemies evolve across levels (gopniks -> leshy-gopniks). **Innovation**: "Folklore Mashup" — random events where enemies merge (e.g., dachnitsa + gopnik = hybrid with new attacks). Endless mode escalates with "cultural waves" (90s memes vs. fairy tales). **Satisfaction**: Humor and discovery, similar to Hades’ narrative surprises.
+- **Replayability Boosters**: Achievements for playstyles (e.g., "Sober Challenge" without alcohol). Equipment mods (lamppost attachments). Social features: share procedural level seeds. **Satisfaction**: Mastery and community engagement.
 
-Эти механики добавят глубину, не усложняя core, и повысят retention (игроки вернутся за экспериментами).
+These mechanics add depth without overcomplicating the core, boosting retention as players return for experimentation.
 
 ## 4. Levels
-- **Campaign:** 8 уровней, каждый сложнее (больше врагов, новые типы).
-- **Endless:** Бесконечная улица + фабрика waves, high scores.
+- **Campaign**: 8 levels, each increasing in difficulty (more enemies, new types).
+- **Endless**: Infinite street + factory waves, high-score driven.
 
 ## 5. Monetization
-Free-to-play с donations, или paid itch.io/Steam.
+Free-to-play with donations, or paid release on itch.io/Steam.
 
 ## 6. Technical Specs
 - Engine: Godot 4.x.
@@ -91,9 +91,9 @@ Free-to-play с donations, или paid itch.io/Steam.
 
 ## 7. Roadmap
 - Month 1: Prototype core loop.
-- Month 2-4: Levels, assets.
-- Month 5+: Polish, release.
+- Months 2-4: Levels, assets.
+- Months 5+: Polish, release.
 
 ## 8. Risks and Mitigations
-- Balance: Playtesting.
-- Content: Юмор, не пропаганда.
+- Balance: Addressed through playtesting.
+- Content: Humor-focused, avoiding promotion of harmful behavior.
