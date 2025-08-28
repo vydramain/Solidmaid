@@ -4,63 +4,66 @@ var GrassScene := preload("res://resources/entity/environment/grass/Grass.tscn")
 var TreeEntityScene := preload("res://resources/entity/environment/trees/Tree.tscn")
 
 @onready var BACKGROUND_SCENE: TileMapLayer = $Background
-@onready var ENVIRONMENT_SCENE: TileMapLayer = $Environment
-@onready var GRASS_SCENE: TileMapLayer = $Grass
 @onready var DECORATIONS_SCENE: TileMapLayer = $Decorations
+@onready var ENVIRONMENT_SCENE: TileMapLayer = $Environment
 
-@export var TILE_SIZE: int = 8
-@export var CHUNK_WIDTH: int = 8
-@export var CHUNK_HEIGHT: int = 24
+var TILE_SIZE: int = 8
+var CHUNK_TILE_WIDTH: int = 20
+var CHUNK_TILE_HEIGHT: int = 26
+var UPPER_CHUNK_TILE_HEIGHT: int = 14
+var LOWER_CHUNK_TILE_HEIGHT: int = 12
 
-@export var CHUNK_WIDTH_FOR_WALLS: int = 8
-@export var CHUNK_HEIGHT_FOR_WALLS: int = 4
-@export var CHUNK_WIDTH_FOR_BASEMENT_WALLS: int = 8
-@export var CHUNK_HEIGHT_FOR_BASEMENT_WALLS: int = 1
-@export var CHUNK_WIDTH_FOR_GRASS: int = 8
-@export var CHUNK_HEIGHT_FOR_GRASS: int = 12
+enum UPPER_CHUNK { LIGTH_BUILDING = 0, BLUE_BUILDING = 1, CROSS = 2, PARK = 3, FACTORY = 4}
+enum LOWER_CHUNK { GRASS = 0, ROAD = 1 }
 
-@export var CHUNK_WIDTH_FOR_DECORATIONS: int = 8
-@export var CHUNK_HEIGHT_FOR_DECORATIONS: int = 3
-
-@export var CHUNK_WIDTH_FOR_ENVIRONMENTS: int = 8
-@export var CHUNK_HEIGHT_FOR_ENVIRONMENTS: int = 1
-
-@export var MAX_CHUNKS: int = 10
-
-@export var BACKGROUND_PLAYGROUND_ATLAS_SOURCE_ID = 0
-@export var BACKGROUND_STREET_ATLAS_SOURCE_ID = 2
-@export var BACKGROUND_WALLS_ATLAS_SOURCE_ID = 1
-@export var DECORATIONS_PLAYGROUND_ATLAS_SOURCE_ID = 0
-@export var DECORATIONS_STREET_ATLAS_SOURCE_ID = 1
+var POSSIBLE_UPPER_CHUNK_BASED_ON_LOWER = {
+	LOWER_CHUNK.GRASS: [UPPER_CHUNK.LIGTH_BUILDING, UPPER_CHUNK.BLUE_BUILDING],
+	LOWER_CHUNK.ROAD: [UPPER_CHUNK.LIGTH_BUILDING, UPPER_CHUNK.BLUE_BUILDING, UPPER_CHUNK.CROSS, UPPER_CHUNK.FACTORY],
+}
 
 
-var BACKGROUND_WALL_PATTERNS = [
-	Vector2i(0, 0),
-	Vector2i(2, 0),
-	Vector2i(4, 0),
-	Vector2i(6, 0),
-	Vector2i(0, 2),
-	Vector2i(2, 2),
-	Vector2i(4, 2),
-	Vector2i(6, 2),
+var LOWER_CHUNK_DECORATION_GRASS_TILE_HEIGHT: int = 2
+var LOWER_CHUNK_DECORATION_GRASS_START_Y_TILE_IDX: int = 5
+
+var UPPER_CHUNK_DECORATION_GRASS_START_Y_TILE_IDX: int = 8
+var UPPER_CHUNK_DECORATION_GRASS_START_X_TILE_IDX: int = 9
+
+var LOWER_CHUNK_DECORATION_ROAD_START_Y_TILE_IDX: int = 9
+
+var UPPER_CHUNK_DECORATION_CROSS
+
+
+var MAX_CHUNKS: int = 10
+
+var ATLAS_SOURCE_ID = 0
+
+var BLUE_BUILDING_ENTRANCE_WINDOW_TILE_SIZE = Vector2i(2, 2)
+var BLUE_BUILDING_ENTRANCE_TILE_SIZE = Vector2i(2, 3)
+var BLUE_BUILDING_WINDOWS_TILE_SIZE = Vector2i(2, 2)
+var BLUE_BUILDING_BASEMENT_TILE_SIZE = Vector2i(2, 1)
+
+var BLUE_BUILDING_ENTRANCE_WINDOW_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ Vector2i(8, 8) ]
+var BLUE_BUILDING_ENTRANCE_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ Vector2i(8, 10) ] 
+var BLUE_BUILDING_BASEMENT_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [
+	Vector2i(0, 12),
+	Vector2i(2, 12),
+	Vector2i(4, 12),
+	Vector2i(6, 12),
 ]
-
-var BACKGROUND_BASEMENT_PATTERNS = [
-	Vector2i(0, 4),
-	Vector2i(2, 4),
-	Vector2i(4, 4),
-	Vector2i(6, 4),
+var BLUE_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [
+	Vector2i(0, 8),
+	Vector2i(2, 8),
+	Vector2i(4, 8),
+	Vector2i(6, 8),
+	Vector2i(0, 10),
+	Vector2i(2, 10),
+	Vector2i(4, 10),
+	Vector2i(6, 10),
 ]
-
 
 func _ready() -> void:
 	randomize()
-	
-	#for i in range(MAX_CHUNKS):
-		#draw_chunk_background(i)
-		#draw_chunk_decorations(i)
-		#draw_chunk_grass(i)
-		#draw_chunk_environments(i)
+
 
 func spawn_new_entity_at(entity: PackedScene, new_position: Vector2i, new_z_index: int = 0) -> Node2D:
 	var new_entity = entity.instantiate()
@@ -71,55 +74,15 @@ func spawn_new_entity_at(entity: PackedScene, new_position: Vector2i, new_z_inde
 
 # Backgound generation
 func draw_chunk_background(current_chunk: int) -> void:
-	var start_x = current_chunk * CHUNK_WIDTH
-	
-	## Background walls generation
-	var start_y_for_walls = 0
-	for x in range(0, CHUNK_WIDTH_FOR_WALLS, 2):
-		for y in range(0, CHUNK_HEIGHT_FOR_WALLS, 2):
-			var top_left = BACKGROUND_WALL_PATTERNS[randi() % BACKGROUND_WALL_PATTERNS.size()]
-			var coords = Vector2i(start_x + x, y)
-			
-			# stamp 2x2 
-			BACKGROUND_SCENE.set_cell(coords + Vector2i(0, 0), BACKGROUND_WALLS_ATLAS_SOURCE_ID, top_left)
-			BACKGROUND_SCENE.set_cell(coords + Vector2i(1, 0), BACKGROUND_WALLS_ATLAS_SOURCE_ID, top_left + Vector2i(1, 0))
-			BACKGROUND_SCENE.set_cell(coords + Vector2i(0, 1), BACKGROUND_WALLS_ATLAS_SOURCE_ID, top_left + Vector2i(0, 1))
-			BACKGROUND_SCENE.set_cell(coords + Vector2i(1, 1), BACKGROUND_WALLS_ATLAS_SOURCE_ID, top_left + Vector2i(1, 1))
-	
-	## Background basementwalls generation
-	var start_y_for_basement_walls = CHUNK_HEIGHT_FOR_WALLS
-	for x in range(0, CHUNK_WIDTH_FOR_BASEMENT_WALLS, 2):
-		for y in range(0, CHUNK_HEIGHT_FOR_BASEMENT_WALLS, 2):
-			var top_left = BACKGROUND_BASEMENT_PATTERNS[randi() % BACKGROUND_BASEMENT_PATTERNS.size()]
-			var coords = Vector2i(start_x + x, start_y_for_basement_walls + y)
-			
-			BACKGROUND_SCENE.set_cell(coords, BACKGROUND_WALLS_ATLAS_SOURCE_ID, top_left)
-			BACKGROUND_SCENE.set_cell(coords + Vector2i(1, 0), BACKGROUND_WALLS_ATLAS_SOURCE_ID, top_left + Vector2i(1, 0))
-	
-	## Background grass generation
-	var start_y_for_grass_walls = CHUNK_HEIGHT_FOR_WALLS + CHUNK_HEIGHT_FOR_BASEMENT_WALLS
-	for x in range(CHUNK_WIDTH_FOR_GRASS):
-		for y in range(CHUNK_HEIGHT_FOR_GRASS):
-			var coords = Vector2i(start_x + x, start_y_for_grass_walls + y)
-			var atlas_coords = Vector2i(randi() % 4 + 4, randi() % 4)
-			
-			BACKGROUND_SCENE.set_cell(coords, BACKGROUND_PLAYGROUND_ATLAS_SOURCE_ID, atlas_coords)
+	pass
 
 # Decorations generation
 func draw_chunk_decorations(current_chunk: int) -> void:
-	var start_x = current_chunk * CHUNK_WIDTH
-	
-	var start_y_for_decorations = 6
-	for x in range(CHUNK_WIDTH_FOR_DECORATIONS):
-		for y in range(CHUNK_HEIGHT_FOR_DECORATIONS):
-			var top_left = Vector2i(randi() % 3, randi() % 3)
-			var coords = Vector2i(start_x + x, start_y_for_decorations + y)
-			
-			DECORATIONS_SCENE.set_cell(coords + Vector2i(0, 0), DECORATIONS_PLAYGROUND_ATLAS_SOURCE_ID, top_left)
+	pass
 
 # Grass generation
 func draw_chunk_grass(current_chunk: int) -> void:
-	var start_x = current_chunk * CHUNK_WIDTH * 16
+	var start_x = current_chunk * CHUNK_TILE_WIDTH * 16
 	var start_y = 65
 	
 	spawn_new_entity_at(GrassScene, Vector2i(start_x, start_y))
@@ -127,23 +90,4 @@ func draw_chunk_grass(current_chunk: int) -> void:
 
 # Environments generation
 func draw_chunk_environments(current_chunk: int) -> void:
-	var tile_position_index_1 = 2 # randi() % CHUNK_WIDTH_FOR_ENVIRONMENTS
-	var tile_position_index_2 = 6 # randi() % CHUNK_WIDTH_FOR_ENVIRONMENTS
-	var start_x = (current_chunk + 0) * CHUNK_WIDTH * 16
-	var start_y = 64
-	var random_tile_position_1 = 16 * tile_position_index_1
-	var random_tile_position_2 = 16 * tile_position_index_2
-	
-	var first_row_z_index = 0
-	var second_row_z_index = 2
-	
-	for x in range(CHUNK_WIDTH_FOR_ENVIRONMENTS):
-		if randi() % 20 != 0:
-			spawn_new_entity_at(TreeEntityScene, Vector2i(start_x + random_tile_position_1, start_y), first_row_z_index)
-		if randi() % 20 != 0:
-			spawn_new_entity_at(TreeEntityScene, Vector2i(start_x + random_tile_position_2, start_y), first_row_z_index)
-		
-		if randi() % 20 != 0:
-			spawn_new_entity_at(TreeEntityScene, Vector2i(start_x + random_tile_position_1 + 32, start_y + 72), second_row_z_index)
-		if randi() % 20 != 0:
-			spawn_new_entity_at(TreeEntityScene, Vector2i(start_x + random_tile_position_2 + 32, start_y + 72), second_row_z_index)
+	pass
