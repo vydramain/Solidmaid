@@ -8,12 +8,19 @@ var TreeEntityScene := preload("res://resources/entity/environment/trees/Tree.ts
 @onready var ENVIRONMENT_SCENE: TileMapLayer = $Environment
 
 var TILE_SIZE: int = 8
-var CHUNK_TILE_WIDTH: int = 20
+var CHUNK_TILE_WIDTH: int = 10
 var CHUNK_TILE_HEIGHT: int = 26
 var UPPER_CHUNK_TILE_HEIGHT: int = 14
 var LOWER_CHUNK_TILE_HEIGHT: int = 12
 
-enum UPPER_CHUNK { LIGTH_BUILDING = 0, BLUE_BUILDING = 1, CROSS = 2, PARK = 3, FACTORY = 4}
+enum UPPER_CHUNK { 
+	LIGTH_BUILDING = 0,
+	BLUE_BUILDING = 1,
+	CROSS = 2,
+	PARK = 3,
+	FACTORY = 4,
+}
+
 enum LOWER_CHUNK { GRASS = 0, ROAD = 1 }
 
 var POSSIBLE_UPPER_CHUNK_BASED_ON_LOWER = {
@@ -35,11 +42,31 @@ var MAX_CHUNKS: int = 10
 
 var ATLAS_SOURCE_ID = 2
 
-var ROAD_BACKGROUND_TILE_SIZE = Vector2i(2, 3)
-var ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ Vector2i(4, 0) ]
+var ROAD_BACKGROUND_TILE_SIZE = Vector2i(1, 1)
+var ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ 
+	Vector2i(4, 0),
+	Vector2i(5, 0),
+	Vector2i(4, 1),
+	Vector2i(5, 1),
+	Vector2i(4, 2),
+	Vector2i(5, 2),
+]
 
-var SIDEWALK_BACKGROUND_TILE_SIZE = Vector2i(4, 3)
-var SIDEWALK_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ Vector2i(6, 0) ]
+var SIDEWALK_BACKGROUND_TILE_SIZE = Vector2i(1, 1)
+var SIDEWALK_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ 
+	Vector2i(6, 0),
+	Vector2i(7, 0),
+	Vector2i(8, 0),
+	Vector2i(9, 0),
+	Vector2i(6, 1),
+	Vector2i(7, 1),
+	Vector2i(8, 1),
+	Vector2i(9, 1),
+	Vector2i(6, 2),
+	Vector2i(7, 2),
+	Vector2i(8, 2),
+	Vector2i(9, 2),
+]
 
 var GRASS_BACKGROUND_TILE_SIZE = Vector2i(4, 4)
 var GRASS_BACKGROUND_TILES_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ Vector2i(0, 4) ]
@@ -129,6 +156,12 @@ func _ready() -> void:
 	#_log("_ready - drawing initial lower chunk: GRASS at index 0")
 	#draw_lower_chunk_background(LOWER_CHUNK.GRASS, 0)
 	
+	for i in range(1, MAX_CHUNKS):
+		draw_chunk(i)
+	
+	draw_upper_chunk_background(UPPER_CHUNK.FACTORY, MAX_CHUNKS)
+	draw_upper_chunk_background(UPPER_CHUNK.FACTORY, MAX_CHUNKS + 1)
+	
 	_log("_ready - completed initial drawing")
 
 
@@ -148,6 +181,10 @@ func draw_chunk(current_chunk_index: int) -> void:
 	
 	var upper_chunk_values = UPPER_CHUNK.values()
 	var upper_chunk_type = upper_chunk_values[randi() % upper_chunk_values.size()]
+	
+	if upper_chunk_type == UPPER_CHUNK.PARK or upper_chunk_type == UPPER_CHUNK.FACTORY:
+		upper_chunk_type = UPPER_CHUNK.CROSS
+	
 	_log("draw_chunk - picked upper_chunk_type: " + str(upper_chunk_type))
 	
 	var lower_chunk_values = LOWER_CHUNK.values()
@@ -155,7 +192,7 @@ func draw_chunk(current_chunk_index: int) -> void:
 	_log("draw_chunk - picked lower_chunk_type: " + str(lower_chunk_type))
 	
 	draw_upper_chunk_background(upper_chunk_type, current_chunk_index)
-	draw_lower_chunk_background(lower_chunk_type, current_chunk_index)
+	#draw_lower_chunk_background(lower_chunk_type, current_chunk_index)
 	_log("draw_chunk - completed for index: " + str(current_chunk_index))
 
 
@@ -170,12 +207,15 @@ func draw_upper_chunk_background(current_chunk_type: UPPER_CHUNK, current_chunk_
 			_log("draw_upper_chunk_background -> LIGTH_BUILDING")
 			_fill_light_building(start_x, start_y)
 		UPPER_CHUNK.BLUE_BUILDING:
+			_fill_blue_building(start_x, start_y)
 			_log("draw_upper_chunk_background -> BLUE_BUILDING not implemented")
 		UPPER_CHUNK.CROSS:
+			_fill_cross(start_x, start_y)
 			_log("draw_upper_chunk_background -> CROSS not implemented")
 		UPPER_CHUNK.PARK:
 			_log("draw_upper_chunk_background -> PARK not implemented")
 		UPPER_CHUNK.FACTORY:
+			_fill_factory_building(start_x, start_y)
 			_log("draw_upper_chunk_background -> FACTORY not implemented")
 	
 	_log("draw_upper_chunk_background - completed | type=" + str(current_chunk_type))
@@ -265,6 +305,158 @@ func _fill_light_building(start_x: int, start_y: int) -> void:
 	
 	_log("_fill_light_building - completed")
 
+func _fill_blue_building(start_x: int, start_y: int) -> void:
+	_log("_fill_blue_building - start | start_x=" + str(start_x) + " start_y=" + str(start_y))
+	
+	# Drawing basement (tile coords, not pixels)
+	for i in range(0, CHUNK_TILE_WIDTH / BLUE_BUILDING_BASEMENT_TILE_SIZE.x):
+		var x_pos = start_x + (i * BLUE_BUILDING_BASEMENT_TILE_SIZE.x)         # Next x position depends on basement legth
+		var y_pos = start_y + 4                                                 # Basement position are same for all chunks
+		var cell_pos = Vector2i(x_pos, y_pos)                                   # Tile coordinates based on each chunk
+		var atlas_coords_index = randi() % BLUE_BUILDING_BASEMENT_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = BLUE_BUILDING_BASEMENT_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		for t in BLUE_BUILDING_BASEMENT_TILE_SIZE.x:
+			BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t, 0), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t, 0))
+		
+	_log("_fill_blue_building - basement tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	# Drawing first line of windows
+	var first_windows_indent = 0 # 0, 2, 6, 8, 12, 14, 18, 20, 24, 26, 30, 32, 36, 38, 42, 44...
+	for i in range(0, CHUNK_TILE_WIDTH / BLUE_BUILDING_WINDOWS_TILE_SIZE.x):
+		var x_pos = start_x + first_windows_indent
+		var y_pos = start_y + (0 * BLUE_BUILDING_WINDOWS_TILE_SIZE.y)
+		
+		first_windows_indent += (BLUE_BUILDING_WINDOWS_TILE_SIZE.x)
+		
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % BLUE_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = BLUE_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		for t_y in BLUE_BUILDING_WINDOWS_TILE_SIZE.y:
+			for t_x in BLUE_BUILDING_WINDOWS_TILE_SIZE.x:
+				BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t_x, t_y), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t_x, t_y))
+		
+	_log("_fill_blue_building - first line of window tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	# Drawing second line of windows
+	var second_windows_indent = 0
+	for i in range(0, CHUNK_TILE_WIDTH / BLUE_BUILDING_WINDOWS_TILE_SIZE.x):
+		var x_pos = start_x + second_windows_indent
+		var y_pos = start_y + (1 * BLUE_BUILDING_WINDOWS_TILE_SIZE.y)
+		
+		second_windows_indent += (BLUE_BUILDING_WINDOWS_TILE_SIZE.x)
+		
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % BLUE_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = BLUE_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		for t_y in BLUE_BUILDING_WINDOWS_TILE_SIZE.y:
+			for t_x in BLUE_BUILDING_WINDOWS_TILE_SIZE.x:
+				BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t_x, t_y), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t_x, t_y))
+		
+	_log("_fill_blue_building - second line of window tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	# Drawing windows entrances
+	for i in range(0, 1):
+		var x_pos = start_x + (i * (BLUE_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x + (BLUE_BUILDING_WINDOWS_TILE_SIZE.x * 4))) + (BLUE_BUILDING_WINDOWS_TILE_SIZE.x * 2)
+		var y_pos = start_y + (0 * BLUE_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.y)
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % BLUE_BUILDING_ENTRANCE_WINDOW_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = BLUE_BUILDING_ENTRANCE_WINDOW_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		for t_y in BLUE_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.y:
+			for t_x in BLUE_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x:
+				BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t_x, t_y), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t_x, t_y))
+		
+	_log("_fill_blue_building - windows entrances tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	# Drawing entrances
+	var entrances_indent
+	for i in range(0, 1):
+		var x_pos = start_x + (i * (BLUE_BUILDING_ENTRANCE_TILE_SIZE.x + (BLUE_BUILDING_WINDOWS_TILE_SIZE.x * 4))) + (BLUE_BUILDING_WINDOWS_TILE_SIZE.x * 2)
+		var y_pos = start_y + (1 * BLUE_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.y)
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % BLUE_BUILDING_ENTRANCE_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = BLUE_BUILDING_ENTRANCE_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		for t_y in BLUE_BUILDING_ENTRANCE_TILE_SIZE.y:
+			for t_x in BLUE_BUILDING_ENTRANCE_TILE_SIZE.x:
+				BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t_x, t_y), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t_x, t_y))
+		
+	_log("_fill_blue_building - entrances tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	_log("_fill_blue_building - completed")
+
+func _fill_cross(start_x: int, start_y: int):
+	_log("_fill_cross - start | start_x=" + str(start_x) + " start_y=" + str(start_y))
+	
+	# Upper sidewalk part
+	var sidewalk_indent = 0
+	for i in range(0, 4):
+		var x_pos = start_x + sidewalk_indent
+		var y_pos = start_y + (4 * SIDEWALK_BACKGROUND_TILE_SIZE.y)
+		
+		var indent_flag = i % 4
+		if indent_flag == 1 or indent_flag == 3:
+			sidewalk_indent += 7
+		else:
+			sidewalk_indent += 1
+		
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % SIDEWALK_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = SIDEWALK_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		BACKGROUND_SCENE.set_cell(cell_pos, ATLAS_SOURCE_ID, atlas_coords_of_tile)
+	
+	# Upper road part
+	var road_indent = 2
+	for i in range(0, 6):
+		var x_pos = start_x + road_indent
+		var y_pos = start_y + (4 * ROAD_BACKGROUND_TILE_SIZE.y)
+		
+		road_indent += 1
+		
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		BACKGROUND_SCENE.set_cell(cell_pos, ATLAS_SOURCE_ID, atlas_coords_of_tile)
+	
+	_log("_fill_cross - upper sidewalk tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	_log("_fill_blue_building - completed")
+
+func _fill_factory_building(start_x: int, start_y: int) -> void:
+	
+	# Drawing first floor of factory building
+	var first_floor_indent = 0
+	for i in range(0, CHUNK_TILE_WIDTH / FACTORY_BUILDING_WINDOWS_TILE_SIZE.x):
+		var x_pos = start_x + first_floor_indent
+		var y_pos = start_y + (0 * FACTORY_BUILDING_WINDOWS_TILE_SIZE.y)
+		
+		first_floor_indent += FACTORY_BUILDING_WINDOWS_TILE_SIZE.x
+		
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % FACTORY_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = FACTORY_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		for t_y in FACTORY_BUILDING_WINDOWS_TILE_SIZE.y:
+			for t_x in FACTORY_BUILDING_WINDOWS_TILE_SIZE.x:
+				BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t_x, t_y), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t_x, t_y))
+		
+	_log("_fill_light_building - first line of window tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	# Drawing second floor of factory building
+	var second_floor_indent = 0
+	for i in range(0, CHUNK_TILE_WIDTH / FACTORY_BUILDING_WINDOWS_TILE_SIZE.x):
+		var x_pos = start_x + second_floor_indent
+		var y_pos = start_y + (1 * FACTORY_BUILDING_WINDOWS_TILE_SIZE.y)
+		
+		second_floor_indent += FACTORY_BUILDING_WINDOWS_TILE_SIZE.x
+		
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % FACTORY_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = FACTORY_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		for t_y in FACTORY_BUILDING_WINDOWS_TILE_SIZE.y:
+			for t_x in FACTORY_BUILDING_WINDOWS_TILE_SIZE.x:
+				BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t_x, t_y), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t_x, t_y))
+		
+	_log("_fill_light_building - first line of window tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	_log("_fill_blue_building - completed")
 
 func draw_lower_chunk_background(current_chunk_type: LOWER_CHUNK, current_chunk_index: int) -> void:
 	_log("draw_lower_chunk_background - start | type=" + str(current_chunk_type) + " index=" + str(current_chunk_index))
