@@ -9,23 +9,40 @@ var TreeEntityScene := preload("res://resources/entity/environment/trees/Tree.ts
 
 var TILE_SIZE: int = 8
 var CHUNK_TILE_WIDTH: int = 10
-var CHUNK_TILE_HEIGHT: int = 26
-var UPPER_CHUNK_TILE_HEIGHT: int = 14
-var LOWER_CHUNK_TILE_HEIGHT: int = 12
+var CHUNK_TILE_HEIGHT: int = 11
+var UPPER_CHUNK_TILE_HEIGHT: int = 5
+var LOWER_CHUNK_TILE_HEIGHT: int = 5
 
 enum UPPER_CHUNK { 
 	LIGTH_BUILDING = 0,
 	BLUE_BUILDING = 1,
-	CROSS = 2,
-	PARK = 3,
-	FACTORY = 4,
+	CROSS_START = 2,
+	CROSS_END = 3,
+	PARK = 4,
+	FACTORY = 5,
 }
 
-enum LOWER_CHUNK { GRASS = 0, ROAD = 1 }
+enum LOWER_CHUNK { 
+	GRASS = 0,
+	ROAD = 1,
+	PARK = 2,
+	CROSS_START = 3,
+	CROSS_END = 4,
+}
 
 var POSSIBLE_UPPER_CHUNK_BASED_ON_LOWER = {
 	LOWER_CHUNK.GRASS: [UPPER_CHUNK.LIGTH_BUILDING, UPPER_CHUNK.BLUE_BUILDING],
-	LOWER_CHUNK.ROAD: [UPPER_CHUNK.LIGTH_BUILDING, UPPER_CHUNK.BLUE_BUILDING, UPPER_CHUNK.CROSS, UPPER_CHUNK.FACTORY],
+	LOWER_CHUNK.ROAD: [UPPER_CHUNK.LIGTH_BUILDING, UPPER_CHUNK.BLUE_BUILDING, UPPER_CHUNK.FACTORY],
+	LOWER_CHUNK.CROSS_START: [UPPER_CHUNK.CROSS_START],
+	LOWER_CHUNK.CROSS_END: [UPPER_CHUNK.CROSS_END],
+}
+
+var POSSIBLE_NEXT_CHUNK_BASED_ON_PREVIOUS = {
+	LOWER_CHUNK.GRASS: [LOWER_CHUNK.GRASS, LOWER_CHUNK.CROSS_START],
+	LOWER_CHUNK.ROAD: [LOWER_CHUNK.ROAD, LOWER_CHUNK.CROSS_END],
+	LOWER_CHUNK.PARK: [LOWER_CHUNK.PARK, LOWER_CHUNK.GRASS, LOWER_CHUNK.CROSS_START],
+	LOWER_CHUNK.CROSS_START: [LOWER_CHUNK.ROAD],
+	LOWER_CHUNK.CROSS_END: [LOWER_CHUNK.GRASS, LOWER_CHUNK.PARK],
 }
 
 var LOWER_CHUNK_DECORATION_GRASS_TILE_HEIGHT: int = 2
@@ -151,74 +168,85 @@ func _ready() -> void:
 	randomize()
 	
 	_log("_ready - drawing initial upper chunk: LIGHT_BUILDING at index 0")
-	draw_upper_chunk_background(UPPER_CHUNK.LIGTH_BUILDING, 0)
+	_draw_upper_chunk_background(UPPER_CHUNK.LIGTH_BUILDING, 0)
+	_draw_upper_chunk_background(UPPER_CHUNK.LIGTH_BUILDING, 1)
+	#_draw_upper_chunk_background(UPPER_CHUNK.CROSS, 2)
+	#_draw_upper_chunk_background(UPPER_CHUNK.BLUE_BUILDING, 3)
 	
-	#_log("_ready - drawing initial lower chunk: GRASS at index 0")
-	#draw_lower_chunk_background(LOWER_CHUNK.GRASS, 0)
+	_log("_ready - drawing initial lower chunk: GRASS at index 0")
+	_draw_lower_chunk_background(LOWER_CHUNK.GRASS, 0)
+	_draw_lower_chunk_background(LOWER_CHUNK.GRASS, 1)
+	#_draw_lower_chunk_background(LOWER_CHUNK.CROSS, 2)
+	#_draw_lower_chunk_background(LOWER_CHUNK.ROAD, 3)
 	
-	for i in range(1, MAX_CHUNKS):
-		draw_chunk(i)
 	
-	draw_upper_chunk_background(UPPER_CHUNK.FACTORY, MAX_CHUNKS)
-	draw_upper_chunk_background(UPPER_CHUNK.FACTORY, MAX_CHUNKS + 1)
+	for i in range(2, MAX_CHUNKS):
+		_draw_chunk(i)
+	
+	_draw_upper_chunk_background(UPPER_CHUNK.FACTORY, MAX_CHUNKS)
+	_draw_upper_chunk_background(UPPER_CHUNK.FACTORY, MAX_CHUNKS + 1)
 	
 	_log("_ready - completed initial drawing")
 
 
-func spawn_new_entity_at(entity: PackedScene, new_position: Vector2i, new_z_index: int = 0) -> Node2D:
-	_log("spawn_new_entity_at - requested: scene=" + str(entity) + " pos=" + str(new_position) + " z=" + str(new_z_index))
+func _spawn_new_entity_at(entity: PackedScene, new_position: Vector2i, new_z_index: int = 0) -> Node2D:
+	_log("_spawn_new_entity_at - requested: scene=" + str(entity) + " pos=" + str(new_position) + " z=" + str(new_z_index))
 	var new_entity = entity.instantiate()
 	new_entity.z_index = new_z_index
 	add_child(new_entity)
 	# ensure position is a Vector2 for Node2D
 	new_entity.global_position = Vector2(new_position.x, new_position.y)
-	_log("spawn_new_entity_at - spawned: " + str(new_entity) + " global_pos=" + str(new_entity.global_position))
+	_log("_spawn_new_entity_at - spawned: " + str(new_entity) + " global_pos=" + str(new_entity.global_position))
 	return new_entity
 
 
-func draw_chunk(current_chunk_index: int) -> void:
-	_log("draw_chunk - start for index: " + str(current_chunk_index))
+func _draw_chunk(current_chunk_index: int) -> void:
+	_log("_draw_chunk - start for index: " + str(current_chunk_index))
 	
 	var upper_chunk_values = UPPER_CHUNK.values()
 	var upper_chunk_type = upper_chunk_values[randi() % upper_chunk_values.size()]
 	
 	if upper_chunk_type == UPPER_CHUNK.PARK or upper_chunk_type == UPPER_CHUNK.FACTORY:
-		upper_chunk_type = UPPER_CHUNK.CROSS
+		upper_chunk_type = UPPER_CHUNK.CROSS_START
 	
-	_log("draw_chunk - picked upper_chunk_type: " + str(upper_chunk_type))
+	_log("_draw_chunk - picked upper_chunk_type: " + str(upper_chunk_type))
 	
 	var lower_chunk_values = LOWER_CHUNK.values()
 	var lower_chunk_type = lower_chunk_values[randi() % lower_chunk_values.size()]
-	_log("draw_chunk - picked lower_chunk_type: " + str(lower_chunk_type))
 	
-	draw_upper_chunk_background(upper_chunk_type, current_chunk_index)
-	#draw_lower_chunk_background(lower_chunk_type, current_chunk_index)
-	_log("draw_chunk - completed for index: " + str(current_chunk_index))
+	if lower_chunk_type == LOWER_CHUNK.PARK:
+		lower_chunk_type = LOWER_CHUNK.CROSS_START
+	
+	_log("_draw_chunk - picked lower_chunk_type: " + str(lower_chunk_type))
+	
+	_draw_upper_chunk_background(upper_chunk_type, current_chunk_index)
+	_draw_lower_chunk_background(lower_chunk_type, current_chunk_index)
+	_log("_draw_chunk - completed for index: " + str(current_chunk_index))
 
 
 # Background generation
-func draw_upper_chunk_background(current_chunk_type: UPPER_CHUNK, current_chunk_index: int) -> void:
-	_log("draw_upper_chunk_background - start | type=" + str(current_chunk_type) + " index=" + str(current_chunk_index))
+func _draw_upper_chunk_background(current_chunk_type: UPPER_CHUNK, current_chunk_index: int) -> void:
+	_log("_draw_upper_chunk_background - start | type=" + str(current_chunk_type) + " index=" + str(current_chunk_index))
 	var start_y = 0  # upper chunk always starts at row 0
 	var start_x = current_chunk_index * CHUNK_TILE_WIDTH  # offset horizontally by index
 	
 	match current_chunk_type:
 		UPPER_CHUNK.LIGTH_BUILDING:
-			_log("draw_upper_chunk_background -> LIGTH_BUILDING")
+			_log("_draw_upper_chunk_background -> LIGTH_BUILDING")
 			_fill_light_building(start_x, start_y)
 		UPPER_CHUNK.BLUE_BUILDING:
 			_fill_blue_building(start_x, start_y)
-			_log("draw_upper_chunk_background -> BLUE_BUILDING not implemented")
-		UPPER_CHUNK.CROSS:
-			_fill_cross(start_x, start_y)
-			_log("draw_upper_chunk_background -> CROSS not implemented")
+			_log("_draw_upper_chunk_background -> BLUE_BUILDING not implemented")
+		UPPER_CHUNK.CROSS_START:
+			_fill_cross_horizon(start_x, start_y)
+			_log("_draw_upper_chunk_background -> CROSS not implemented")
 		UPPER_CHUNK.PARK:
-			_log("draw_upper_chunk_background -> PARK not implemented")
+			_log("_draw_upper_chunk_background -> PARK not implemented")
 		UPPER_CHUNK.FACTORY:
 			_fill_factory_building(start_x, start_y)
-			_log("draw_upper_chunk_background -> FACTORY not implemented")
+			_log("_draw_upper_chunk_background -> FACTORY not implemented")
 	
-	_log("draw_upper_chunk_background - completed | type=" + str(current_chunk_type))
+	_log("_draw_upper_chunk_background - completed | type=" + str(current_chunk_type))
 
 
 func _fill_light_building(start_x: int, start_y: int) -> void:
@@ -383,8 +411,8 @@ func _fill_blue_building(start_x: int, start_y: int) -> void:
 	
 	_log("_fill_blue_building - completed")
 
-func _fill_cross(start_x: int, start_y: int):
-	_log("_fill_cross - start | start_x=" + str(start_x) + " start_y=" + str(start_y))
+func _fill_cross_horizon(start_x: int, start_y: int):
+	_log("_fill_cross_horizon - start | start_x=" + str(start_x) + " start_y=" + str(start_y))
 	
 	# Upper sidewalk part
 	var sidewalk_indent = 0
@@ -416,12 +444,11 @@ func _fill_cross(start_x: int, start_y: int):
 		var atlas_coords_of_tile = ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
 		BACKGROUND_SCENE.set_cell(cell_pos, ATLAS_SOURCE_ID, atlas_coords_of_tile)
 	
-	_log("_fill_cross - upper sidewalk tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	_log("_fill_cross_horizon - upper sidewalk tiles placed: count=" + str(CHUNK_TILE_WIDTH))
 	
 	_log("_fill_blue_building - completed")
 
 func _fill_factory_building(start_x: int, start_y: int) -> void:
-	
 	# Drawing first floor of factory building
 	var first_floor_indent = 0
 	for i in range(0, CHUNK_TILE_WIDTH / FACTORY_BUILDING_WINDOWS_TILE_SIZE.x):
@@ -458,35 +485,139 @@ func _fill_factory_building(start_x: int, start_y: int) -> void:
 	
 	_log("_fill_blue_building - completed")
 
-func draw_lower_chunk_background(current_chunk_type: LOWER_CHUNK, current_chunk_index: int) -> void:
-	_log("draw_lower_chunk_background - start | type=" + str(current_chunk_type) + " index=" + str(current_chunk_index))
-	# TODO: Implementation pending
-	_log("draw_lower_chunk_background - not implemented yet")
-	pass
+func _draw_lower_chunk_background(current_chunk_type: LOWER_CHUNK, current_chunk_index: int) -> void:
+	_log("_draw_lower_chunk_background - start | type=" + str(current_chunk_type) + " index=" + str(current_chunk_index))
+	var start_y = 0  # upper chunk always starts at row 0
+	var start_x = current_chunk_index * CHUNK_TILE_WIDTH  # offset horizontally by index
+	
+	match current_chunk_type:
+		LOWER_CHUNK.GRASS:
+			_log("_draw_lower_chunk_background -> LIGTH_BUILDING")
+			_fill_grass_area(start_x, start_y)
+		LOWER_CHUNK.ROAD:
+			_fill_road_area(start_x, start_y)
+			_log("_draw_lower_chunk_background -> BLUE_BUILDING not implemented")
+		LOWER_CHUNK.PARK:
+			_log("_draw_lower_chunk_background -> PARK not implemented")
+		LOWER_CHUNK.CROSS_START:
+			_fill_cross_area(start_x, start_y)
+			_log("_draw_lower_chunk_background -> FACTORY not implemented")
+	
+	_log("_draw_lower_chunk_background - not implemented yet")
+
+func _fill_grass_area(start_x: int, start_y: int) -> void:
+	_log("_fill_grass_area - start | start_x=" + str(start_x) + " start_y=" + str(start_y))
+	
+	# lower grass part
+	for ii in range(LOWER_CHUNK_TILE_HEIGHT, CHUNK_TILE_HEIGHT):
+		for i in range(0, CHUNK_TILE_WIDTH):
+			var y_pos = start_y + ii
+			var x_pos = start_x + i
+			
+			var cell_pos = Vector2i(x_pos, y_pos)
+			var atlas_coords_index = randi() % GRASS_BACKGROUND_TILES_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+			var atlas_coords_of_tile = GRASS_BACKGROUND_TILES_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+			BACKGROUND_SCENE.set_cell(cell_pos, ATLAS_SOURCE_ID, atlas_coords_of_tile)
+			
+	_log("_fill_grass_area - upper sidewalk tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	_log("_fill_grass_area - completed")
+
+func _fill_road_area(start_x: int, start_y: int) -> void:
+	_log("_fill_road_area - start | start_x=" + str(start_x) + " start_y=" + str(start_y))
+	
+	# lower sidewalk part
+	for ii in range(LOWER_CHUNK_TILE_HEIGHT, CHUNK_TILE_HEIGHT - 2):
+		for i in range(0, CHUNK_TILE_WIDTH):
+			var y_pos = start_y + ii
+			var x_pos = start_x + i
+			
+			var cell_pos = Vector2i(x_pos, y_pos)
+			var atlas_coords_index = randi() % SIDEWALK_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+			var atlas_coords_of_tile = SIDEWALK_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+			BACKGROUND_SCENE.set_cell(cell_pos, ATLAS_SOURCE_ID, atlas_coords_of_tile)
+	
+	_log("_fill_road_area - lower sidewalk tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	# lower road part
+	for ii in range(CHUNK_TILE_HEIGHT - 2, CHUNK_TILE_HEIGHT):
+		for i in range(0, CHUNK_TILE_WIDTH):
+			var y_pos = start_y + ii
+			var x_pos = start_x + i
+			
+			var cell_pos = Vector2i(x_pos, y_pos)
+			var atlas_coords_index = randi() % ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+			var atlas_coords_of_tile = ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+			BACKGROUND_SCENE.set_cell(cell_pos, ATLAS_SOURCE_ID, atlas_coords_of_tile)
+			
+	_log("_fill_road_area - lower sidewalk tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	_log("_fill_road_area - completed")
+
+func _fill_cross_area(start_x: int, start_y: int) -> void:
+	_log("_fill_cross_area - start | start_x=" + str(start_x) + " start_y=" + str(start_y))
+	
+	# Lower sidewalk part
+	for ii in range(LOWER_CHUNK_TILE_HEIGHT, CHUNK_TILE_HEIGHT):
+		var sidewalk_indent = 0
+		for i in range(0, 4):
+			var y_pos = start_y + ii
+			var x_pos = start_x + sidewalk_indent
+			
+			var indent_flag = i % 4
+			if indent_flag == 1 or indent_flag == 3:
+				sidewalk_indent += 7
+			else:
+				sidewalk_indent += 1
+			
+			var cell_pos = Vector2i(x_pos, y_pos)
+			var atlas_coords_index = randi() % SIDEWALK_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+			var atlas_coords_of_tile = SIDEWALK_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+			if !((indent_flag == 2 or indent_flag == 3) and (CHUNK_TILE_HEIGHT - 2 <= ii)):
+				BACKGROUND_SCENE.set_cell(cell_pos, ATLAS_SOURCE_ID, atlas_coords_of_tile)
+	
+	# Upper road part
+	for ii in range(LOWER_CHUNK_TILE_HEIGHT, CHUNK_TILE_HEIGHT):
+		var road_indent = 0
+		for i in range(0, CHUNK_TILE_WIDTH):
+			var y_pos = start_y + ii
+			var x_pos = start_x + road_indent
+			
+			road_indent += 1
+			
+			var cell_pos = Vector2i(x_pos, y_pos)
+			var atlas_coords_index = randi() % ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+			var atlas_coords_of_tile = ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+			if ((1 < i and i < CHUNK_TILE_WIDTH - 2) or (CHUNK_TILE_WIDTH - 3 < i and CHUNK_TILE_HEIGHT - 3 < ii)):
+				BACKGROUND_SCENE.set_cell(cell_pos, ATLAS_SOURCE_ID, atlas_coords_of_tile)
+	
+	_log("_fill_cross_area - upper sidewalk tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	_log("_fill_cross_area - completed")
 
 
 # Decorations generation
-func draw_chunk_decorations(current_chunk: int) -> void:
-	_log("draw_chunk_decorations - start | index=" + str(current_chunk))
+func _draw_chunk_decorations(current_chunk: int) -> void:
+	_log("_draw_chunk_decorations - start | index=" + str(current_chunk))
 	# TODO: Implementation pending
-	_log("draw_chunk_decorations - not implemented yet")
+	_log("_draw_chunk_decorations - not implemented yet")
 	pass
 
 
 # Grass generation
-func draw_chunk_grass(current_chunk: int) -> void:
-	_log("draw_chunk_grass - start | index=" + str(current_chunk))
+func _draw_chunk_grass(current_chunk: int) -> void:
+	_log("_draw_chunk_grass - start | index=" + str(current_chunk))
 	var start_x = current_chunk * CHUNK_TILE_WIDTH * 16
 	var start_y = 65
 	
-	spawn_new_entity_at(GrassScene, Vector2i(start_x, start_y))
-	spawn_new_entity_at(GrassScene, Vector2i(start_x + 16 * 4, start_y))
-	_log("draw_chunk_grass - grass entities spawned for chunk " + str(current_chunk))
+	_spawn_new_entity_at(GrassScene, Vector2i(start_x, start_y))
+	_spawn_new_entity_at(GrassScene, Vector2i(start_x + 16 * 4, start_y))
+	_log("_draw_chunk_grass - grass entities spawned for chunk " + str(current_chunk))
 
 
 # Environments generation
-func draw_chunk_environments(current_chunk: int) -> void:
-	_log("draw_chunk_environments - start | index=" + str(current_chunk))
+func _draw_chunk_environments(current_chunk: int) -> void:
+	_log("_draw_chunk_environments - start | index=" + str(current_chunk))
 	# TODO: Implementation pending
-	_log("draw_chunk_environments - not implemented yet")
+	_log("_draw_chunk_environments - not implemented yet")
 	pass
