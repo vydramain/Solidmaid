@@ -33,7 +33,7 @@ var UPPER_CHUNK_DECORATION_CROSS
 
 var MAX_CHUNKS: int = 10
 
-var ATLAS_SOURCE_ID = 0
+var ATLAS_SOURCE_ID = 2
 
 var ROAD_BACKGROUND_TILE_SIZE = Vector2i(2, 3)
 var ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ Vector2i(4, 0) ]
@@ -87,7 +87,7 @@ var LIGHT_BUILDING_BASEMENT_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [
 	Vector2i(16, 12),
 ]
 
-var LIGHT_BUILDING_WINDOWS_TILE_SIZE = Vector2i(2, 2)
+var LIGHT_BUILDING_WINDOWS_TILE_SIZE = Vector2i(4, 2)
 var LIGHT_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [
 	Vector2i(10, 8),
 	Vector2i(14, 8),
@@ -123,12 +123,13 @@ func _ready() -> void:
 	_log("_ready - start")
 	randomize()
 	
-	#_log("_ready - drawing initial upper chunk: LIGHT_BUILDING at index 0")
-	#draw_upper_chunk_background(UPPER_CHUNK.LIGTH_BUILDING, 0)
-	#
+	_log("_ready - drawing initial upper chunk: LIGHT_BUILDING at index 0")
+	draw_upper_chunk_background(UPPER_CHUNK.LIGTH_BUILDING, 0)
+	
 	#_log("_ready - drawing initial lower chunk: GRASS at index 0")
 	#draw_lower_chunk_background(LOWER_CHUNK.GRASS, 0)
-	#_log("_ready - completed initial drawing")
+	
+	_log("_ready - completed initial drawing")
 
 
 func spawn_new_entity_at(entity: PackedScene, new_position: Vector2i, new_z_index: int = 0) -> Node2D:
@@ -184,20 +185,83 @@ func _fill_light_building(start_x: int, start_y: int) -> void:
 	_log("_fill_light_building - start | start_x=" + str(start_x) + " start_y=" + str(start_y))
 	
 	# Drawing basement (tile coords, not pixels)
-	for i in range(0, CHUNK_TILE_WIDTH):
-		var cell_pos = Vector2i(start_x + i, start_y + 5) # tile coordinates
+	for i in range(0, CHUNK_TILE_WIDTH / LIGHT_BUILDING_BASEMENT_TILE_SIZE.x):
+		var x_pos = start_x + (i * LIGHT_BUILDING_BASEMENT_TILE_SIZE.x)         # Next x position depends on basement legth
+		var y_pos = start_y + 4                                                 # Basement position are same for all chunks
+		var cell_pos = Vector2i(x_pos, y_pos)                                   # Tile coordinates based on each chunk
 		var atlas_coords_index = randi() % LIGHT_BUILDING_BASEMENT_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
 		var atlas_coords_of_tile = LIGHT_BUILDING_BASEMENT_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
-		BACKGROUND_SCENE.set_cell(cell_pos, ATLAS_SOURCE_ID, atlas_coords_of_tile)
+		for t in LIGHT_BUILDING_BASEMENT_TILE_SIZE.x:
+			BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t, 0), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t, 0))
+		
 	_log("_fill_light_building - basement tiles placed: count=" + str(CHUNK_TILE_WIDTH))
 	
-	# Drawing windows
-	for i in range(0, CHUNK_TILE_WIDTH):
-		var cell_pos = Vector2i(start_x + i, start_y)
+	# Drawing first line of windows
+	var first_windows_indent = 0
+	for i in range(0, CHUNK_TILE_WIDTH / (LIGHT_BUILDING_WINDOWS_TILE_SIZE.x + (LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x * 0.5))):
+		var x_pos = start_x + first_windows_indent
+		var y_pos = start_y + (0 * LIGHT_BUILDING_WINDOWS_TILE_SIZE.y)
+		
+		if i % 2 == 0:
+			first_windows_indent += (LIGHT_BUILDING_WINDOWS_TILE_SIZE.x + LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x)
+		else:
+			first_windows_indent += (LIGHT_BUILDING_WINDOWS_TILE_SIZE.x)
+		
+		var cell_pos = Vector2i(x_pos, y_pos)
 		var atlas_coords_index = randi() % LIGHT_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
 		var atlas_coords_of_tile = LIGHT_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
-		BACKGROUND_SCENE.set_cell(cell_pos, ATLAS_SOURCE_ID, atlas_coords_of_tile)
-	_log("_fill_light_building - window tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+		for t_y in LIGHT_BUILDING_WINDOWS_TILE_SIZE.y:
+			for t_x in LIGHT_BUILDING_WINDOWS_TILE_SIZE.x:
+				BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t_x, t_y), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t_x, t_y))
+		
+	_log("_fill_light_building - first line of window tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	# Drawing second line of windows
+	var second_windows_indent = 0
+	for i in range(0, CHUNK_TILE_WIDTH / (LIGHT_BUILDING_WINDOWS_TILE_SIZE.x + (LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x * 0.5))):
+		var x_pos = start_x + second_windows_indent
+		var y_pos = start_y + (1 * LIGHT_BUILDING_WINDOWS_TILE_SIZE.y)
+		
+		if i % 2 == 0:
+			second_windows_indent += (LIGHT_BUILDING_WINDOWS_TILE_SIZE.x + LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x)
+		else:
+			second_windows_indent += (LIGHT_BUILDING_WINDOWS_TILE_SIZE.x)
+		
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % LIGHT_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = LIGHT_BUILDING_WINDOWS_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		for t_y in LIGHT_BUILDING_WINDOWS_TILE_SIZE.y:
+			for t_x in LIGHT_BUILDING_WINDOWS_TILE_SIZE.x:
+				BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t_x, t_y), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t_x, t_y))
+		
+	_log("_fill_light_building - second line of window tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	# Drawing windows entrances
+	for i in range(0, CHUNK_TILE_WIDTH / (LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x + (LIGHT_BUILDING_WINDOWS_TILE_SIZE.x * 2))):
+		var x_pos = start_x + (i * (LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x + (LIGHT_BUILDING_WINDOWS_TILE_SIZE.x * 2))) + LIGHT_BUILDING_WINDOWS_TILE_SIZE.x
+		var y_pos = start_y + (0 * LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.y)
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % LIGHT_BUILDING_ENTRANCE_WINDOW_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = LIGHT_BUILDING_ENTRANCE_WINDOW_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		for t_y in LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.y:
+			for t_x in LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x:
+				BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t_x, t_y), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t_x, t_y))
+		
+	_log("_fill_light_building - windows entrances tiles placed: count=" + str(CHUNK_TILE_WIDTH))
+	
+	# Drawing entrances
+	var entrances_indent
+	for i in range(0, CHUNK_TILE_WIDTH / (LIGHT_BUILDING_ENTRANCE_TILE_SIZE.x + (LIGHT_BUILDING_WINDOWS_TILE_SIZE.x * 2))):
+		var x_pos = start_x + (i * (LIGHT_BUILDING_ENTRANCE_TILE_SIZE.x + (LIGHT_BUILDING_WINDOWS_TILE_SIZE.x * 2))) + LIGHT_BUILDING_WINDOWS_TILE_SIZE.x
+		var y_pos = start_y + (1 * LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.y)
+		var cell_pos = Vector2i(x_pos, y_pos)
+		var atlas_coords_index = randi() % LIGHT_BUILDING_ENTRANCE_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.size()
+		var atlas_coords_of_tile = LIGHT_BUILDING_ENTRANCE_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS[atlas_coords_index]
+		for t_y in LIGHT_BUILDING_ENTRANCE_TILE_SIZE.y:
+			for t_x in LIGHT_BUILDING_ENTRANCE_TILE_SIZE.x:
+				BACKGROUND_SCENE.set_cell(cell_pos + Vector2i(t_x, t_y), ATLAS_SOURCE_ID, atlas_coords_of_tile + Vector2i(t_x, t_y))
+		
+	_log("_fill_light_building - entrances tiles placed: count=" + str(CHUNK_TILE_WIDTH))
 	
 	_log("_fill_light_building - completed")
 
