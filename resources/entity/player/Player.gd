@@ -16,49 +16,56 @@ var respawn_position := Vector2(100, 100)
 var attack_ready: bool = true
 
 func _ready() -> void:
-	print("Spawned object in groups: " + str(self.get_groups()))
-	print(self.name, " ready, AnimationPlayer: ", ANIMATION_PLAYER)
+	Logger.log(self, "Spawned object. Groups: " + str(self.get_groups()))
+	Logger.log(self, "Node name: %s, AnimationPlayer ready: %s" % [self.name, ANIMATION_PLAYER])
 	
+	# Connect timers
 	ATTACK_TIMER.timeout.connect(_on_attack_timer_timeout)
 	INVINCIBILITY_TIMER.timeout.connect(_on_invincibility_timer_timeout)
+	Logger.log(self, "Timers connected successfully.")
 
 func _on_attack_timer_timeout() -> void:
 	attack_ready = true
+	Logger.log(self, "Attack timer ended. Player can attack again.")
 
 func _physics_process(delta):
 	var input_dir = get_input_direction()
+	
 	if input_dir != Vector2.ZERO:
-		## PLAYER IS MOVING
+		# Player is moving
 		velocity = SPEED * input_dir
 		ANIMATION_PLAYER.play("Moving")
 		ANIMATION_PLAYER.speed_scale = 2.0
+		
 		if input_dir.x != 0 and sign(SPRITE.scale.x) != sign(input_dir.x):
 			SPRITE.scale.x *= -1
+			Logger.log(self, "Sprite flipped. New scale.x: %s" % SPRITE.scale.x)
 	else:
-		## PLAYER IS IDLE
+		# Player is idle
 		velocity = Vector2.ZERO
 		ANIMATION_PLAYER.play("Idle")
-	
+
+	# Handle attack input
 	if Input.is_action_pressed("action_attack") and attack_ready:
-		# var direction = self.global_position.direction_to(get_global_mouse_position())
 		var attack_dir: Vector2 = Vector2.ZERO
 		attack_dir.x = Input.get_action_strength("look_right") - Input.get_action_strength("look_left")
 		attack_dir.y = Input.get_action_strength("look_down") - Input.get_action_strength("look_up")
+		
 		if attack_dir != Vector2.ZERO:
 			throw_projecttile(attack_dir)
+			Logger.log(self, "Projectile thrown in direction: %s" % attack_dir)
 	
 	move_and_slide()
-
 
 func _on_died() -> void:
 	var main = get_tree().root.get_node("Main") # Adjust path if needed
 	if main == null or not main.has_method("load_level"):
-		push_error("Main node with 'load_level' method not found in scene tree!")
+		Logger.log(self, "[ERROR] Main node with 'load_level' method not found!")
 		return
 
 	var current_level = main.get("current_level")
 	var scene_file = current_level.scene_file_path if current_level else ""
-	print("Current level: ", scene_file)
+	Logger.log(self, "Player died. Current level: %s" % scene_file)
 
 	var next_level: PackedScene = null
 	if scene_file == HOME_LEVEL_PATH:
@@ -67,27 +74,29 @@ func _on_died() -> void:
 		next_level = HOME_LEVEL
 
 	if next_level:
+		Logger.log(self, "Loading next level: %s" % next_level.resource_path)
 		main.load_level(next_level)
 	else:
-		push_error("Unable to determine next level from: " + str(scene_file))
+		Logger.log(self, "[ERROR] Unable to determine next level from scene file: %s" % str(scene_file))
 		
 	self.die()
 
-
-func throw_projecttile(direction) -> void:
+func throw_projecttile(direction: Vector2) -> void:
 	if PROJECTTILE_SCENE:
 		var projecttile_scene = PROJECTTILE_SCENE.instantiate()
 		get_tree().current_scene.add_child(projecttile_scene)
 		projecttile_scene.global_position = self.global_position
 		
-		var dagger_rotation = direction.angle()
-		projecttile_scene.rotation = dagger_rotation
+		var projectile_rotation = direction.angle()
+		projecttile_scene.rotation = projectile_rotation
 		
 		attack_ready = false
 		ATTACK_TIMER.start()
+		Logger.log(self, "Attack cooldown started.")
 		
 		invincibility = true
 		INVINCIBILITY_TIMER.start()
+		Logger.log(self, "Player is temporarily invincible.")
 
 func get_input_direction() -> Vector2:
 	var input_dir: Vector2 = Vector2.ZERO

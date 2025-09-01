@@ -7,23 +7,32 @@ extends Node2D
 
 var current_level: Node = null
 
-
 func _ready() -> void:
-	print("[Main] Ready. Loading initial level...")
+	Logger.log(self, "Main node ready. Attempting to load initial level...")
 	if initial_level_scene:
 		load_level(initial_level_scene)
 	else:
-		push_error("[Main] No initial level assigned!")
+		Logger.log(self, "No initial level assigned! Cannot proceed with level loading.")
 
 
 func load_level(scene: PackedScene) -> void:
-	# Clean up old level
+	# Clean up the previous level if it exists
 	if current_level and current_level.is_inside_tree():
+		Logger.log(self, "Cleaning up previous level: '%s'" % current_level.name)
 		current_level.queue_free()
 		current_level = null
 	
-	print("[Main] Instantiating new level: ", scene.resource_path)
+	if not scene:
+		Logger.log(self, "Attempted to load a null scene. Aborting load.")
+		return
 	
-	# Instance and add to container
+	Logger.log(self, "Instantiating new level from scene: '%s'" % scene.resource_path)
+	
+	# Instance the new level and add it to the container
 	current_level = scene.instantiate()
+	if not current_level:
+		Logger.log(self, "Failed to instantiate scene: '%s'" % scene.resource_path)
+		return
+	
 	level_container.add_child(current_level)
+	Logger.log(self, "Level '%s' successfully loaded and added to LevelContainer." % current_level.name)
