@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=4 uid="uid://c7mxfrjlts61m"]
 
-[ext_resource type="Script" uid="uid://bauq1la5fw46a" path="res://resources/levels/outside/Outside_Map_Layer.gd" id="1_aa5ui"]
-[ext_resource type="TileSet" uid="uid://sps8t0n70j1f" path="res://resources/levels/outside/Tile_Set_For_Outside_Map_Layer.tres" id="2_aa5ui"]
+[ext_resource type="Script" uid="uid://bauq1la5fw46a" path="res://resources/levels/outside/map_layer/Outside_Map_Layer.gd" id="1_aa5ui"]
+[ext_resource type="TileSet" uid="uid://sps8t0n70j1f" path="res://resources/levels/outside/map_layer/Tile_Set_For_Outside_Map_Layer.tres" id="2_aa5ui"]
 [ext_resource type="Texture2D" uid="uid://mumoryw1urhl" path="res://assets/textures/outside/cross.png" id="6_ye08u"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_x0vip"]
