@@ -4,14 +4,14 @@
 
 *Solidmaid: Alkoldun Vasiliusavich* is a 2D pixel art beat'em up game set in an alternate 1990s Russia, blending gritty post-Soviet vibes with Russian folklore. Play as Vasiliusavich, a mystical alcoholic navigating a procedurally generated street filled with foes like gopniks, leshy-dachnitsy, and other quirky enemies. Buff up with alcohol and snacks, fight at lampposts, and multitask at the factory to craft lampposts while battling bosses. With roguelite progression, tactical lamppost upgrades, and a satirical twist, this game offers replayable chaos and humor.
 
-Check out the [Game Design Document (GDD)](docs/GDD.md) for detailed game mechanics and vision.
-
 ---
 
 ## Content
 
 - [Installation](#installation)
 - [Features](#features)
+- [Codestyle](#codestyle)
+- [Design Document](#design-document)
 - [Requirements](#requirements)
 - [Author](#author)
 - [License](#license)
@@ -44,6 +44,18 @@ No additional prerequisites are required, as Godot Engine includes all necessary
 - **Multitasking Factory Fights:** Battle bosses while assembling lampposts in a rhythm-based mini-game.
 - **Cultural Satire:** Face evolving enemies blending 90s memes and folklore, with random "folklore mix" events.
 - **Replayability:** Campaign (8 levels), endless mode, achievements (e.g., "Sober Challenge"), and shareable level seeds.
+
+---
+
+## Codestyle
+
+For consistent code quality, follow the [Solidmaid Codestyle (CGS)](docs/CGS.md).
+
+---
+
+## Design Document
+
+For detailed game mechanics, story, and level design, see the [Solidmaid Design Document (GDD)](docs/GDD.md).
 
 ---
 
