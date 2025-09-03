@@ -3,7 +3,7 @@ class_name Outside_Upper_Chunk_Drawer
 
 var background_scene: TileMapLayer
 
-func draw_upper_chunk(background_scene: TileMapLayer, current_chunk_type: int, current_chunk_index: int) -> void:
+func draw_upper_chunk(background_scene: TileMapLayer, current_chunk_type: Outside_Constants.UPPER_CHUNK, current_chunk_index: int) -> void:
 	Logger.log(self, "[DRAW CHUNK] Starting upper chunk drawing | type=" + str(current_chunk_type) + " | index=" + str(current_chunk_index))
 	var start_y = 0  # upper chunk always starts at row 0
 	var start_x = current_chunk_index * Outside_Constants.CHUNK_TILE_WIDTH
