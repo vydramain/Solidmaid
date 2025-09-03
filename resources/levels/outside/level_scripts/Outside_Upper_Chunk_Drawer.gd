@@ -3,29 +3,31 @@ class_name Outside_Upper_Chunk_Drawer
 
 var background_scene: TileMapLayer
 
-func draw_upper_chunk(background_scene: TileMapLayer, current_chunk_type: Outside_Constants.UPPER_CHUNK, current_chunk_index: int) -> void:
+func draw_upper_chunk(current_chunk_type: Outside_Constants.UPPER_CHUNK, current_chunk_index: int) -> void:
 	Logger.log(self, "[DRAW CHUNK] Starting upper chunk drawing | type=" + str(current_chunk_type) + " | index=" + str(current_chunk_index))
 	var start_y = 0  # upper chunk always starts at row 0
 	var start_x = current_chunk_index * Outside_Constants.CHUNK_TILE_WIDTH
 	
 	match current_chunk_type:
 		Outside_Constants.UPPER_CHUNK.LIGTH_BUILDING:
-			_fill_light_building(background_scene, start_x, start_y)
+			_fill_light_building(start_x, start_y)
 		Outside_Constants.UPPER_CHUNK.BLUE_BUILDING:
-			_fill_blue_building(background_scene, start_x, start_y)
+			_fill_blue_building(start_x, start_y)
 		Outside_Constants.UPPER_CHUNK.CROSS_START:
-			_fill_cross_horizon(background_scene, start_x, start_y)
+			_fill_cross_horizon(start_x, start_y)
+		Outside_Constants.UPPER_CHUNK.CROSS_END:
+			_fill_cross_horizon(start_x, start_y)
 		Outside_Constants.UPPER_CHUNK.PARK:
 			Logger.log(self, "[DRAW CHUNK] PARK chunk type not implemented yet")
 		Outside_Constants.UPPER_CHUNK.FACTORY:
-			_fill_factory_building(background_scene, start_x, start_y)
+			_fill_factory_building(start_x, start_y)
 		_:
 			Logger.log(self, "[DRAW CHUNK] Unknown upper chunk type: " + str(current_chunk_type))
 	
 	Logger.log(self, "[DRAW CHUNK] Completed drawing upper chunk | type=" + str(current_chunk_type))
 
 
-func _fill_light_building(background_scene: TileMapLayer, start_x: int, start_y: int) -> void:
+func _fill_light_building(start_x: int, start_y: int) -> void:
 	Logger.log(self, "[LIGHT BUILDING] Starting drawing at position (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	# Basement
@@ -96,7 +98,7 @@ func _fill_light_building(background_scene: TileMapLayer, start_x: int, start_y:
 	Logger.log(self, "[LIGHT BUILDING] Completed drawing light building")
 
 
-func _fill_blue_building(background_scene: TileMapLayer, start_x: int, start_y: int) -> void:
+func _fill_blue_building(start_x: int, start_y: int) -> void:
 	Logger.log(self, "[BLUE BUILDING] Starting drawing at position (" + str(start_x) + ", " + str(start_y) + ")")
 
 	# Basement
@@ -143,7 +145,7 @@ func _fill_blue_building(background_scene: TileMapLayer, start_x: int, start_y: 
 	Logger.log(self, "[BLUE BUILDING] Completed drawing blue building")
 
 
-func _fill_cross_horizon(background_scene: TileMapLayer, start_x: int, start_y: int) -> void:
+func _fill_cross_horizon(start_x: int, start_y: int) -> void:
 	Logger.log(self, "[CROSS HORIZON] Starting drawing at position (" + str(start_x) + ", " + str(start_y) + ")")
 
 	var sidewalk_indent = 0
@@ -164,7 +166,7 @@ func _fill_cross_horizon(background_scene: TileMapLayer, start_x: int, start_y: 
 	Logger.log(self, "[CROSS HORIZON] Completed drawing cross horizon")
 
 
-func _fill_factory_building(background_scene: TileMapLayer, start_x: int, start_y: int) -> void:
+func _fill_factory_building(start_x: int, start_y: int) -> void:
 	Logger.log(self, "[FACTORY BUILDING] Starting drawing factory building at position (" + str(start_x) + ", " + str(start_y) + ")")
 
 	for floor in range(2):
