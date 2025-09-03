@@ -69,8 +69,8 @@ func _draw_chunks(chunks_amount: int) -> void:
 		Logger.log(self, "[ChunkManager] For lower chunk %d choosed type: '%d' choosed upper chunk: '%d'" % [i, current_lower_chunk_type, current_upper_chunk_type])
 		
 		# Draw upper and lower chunks
-		upper_drawer.draw_upper_chunk(current_upper_chunk_type, i)
 		lower_drawer.draw_lower_chunk(current_lower_chunk_type, i)
+		upper_drawer.draw_upper_chunk(current_upper_chunk_type, i)
 		lower_decorations_drawer.draw_lower_decorations(current_lower_chunk_type, i)
 		
 		Logger.log(self, "[ChunkManager] Chunk %d drawn successfully" % i)
