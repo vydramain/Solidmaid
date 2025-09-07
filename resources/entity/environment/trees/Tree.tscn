@@ -50,6 +50,9 @@ _data = {
 collision_layer = 1
 collision_mask = 31
 script = ExtResource("2_f57ga")
+TILE_SIZE = 8
+TILE_HEIGHT = 3
+TILE_WIDTH = 2
 
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_mwon1")

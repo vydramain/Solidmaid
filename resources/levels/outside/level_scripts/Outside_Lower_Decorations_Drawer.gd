@@ -1,5 +1,6 @@
 extends Node
 class_name Outside_Lower_Decorations_Drawer
+class_name Outside_Lower_Decorations_Drawer
 
 var decorations_scene: TileMapLayer
 
