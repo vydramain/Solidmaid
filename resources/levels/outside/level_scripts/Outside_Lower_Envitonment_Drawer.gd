@@ -3,6 +3,7 @@ class_name Outside_Lower_Environment_Drawer
 
 var environment_layer_1: Node2D  # For non-collision objects (grass)
 var environment_layer_2: Node2D  # For collision/interactive objects (trees)
+var decorations_scene: TileMapLayer  # Reference to check for existing decorations
 
 ## Environment configuration data class
 class EnvironmentConfig:
@@ -12,19 +13,24 @@ class EnvironmentConfig:
 	var rotation_variance: float = 0
 	var scene_path: String = ""
 	var layer_priority: int = 0  # 0 = layer_1 (no collision), 1 = layer_2 (collision)
+	var tile_width: int = 1  # Width in tiles
+	var tile_height: int = 1  # Height in tiles
 	
-	func _init(p_density: float = 0.15, p_scene_path: String = "", p_min_spacing: int = 2, p_layer: int = 0):
+	func _init(p_density: float = 0.15, p_scene_path: String = "", p_min_spacing: int = 2, p_layer: int = 0, p_tile_width: int = 1, p_tile_height: int = 1):
 		density = p_density
 		scene_path = p_scene_path
 		min_spacing = p_min_spacing
 		layer_priority = p_layer
+		tile_width = p_tile_width
+		tile_height = p_tile_height
 
 ## Environment placement strategy interface
 class PlacementStrategy:
 	var _rng: RandomNumberGenerator
 	var _placed_positions: Dictionary = {}  # Separate tracking per layer
+	var _decorations_tilemap: TileMapLayer
 	
-	func _init(seed_value: int = -1):
+	func _init(seed_value: int = -1, decorations_ref: TileMapLayer = null):
 		_rng = RandomNumberGenerator.new()
 		if seed_value != -1:
 			_rng.seed = seed_value
@@ -32,11 +38,30 @@ class PlacementStrategy:
 			_rng.randomize()
 		_placed_positions[0] = []  # Layer 1 positions
 		_placed_positions[1] = []  # Layer 2 positions
+		_decorations_tilemap = decorations_ref
 	
-	func can_place_at(col: int, row: int, config: EnvironmentConfig) -> bool:
-		var current_pos = Vector2(col, row)
+	func _is_area_free_of_decorations(tile_x: int, tile_y: int, width: int, height: int) -> bool:
+		if not _decorations_tilemap:
+			return true  # If no decorations reference, assume free
+		
+		# Check all tiles in the area
+		for y in range(tile_y, tile_y + height):
+			for x in range(tile_x, tile_x + width):
+				var cell_pos = Vector2i(x, y)
+				if _decorations_tilemap.get_cell_source_id(cell_pos) != -1:
+					# There's a decoration tile here
+					return false
+		return true
+	
+	func can_place_at(tile_x: int, tile_y: int, config: EnvironmentConfig) -> bool:
+		# Check if area is free of decorations
+		if not _is_area_free_of_decorations(tile_x, tile_y, config.tile_width, config.tile_height):
+			return false
+		
+		var current_pos = Vector2(tile_x, tile_y)
 		var layer_positions = _placed_positions.get(config.layer_priority, [])
 		
+		# Check spacing with other placed objects
 		for placed_pos in layer_positions:
 			if current_pos.distance_to(placed_pos) < config.min_spacing:
 				return false
@@ -60,21 +85,35 @@ class PlacementStrategy:
 			Logger.log(self, "[PLACEMENT_ERROR] Target parent node is null for layer " + str(config.layer_priority))
 			return 0
 		
-		Logger.log(target_parent, "[PLACEMENT_START] Layer " + str(config.layer_priority) + " | Area: (" + str(start_x) + "," + str(start_y) + ") " + str(width) + "x" + str(height) + " | Scene: " + config.scene_path)
+		Logger.log(target_parent, "[PLACEMENT_START] Layer " + str(config.layer_priority) + " | Area: (" + str(start_x) + "," + str(start_y) + ") " + str(width) + "x" + str(height) + " | Scene: " + config.scene_path + " | Tile size: " + str(config.tile_width) + "x" + str(config.tile_height))
 		
-		for row in range(height):
-			for col in range(width):
-				if _should_place_object(col, row, config):
-					var world_pos = _calculate_world_position(start_x + col, start_y + row, config)
-					_instantiate_object(scene_resource, world_pos, target_parent, config)
-					_placed_positions[config.layer_priority].append(Vector2(col, row))
-					placed_count += 1
+		# Place objects with proper tile spacing
+		var y = 0
+		while y < height:
+			var x = 0
+			while x < width:
+				var tile_x = start_x + x
+				var tile_y = start_y + y
+				
+				# Check if we can fit the object within bounds
+				if x + config.tile_width <= width and y + config.tile_height <= height:
+					if _should_place_object(x, y, config, tile_x, tile_y):
+						var world_pos = _calculate_world_position(tile_x, tile_y, config)
+						_instantiate_object(scene_resource, world_pos, target_parent, config)
+						_placed_positions[config.layer_priority].append(Vector2(x, y))
+						placed_count += 1
+				
+				# Move to next placement position based on tile width
+				x += config.tile_width
+			
+			# Move to next row based on tile height
+			y += config.tile_height
 		
 		Logger.log(target_parent, "[PLACEMENT_COMPLETE] Layer " + str(config.layer_priority) + " | Placed " + str(placed_count) + " objects")
 		return placed_count
 	
-	func _should_place_object(col: int, row: int, config: EnvironmentConfig) -> bool:
-		return _rng.randf() <= config.density and can_place_at(col, row, config)
+	func _should_place_object(local_x: int, local_y: int, config: EnvironmentConfig, tile_x: int, tile_y: int) -> bool:
+		return _rng.randf() <= config.density and can_place_at(tile_x, tile_y, config)
 	
 	func _calculate_world_position(tile_x: int, tile_y: int, config: EnvironmentConfig) -> Vector2:
 		var tile_size: int = Outside_Constants.TILE_SIZE if "TILE_SIZE" in Outside_Constants else 32
@@ -101,7 +140,7 @@ class PlacementStrategy:
 			instance.rotation = _rng.randf_range(-PI * config.rotation_variance, PI * config.rotation_variance)
 		
 		parent.add_child(instance)
-		Logger.log(self, "[OBJECT_PLACED] " + scene.resource_path.get_file() + " at " + str(position) + " on layer " + str(config.layer_priority))
+		Logger.log(self, "[OBJECT_PLACED] " + scene.resource_path.get_file() + " at " + str(position) + " on layer " + str(config.layer_priority) + " | Tile area: " + str(config.tile_width) + "x" + str(config.tile_height))
 
 ## Main environment drawer class
 @export var use_fixed_seed: bool = false
@@ -121,31 +160,47 @@ func _ready() -> void:
 func _initialize_configs() -> void:
 	Logger.log(self, "[CONFIG] Initializing environment configurations")
 	
-	# Trees go to layer 2 (collision/interaction layer)
+	# Trees go to layer 2 (collision/interaction layer) - 4 tiles wide, 2 tiles high
+	var tree_scene_addr = "res://resources/entity/environment/trees/Tree.tscn"
+	var tree_scene = load(tree_scene_addr)
+	var tree_instance = tree_scene.instantiate()
 	_tree_config = EnvironmentConfig.new(
-		0.15,  # density
-		"res://resources/entity/environment/trees/Tree.tscn",
-		3,     # min_spacing
-		1      # layer_priority: 1 = environment_layer_2 (collision)
+		1,                        # density
+		tree_scene_addr,
+		0,                           # min_spacing
+		1,                           # layer_priority: 1 = environment_layer_2 (collision)
+		tree_instance.tile_width,       # tile_width
+		tree_instance.tile_height,      # tile_height
 	)
 	_tree_config.position_variance = 0
 	_tree_config.rotation_variance = 0
 	
-	# Grass goes to layer 1 (no collision layer)
+	# Free the instance if you don't need it
+	tree_instance.queue_free()
+	
+	# Grass goes to layer 1 (no collision layer) - assuming 1 tile size
+	var grass_scene_addr = "res://resources/entity/environment/grass/Grass.tscn"
+	var grass_scene = load(grass_scene_addr)
+	var grass_instance = grass_scene.instantiate()
 	_grass_config = EnvironmentConfig.new(
-		0.8,   # density
-		"res://resources/entity/environment/grass/Grass.tscn",
-		1,     # min_spacing
-		0      # layer_priority: 0 = environment_layer_1 (no collision)
+		1,                              # density
+		grass_scene_addr,
+		2,                              # min_spacing
+		0,                              # layer_priority: 0 = environment_layer_1 (no collision)
+		grass_instance.tile_width,      # tile_width
+		grass_instance.tile_height,     # tile_height
 	)
 	_grass_config.position_variance = 0
 	_grass_config.rotation_variance = 0
 	
-	Logger.log(self, "[CONFIG] Configurations set | Trees: layer_2 (collision), density=" + str(_tree_config.density) + " | Grass: layer_1 (no collision), density=" + str(_grass_config.density))
+	# Free the instance if you don't need it
+	grass_instance.queue_free()
+	
+	Logger.log(self, "[CONFIG] Configurations set | Trees: layer_2 (collision), density=" + str(_tree_config.density) + ", size=" + str(_tree_config.tile_width) + "x" + str(_tree_config.tile_height) + " | Grass: layer_1 (no collision), density=" + str(_grass_config.density) + ", size=" + str(_grass_config.tile_width) + "x" + str(_grass_config.tile_height))
 
 func _initialize_placement_strategy() -> void:
 	var seed_to_use = generation_seed if use_fixed_seed else -1
-	_placement_strategy = PlacementStrategy.new(seed_to_use)
+	_placement_strategy = PlacementStrategy.new(seed_to_use, decorations_scene)
 	
 	if use_fixed_seed:
 		Logger.log(self, "[STRATEGY] Placement strategy initialized with fixed seed: " + str(generation_seed))
@@ -167,6 +222,11 @@ func _validate_environment_layers() -> bool:
 	else:
 		Logger.log(self, "[VALIDATION_OK] environment_layer_2 found: " + environment_layer_2.name)
 	
+	if not decorations_scene:
+		Logger.log(self, "[VALIDATION_WARNING] decorations_scene is null - objects may overlap with decorations!")
+	else:
+		Logger.log(self, "[VALIDATION_OK] decorations_scene found: " + decorations_scene.name)
+	
 	return valid
 
 func draw_lower_environment(current_chunk_type: Outside_Constants.LOWER_CHUNK, current_chunk_index: int) -> void:
@@ -176,7 +236,7 @@ func draw_lower_environment(current_chunk_type: Outside_Constants.LOWER_CHUNK, c
 		Logger.log(self, "[DRAW_ERROR] Cannot draw environment - layers not properly configured")
 		return
 	
-	var start_y: int = Outside_Constants.UPPER_CHUNK_TILE_HEIGHT - Outside_Constants.TILE_SIZE
+	var start_y: int = Outside_Constants.UPPER_CHUNK_TILE_HEIGHT - 1
 	var start_x: int = current_chunk_index * Outside_Constants.CHUNK_TILE_WIDTH
 	
 	match current_chunk_type:
@@ -198,7 +258,7 @@ func draw_lower_environment(current_chunk_type: Outside_Constants.LOWER_CHUNK, c
 func _draw_grass_chunk(start_x: int, start_y: int) -> void:
 	Logger.log(self, "[GRASS_CHUNK] Drawing grass chunk at (" + str(start_x) + ", " + str(start_y) + ")")
 	
-	# Calculate areas for placement
+	# Calculate areas for placement in tile coordinates
 	var tree_area_height = Outside_Constants.CHUNK_TILE_HEIGHT - Outside_Constants.LOWER_CHUNK_TILE_HEIGHT - 4
 	var grass_area_height = Outside_Constants.CHUNK_TILE_HEIGHT - Outside_Constants.LOWER_CHUNK_TILE_HEIGHT
 	
@@ -302,7 +362,14 @@ func set_grass_density(density: float) -> void:
 	_grass_config.density = clamp(density, 0.0, 1.0)
 	Logger.log(self, "[CONFIG_UPDATE] Grass density changed: " + str(old_density) + " -> " + str(_grass_config.density))
 
-func add_custom_environment_object(scene_path: String, density: float, use_collision: bool, min_spacing: int = 1) -> EnvironmentConfig:
+func add_custom_environment_object(scene_path: String, density: float, use_collision: bool, min_spacing: int = 1, tile_width: int = 1, tile_height: int = 1) -> EnvironmentConfig:
 	var layer = 1 if use_collision else 0  # Layer 2 for collision, Layer 1 for no collision
-	Logger.log(self, "[CONFIG_CREATE] New environment object | Scene: " + scene_path + " | Layer: " + str(layer) + " | Density: " + str(density))
-	return EnvironmentConfig.new(density, scene_path, min_spacing, layer)
+	Logger.log(self, "[CONFIG_CREATE] New environment object | Scene: " + scene_path + " | Layer: " + str(layer) + " | Density: " + str(density) + " | Tile size: " + str(tile_width) + "x" + str(tile_height))
+	return EnvironmentConfig.new(density, scene_path, min_spacing, layer, tile_width, tile_height)
+
+## Method to set decorations reference (call this from your main scene)
+func set_decorations_reference(decorations_ref: TileMapLayer) -> void:
+	decorations_scene = decorations_ref
+	if _placement_strategy:
+		_placement_strategy._decorations_tilemap = decorations_ref
+	Logger.log(self, "[DECORATIONS_REF] Set decorations reference: " + (decorations_ref.name if decorations_ref else "null"))
