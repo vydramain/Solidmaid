@@ -7,13 +7,15 @@ var TreeEntityScene := preload("res://resources/entity/environment/trees/Tree.ts
 # TileMap references
 @onready var background_scene: TileMapLayer = $Background
 @onready var decorations_scene: TileMapLayer = $Decorations
-@onready var environment_scene: TileMapLayer = $Environment
+
+@onready var environment_layer_1_scene: Node = $EnvironmentLayer_1
+@onready var environment_layer_2_scene: Node = $EnvironmentLayer_2
 
 # Preload scripts for chunk drawing and entity spawning
 @onready var upper_drawer = Outside_Upper_Chunk_Drawer.new()
 @onready var lower_drawer = Outside_Lower_Chunk_Drawer.new()
 @onready var lower_decorations_drawer = Outside_Lower_Decorations_Drawer.new()
-@onready var entity_spawner = Outside_Entity_Spawner.new()
+@onready var lower_environment_drawer = Outside_Lower_Environment_Drawer.new()
 
 func _ready() -> void:
 	Logger.log(self, "[ChunkManager] Initialization started")
@@ -21,20 +23,22 @@ func _ready() -> void:
 	# Add child nodes
 	add_child(upper_drawer)
 	Logger.log(self, "[ChunkManager] Upper chunk drawer added as child")
-
+	
 	add_child(lower_drawer)
 	Logger.log(self, "[ChunkManager] Lower chunk drawer added as child")
-
-	add_child(entity_spawner)
-	Logger.log(self, "[ChunkManager] Entity spawner added as child")
 	
 	add_child(lower_decorations_drawer)
-	Logger.log(self, "[ChunkManager] Entity spawner added as child")
+	Logger.log(self, "[ChunkManager] Lower decorations drawer added as child")
+	
+	add_child(lower_environment_drawer)
+	Logger.log(self, "[ChunkManager] Lower environment drawer added as child")
 	
 	# Assign backgrounds to chunk drawers
 	upper_drawer.background_scene = background_scene
 	lower_drawer.background_scene = background_scene
 	lower_decorations_drawer.decorations_scene = decorations_scene
+	lower_environment_drawer.environment_layer_1 = environment_layer_1_scene
+	lower_environment_drawer.environment_layer_2 = environment_layer_2_scene
 	Logger.log(self, "[ChunkManager] Background TileMap assigned to upper and lower drawers")
 	
 	# Draw init chunks
@@ -46,6 +50,10 @@ func _ready() -> void:
 	# Draw decorations
 	lower_decorations_drawer.draw_lower_decorations(Outside_Constants.LOWER_CHUNK.GRASS, 0)
 	lower_decorations_drawer.draw_lower_decorations(Outside_Constants.LOWER_CHUNK.GRASS, 1)
+	
+	# Draw environment
+	lower_environment_drawer.draw_lower_environment(Outside_Constants.LOWER_CHUNK.GRASS, 0)
+	lower_environment_drawer.draw_lower_environment(Outside_Constants.LOWER_CHUNK.GRASS, 1)
 	
 	# Draw all chunks
 	_draw_chunks(Outside_Constants.MAX_CHUNKS)

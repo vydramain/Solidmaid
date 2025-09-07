@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://d15ok0rjcr3m"]
 
-[ext_resource type="Texture2D" uid="uid://kanl2givy2vn" path="res://assets/textures/outside/grass.png" id="1_3og0o"]
 [ext_resource type="Script" uid="uid://dv1wi8vlxpv7n" path="res://resources/entity/environment/grass/Grass.gd" id="1_t6dn5"]
+[ext_resource type="Texture2D" uid="uid://dtskqqpem5xdx" path="res://assets/textures/outside/grass_1.png" id="2_atv4w"]
 
 [sub_resource type="Animation" id="Animation_t6dn5"]
 length = 0.001
@@ -19,7 +19,7 @@ tracks/0/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_3og0o"]
-resource_name = "Wind"
+resource_name = "idle_1"
 length = 4.0
 loop_mode = 1
 tracks/0/type = "value"
@@ -38,17 +38,17 @@ tracks/0/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_p3nbu"]
 _data = {
 &"RESET": SubResource("Animation_t6dn5"),
-&"Wind": SubResource("Animation_3og0o")
+&"idle_1": SubResource("Animation_3og0o")
 }
 
 [node name="Grass" type="Node2D"]
 script = ExtResource("1_t6dn5")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(32, 8)
-texture = ExtResource("1_3og0o")
+position = Vector2(8, 4)
+texture = ExtResource("2_atv4w")
 hframes = 8
-frame = 7
+frame = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
