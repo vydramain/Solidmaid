@@ -41,16 +41,16 @@ tile_set = ExtResource("2_aa5ui")
 [node name="EnvironmentLayer_1" type="Node2D" parent="."]
 
 [node name="Grass" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(0, 352)
+position = Vector2(0, 360)
 
 [node name="Grass2" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(96, 352)
+position = Vector2(96, 360)
 
 [node name="Grass3" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(160, 352)
+position = Vector2(160, 360)
 
 [node name="Grass4" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(256, 352)
+position = Vector2(256, 360)
 
 [node name="EnvironmentLayer_2" type="Node2D" parent="."]
 
