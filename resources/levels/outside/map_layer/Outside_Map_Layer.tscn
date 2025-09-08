@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=4 uid="uid://c7mxfrjlts61m"]
+[gd_scene load_steps=8 format=4 uid="uid://c7mxfrjlts61m"]
 
 [ext_resource type="Script" uid="uid://bauq1la5fw46a" path="res://resources/levels/outside/map_layer/Outside_Map_Layer.gd" id="1_aa5ui"]
 [ext_resource type="TileSet" uid="uid://sps8t0n70j1f" path="res://resources/levels/outside/map_layer/Tile_Set_For_Outside_Map_Layer.tres" id="2_aa5ui"]
-[ext_resource type="Texture2D" uid="uid://1fm1h6cggxtp" path="res://assets/textures/outside/Skybox_1.png" id="2_qskow"]
-[ext_resource type="Texture2D" uid="uid://hv6wh50s2uks" path="res://assets/textures/outside/Skybox_2.png" id="3_t0p5h"]
+[ext_resource type="Texture2D" uid="uid://dp8yi606abx74" path="res://assets/textures/outside/Skybox_4.png" id="2_w4j8t"]
+[ext_resource type="Texture2D" uid="uid://cxs2olomhlc3m" path="res://assets/textures/outside/Skybox_5.png" id="3_rqdqt"]
+[ext_resource type="Texture2D" uid="uid://crvcyu3fjefnn" path="res://assets/textures/outside/Skybox_3.png" id="4_7184l"]
 [ext_resource type="PackedScene" uid="uid://d15ok0rjcr3m" path="res://resources/entity/environment/grass/Grass.tscn" id="5_t0p5h"]
 [ext_resource type="PackedScene" uid="uid://nb0trdq6a2oo" path="res://resources/entity/environment/trees/Tree.tscn" id="6_w4j8t"]
 
@@ -18,16 +19,25 @@ motion_mirroring = Vector2(256, 0)
 
 [node name="Sprite2DParalaxLayer_1" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
 scale = Vector2(2, 1)
-texture = ExtResource("2_qskow")
+texture = ExtResource("2_w4j8t")
 offset = Vector2(64, 32)
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.5, 0.5)
+motion_scale = Vector2(0.45, 0.45)
 motion_mirroring = Vector2(256, 0)
 
 [node name="Sprite2DParalaxLayer_2" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer2"]
 scale = Vector2(2, 1)
-texture = ExtResource("3_t0p5h")
+texture = ExtResource("3_rqdqt")
+offset = Vector2(64, 32)
+
+[node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 0.5)
+motion_mirroring = Vector2(256, 0)
+
+[node name="Sprite2DParalaxLayer_3" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer3"]
+scale = Vector2(2, 1)
+texture = ExtResource("4_7184l")
 offset = Vector2(64, 32)
 
 [node name="Background" type="TileMapLayer" parent="."]
@@ -41,16 +51,16 @@ tile_set = ExtResource("2_aa5ui")
 [node name="EnvironmentLayer_1" type="Node2D" parent="."]
 
 [node name="Grass" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(0, 352)
+position = Vector2(0, 360)
 
 [node name="Grass2" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(96, 352)
+position = Vector2(96, 360)
 
 [node name="Grass3" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(160, 352)
+position = Vector2(160, 360)
 
 [node name="Grass4" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(256, 352)
+position = Vector2(256, 360)
 
 [node name="EnvironmentLayer_2" type="Node2D" parent="."]
 

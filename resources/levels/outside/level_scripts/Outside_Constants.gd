@@ -18,7 +18,7 @@ enum LOWER_CHUNK {
 	CROSS_END = 4,
 }
 
-const TILE_SIZE: int = 8
+const TILE_SIZE: int = 16
 const CHUNK_TILE_WIDTH: int = 10
 const CHUNK_TILE_HEIGHT: int = 11
 const UPPER_CHUNK_TILE_HEIGHT: int = 5
