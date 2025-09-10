@@ -53,7 +53,8 @@ func _set_entity_in_layer_data(x: int, y: int, layer_index: int, scene: PackedSc
 			if y >= 0 and y < layer_data[layer_index][x].size():
 				layer_data[layer_index][x][y] = {
 					"scene": scene,
-					"position": world_position
+					"position": world_position,
+					"sprite_type": randi() % 4  # Random grass type 0-3
 				}
 
 func _is_tile_covered_by_decoration(x: int, y: int, decorations_context: Array) -> bool:
