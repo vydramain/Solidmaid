@@ -1,9 +1,5 @@
 extends Node2D
 
-# Preload environment scenes
-var GrassScene := preload("res://resources/entity/environment/grass/Grass.tscn")
-var TreeEntityScene := preload("res://resources/entity/environment/trees/Tree.tscn")
-
 # Layer enumeration for Z dimension
 enum LAYER {
 	BACKGROUND = 0,
@@ -165,6 +161,11 @@ func _apply_layer_to_node(layer_index: int, parent_node: Node) -> void:
 			if entity_data != null and entity_data.has("scene") and entity_data.has("position"):
 				var instance = entity_data.scene.instantiate()
 				instance.position = entity_data.position
+				
+				# Set sprite type if specified
+				if entity_data.has("sprite_type"):
+					instance.set_sprite_type(entity_data.sprite_type)
+				
 				parent_node.add_child(instance)
 
 func get_layer_data_at(layer_index: int, x: int, y: int):
