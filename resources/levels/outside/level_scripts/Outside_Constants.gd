@@ -79,10 +79,37 @@ const SIDEWALK_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [
 ]
 
 const GRASS_BACKGROUND_TILE_SIZE = Vector2i(4, 4)
-const GRASS_BACKGROUND_TILES_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ Vector2i(0, 4) ]
+const GRASS_BACKGROUND_TILES_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [
+	Vector2i(0, 4),
+	Vector2i(1, 4),
+	Vector2i(2, 4),
+	Vector2i(3, 4),
+	Vector2i(0, 5),
+	Vector2i(1, 5),
+	Vector2i(2, 5),
+	Vector2i(3, 5),
+	Vector2i(0, 6),
+	Vector2i(1, 6),
+	Vector2i(2, 6),
+	Vector2i(3, 6),
+	Vector2i(0, 7),
+	Vector2i(1, 7),
+	Vector2i(2, 7),
+	Vector2i(3, 7),
+]
 
 const GRASS_SIDEWALK_DECORATION_TILE_SIZE = Vector2i(3, 3)
-const GRASS_SIDEWALK_DECORATION_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ Vector2i(4, 4) ]
+const GRASS_SIDEWALK_DECORATION_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS = [ 
+	Vector2i(4, 4),
+	Vector2i(5, 4),
+	Vector2i(6, 4),
+	Vector2i(4, 5),
+	Vector2i(5, 5),
+	Vector2i(6, 5),
+	Vector2i(4, 6),
+	Vector2i(5, 6),
+	Vector2i(6, 6),
+ ]
 
 # --- Whole concrete
 
