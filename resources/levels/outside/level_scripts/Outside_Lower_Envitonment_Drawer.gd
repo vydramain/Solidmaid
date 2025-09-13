@@ -37,9 +37,11 @@ func draw_lower_environment_layer_2_to_layer_data(current_chunk_type: Outside_Co
 	
 	match current_chunk_type:
 		Outside_Constants.LOWER_CHUNK.GRASS:
-			_fill_grass_environment_layer_2(start_x, start_y, layer_index, background_context, decorations_context, env1_context)
+			# _fill_grass_environment_layer_2(start_x, start_y, layer_index, background_context, decorations_context, env1_context)
+			pass
 		Outside_Constants.LOWER_CHUNK.PARK:
-			_fill_park_environment_layer_2(start_x, start_y, layer_index, background_context, decorations_context, env1_context)
+			# _fill_park_environment_layer_2(start_x, start_y, layer_index, background_context, decorations_context, env1_context)
+			pass
 		Outside_Constants.LOWER_CHUNK.ROAD, Outside_Constants.LOWER_CHUNK.CROSS_START, Outside_Constants.LOWER_CHUNK.CROSS_END:
 			# No tree placement for road chunks
 			Logger.log(self, "[ENVIRONMENT_L2] Skipping tree placement for road/cross chunk type: " + str(current_chunk_type))

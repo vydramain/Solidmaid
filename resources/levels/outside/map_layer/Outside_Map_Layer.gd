@@ -15,10 +15,11 @@ enum LAYER {
 @onready var environment_layer_2_scene: Node = $EnvironmentLayer_2
 
 # Preload scripts for chunk drawing and entity spawning
-@onready var upper_background_drawer = Outside_Upper_Background_Drawer.new()
 @onready var lower_background_drawer = Outside_Lower_Background_Drawer.new()
 @onready var lower_decorations_drawer = Outside_Lower_Decorations_Drawer.new()
 @onready var lower_environment_drawer = Outside_Lower_Environment_Drawer.new()
+@onready var upper_background_drawer = Outside_Upper_Background_Drawer.new()
+@onready var upper_environment_drawer = Outside_Upper_Environment_Drawer.new()
 
 # Three-dimensional array: [layer][x][y]
  #layer: 0=background, 1=decorations, 2=environment_1, 3=environment_2
@@ -32,16 +33,13 @@ func _ready() -> void:
 	
 	# Add child nodes
 	add_child(upper_background_drawer)
-	Logger.log(self, "[ChunkManager] Upper chunk drawer added as child")
+	add_child(upper_environment_drawer)
+	Logger.log(self, "[ChunkManager] Upper chunk drawers added as child")
 	
 	add_child(lower_background_drawer)
-	Logger.log(self, "[ChunkManager] Lower chunk drawer added as child")
-	
 	add_child(lower_decorations_drawer)
-	Logger.log(self, "[ChunkManager] Lower decorations drawer added as child")
-	
 	add_child(lower_environment_drawer)
-	Logger.log(self, "[ChunkManager] Lower environment drawer added as child")
+	Logger.log(self, "[ChunkManager] Lower chunk drawers added as child")
 	
 	# Assign references to chunk drawers
 	_assign_drawer_references()
@@ -73,17 +71,20 @@ func _initialize_layer_data() -> void:
 	Logger.log(self, "[ChunkManager] Layer data initialized: %d layers, %dx%d size" % [4, total_width, total_height])
 
 func _assign_drawer_references() -> void:
-	upper_background_drawer.layer_data = layer_data
 	lower_background_drawer.layer_data = layer_data
 	lower_decorations_drawer.layer_data = layer_data
 	lower_environment_drawer.layer_data = layer_data
+	upper_background_drawer.layer_data = layer_data
+	upper_environment_drawer.layer_data = layer_data
 	
 	# Assign scene references for final application
-	upper_background_drawer.background_scene = background_scene
 	lower_background_drawer.background_scene = background_scene
 	lower_decorations_drawer.decorations_scene = decorations_scene
 	lower_environment_drawer.environment_layer_1 = environment_layer_1_scene
 	lower_environment_drawer.environment_layer_2 = environment_layer_2_scene
+	upper_background_drawer.background_scene = background_scene
+	upper_environment_drawer.environment_layer_1 = environment_layer_1_scene
+	upper_environment_drawer.environment_layer_2 = environment_layer_2_scene
 	
 	Logger.log(self, "[ChunkManager] References assigned to all drawers")
 
@@ -124,11 +125,13 @@ func _draw_chunk_all_layers(lower_chunk_type: int, upper_chunk_type: int, chunk_
 	var background_context = layer_data[LAYER.BACKGROUND]
 	var decorations_context = layer_data[LAYER.DECORATIONS]
 	lower_environment_drawer.draw_lower_environment_layer_1_to_layer_data(lower_chunk_type, chunk_index, LAYER.ENVIRONMENT_1, background_context, decorations_context)
+	upper_environment_drawer.draw_upper_environment_layer_1_to_layer_data(upper_chunk_type, chunk_index, LAYER.ENVIRONMENT_1, background_context, decorations_context)
 	
 	# Layer 3: Environment Layer 2 (based on all previous layers)
 	Logger.log(self, "[ChunkManager] Drawing environment layer 2 for chunk %d" % chunk_index)
 	var env1_context = layer_data[LAYER.ENVIRONMENT_1]
 	lower_environment_drawer.draw_lower_environment_layer_2_to_layer_data(lower_chunk_type, chunk_index, LAYER.ENVIRONMENT_2, background_context, decorations_context, env1_context)
+	upper_environment_drawer.draw_upper_environment_layer_2_to_layer_data(upper_chunk_type, chunk_index, LAYER.ENVIRONMENT_2, background_context, decorations_context, env1_context)
 
 func _apply_layer_data_to_scenes() -> void:
 	Logger.log(self, "[ChunkManager] Converting layer data to scene nodes")
