@@ -11,16 +11,16 @@ const FACTORY_LEVEL_PATH: String = "res://resources/levels/factory/Factory_Level
 @onready var FACTORY_LEVEL: PackedScene = load(FACTORY_LEVEL_PATH)
 
 func _ready() -> void:
-	Logger.log(self, "NextLevel trigger initialized on scene: " + str(get_tree().current_scene.scene_file_path))
+	Custom_Logger.log(self, "NextLevel trigger initialized on scene: " + str(get_tree().current_scene.scene_file_path))
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player"):
-		Logger.log(self, "Player collided with NextLevel trigger (body entered)")
+		Custom_Logger.log(self, "Player collided with NextLevel trigger (body entered)")
 		transfer_player_to_next_level()
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Player"):
-		Logger.log(self, "Player entered NextLevel trigger as area")
+		Custom_Logger.log(self, "Player entered NextLevel trigger as area")
 		transfer_player_to_next_level()
 
 
@@ -32,7 +32,7 @@ func transfer_player_to_next_level() -> void:
 
 	var current_level = main.get("current_level")
 	var scene_file = current_level.scene_file_path if current_level else "UNKNOWN"
-	Logger.log(self, "Current level detected: " + scene_file)
+	Custom_Logger.log(self, "Current level detected: " + scene_file)
 
 	var next_level: PackedScene = null
 	var next_level_name: String = ""
@@ -51,5 +51,5 @@ func transfer_player_to_next_level() -> void:
 			push_error("Next level not determined. Unknown current level path: " + scene_file)
 
 	if next_level:
-		Logger.log(self, "Transferring player to next level: " + next_level_name)
+		Custom_Logger.log(self, "Transferring player to next level: " + next_level_name)
 		main.load_level(next_level)

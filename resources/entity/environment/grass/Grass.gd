@@ -34,15 +34,15 @@ func initialize_grass():
 	
 	is_initialized = true
 	# Only log successful initialization once per instance
-	Logger.debug(self, "Grass scene initialized at position: " + str(position))
+	Custom_Logger.debug(self, "Grass scene initialized at position: " + str(position))
 
 func validate_scene_structure() -> bool:
 	if sprite == null:
-		Logger.error(self, "Sprite2D node not found! Available children: " + str(get_children()))
+		Custom_Logger.error(self, "Sprite2D node not found! Available children: " + str(get_children()))
 		return false
 	
 	if animation_player == null:
-		Logger.error(self, "AnimationPlayer node not found! Available children: " + str(get_children()))
+		Custom_Logger.error(self, "AnimationPlayer node not found! Available children: " + str(get_children()))
 		return false
 	
 	return true
@@ -62,7 +62,7 @@ func load_textures():
 		var texture = load(texture_paths[i])
 		if texture == null:
 			failed_count += 1
-			Logger.warning(self, "Could not load texture: " + texture_paths[i])
+			Custom_Logger.warning(self, "Could not load texture: " + texture_paths[i])
 			# Create a simple colored texture as fallback
 			var fallback_texture = ImageTexture.new()
 			var image = Image.create(32, 32, false, Image.FORMAT_RGB8)
@@ -74,9 +74,9 @@ func load_textures():
 	
 	# Only log summary instead of each successful load
 	if failed_count > 0:
-		Logger.warning(self, "Loaded textures with " + str(failed_count) + " failures (using fallbacks)")
+		Custom_Logger.warning(self, "Loaded textures with " + str(failed_count) + " failures (using fallbacks)")
 	else:
-		Logger.debug(self, "All " + str(texture_paths.size()) + " textures loaded successfully")
+		Custom_Logger.debug(self, "All " + str(texture_paths.size()) + " textures loaded successfully")
 
 func setup_animation_names():
 	animation_names = [
@@ -94,9 +94,9 @@ func setup_sprite_and_animation():
 	if sprite_type < sprite_textures.size() and sprite_textures[sprite_type] != null:
 		sprite.texture = sprite_textures[sprite_type]
 		# Only log texture changes in debug mode, not every setup
-		Logger.debug(self, "Set texture for sprite type: " + str(sprite_type))
+		Custom_Logger.debug(self, "Set texture for sprite type: " + str(sprite_type))
 	else:
-		Logger.error(self, "Invalid sprite_type or texture not loaded: " + str(sprite_type))
+		Custom_Logger.error(self, "Invalid sprite_type or texture not loaded: " + str(sprite_type))
 		return
 	
 	# Play the corresponding animation if AnimationPlayer exists and has the animation
@@ -104,25 +104,25 @@ func setup_sprite_and_animation():
 		var anim_name = animation_names[sprite_type]
 		if animation_player.has_animation(anim_name):
 			animation_player.play(anim_name)
-			Logger.debug(self, "Playing animation: " + anim_name)
+			Custom_Logger.debug(self, "Playing animation: " + anim_name)
 		else:
-			Logger.warning(self, "Animation not found: " + anim_name + ". Create this animation in the AnimationPlayer.")
+			Custom_Logger.warning(self, "Animation not found: " + anim_name + ". Create this animation in the AnimationPlayer.")
 	else:
-		Logger.error(self, "Invalid sprite_type for animation: " + str(sprite_type))
+		Custom_Logger.error(self, "Invalid sprite_type for animation: " + str(sprite_type))
 
 # Function to change sprite type at runtime - works both before and after initialization
 func set_sprite_type(new_type: int):
 	if new_type >= 0 and new_type <= 3:
 		# Only log if the type is actually changing
 		if sprite_type != new_type:
-			Logger.debug(self, "Changing sprite type from " + str(sprite_type) + " to " + str(new_type))
+			Custom_Logger.debug(self, "Changing sprite type from " + str(sprite_type) + " to " + str(new_type))
 			sprite_type = new_type
 			
 			# If already initialized, update immediately
 			if is_initialized and sprite != null:
 				setup_sprite_and_animation()
 	else:
-		Logger.error(self, "Invalid sprite type: " + str(new_type) + ". Must be 0-3.")
+		Custom_Logger.error(self, "Invalid sprite type: " + str(new_type) + ". Must be 0-3.")
 
 # Optional: Function to initialize with specific type (can be called before adding to scene)
 func initialize_with_type(type: int):

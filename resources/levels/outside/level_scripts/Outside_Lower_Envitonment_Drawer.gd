@@ -13,7 +13,7 @@ var GrassScene := preload("res://resources/entity/environment/grass/Grass.tscn")
 var TreeEntityScene := preload("res://resources/entity/environment/trees/Tree.tscn")
 
 func draw_lower_environment_layer_1_to_layer_data(current_chunk_type: Outside_Constants.LOWER_CHUNK, current_chunk_index: int, layer_index: int, background_context: Array, decorations_context: Array) -> void:
-	Logger.log(self, "[ENVIRONMENT_L1] Start drawing lower environment layer 1 | Type: " + str(current_chunk_type) + ", Index: " + str(current_chunk_index) + " | layer=" + str(layer_index))
+	Custom_Logger.log(self, "[ENVIRONMENT_L1] Start drawing lower environment layer 1 | Type: " + str(current_chunk_type) + ", Index: " + str(current_chunk_index) + " | layer=" + str(layer_index))
 	
 	var start_y = 0  # Lower chunk always starts at row 0
 	var start_x = current_chunk_index * Outside_Constants.CHUNK_TILE_WIDTH  # Horizontal offset by index
@@ -25,12 +25,12 @@ func draw_lower_environment_layer_1_to_layer_data(current_chunk_type: Outside_Co
 			_fill_park_environment_layer_1(start_x, start_y, layer_index, background_context, decorations_context)
 		Outside_Constants.LOWER_CHUNK.ROAD, Outside_Constants.LOWER_CHUNK.CROSS_START, Outside_Constants.LOWER_CHUNK.CROSS_END:
 			# No grass placement for road chunks
-			Logger.log(self, "[ENVIRONMENT_L1] Skipping grass placement for road/cross chunk type: " + str(current_chunk_type))
+			Custom_Logger.log(self, "[ENVIRONMENT_L1] Skipping grass placement for road/cross chunk type: " + str(current_chunk_type))
 		_:
-			Logger.log(self, "[ENVIRONMENT_L1] Unsupported chunk type for environment layer 1: " + str(current_chunk_type))
+			Custom_Logger.log(self, "[ENVIRONMENT_L1] Unsupported chunk type for environment layer 1: " + str(current_chunk_type))
 
 func draw_lower_environment_layer_2_to_layer_data(current_chunk_type: Outside_Constants.LOWER_CHUNK, current_chunk_index: int, layer_index: int, background_context: Array, decorations_context: Array, env1_context: Array) -> void:
-	Logger.log(self, "[ENVIRONMENT_L2] Start drawing lower environment layer 2 | Type: " + str(current_chunk_type) + ", Index: " + str(current_chunk_index) + " | layer=" + str(layer_index))
+	Custom_Logger.log(self, "[ENVIRONMENT_L2] Start drawing lower environment layer 2 | Type: " + str(current_chunk_type) + ", Index: " + str(current_chunk_index) + " | layer=" + str(layer_index))
 	
 	var start_y = 0  # Lower chunk always starts at row 0
 	var start_x = current_chunk_index * Outside_Constants.CHUNK_TILE_WIDTH  # Horizontal offset by index
@@ -44,9 +44,9 @@ func draw_lower_environment_layer_2_to_layer_data(current_chunk_type: Outside_Co
 			pass
 		Outside_Constants.LOWER_CHUNK.ROAD, Outside_Constants.LOWER_CHUNK.CROSS_START, Outside_Constants.LOWER_CHUNK.CROSS_END:
 			# No tree placement for road chunks
-			Logger.log(self, "[ENVIRONMENT_L2] Skipping tree placement for road/cross chunk type: " + str(current_chunk_type))
+			Custom_Logger.log(self, "[ENVIRONMENT_L2] Skipping tree placement for road/cross chunk type: " + str(current_chunk_type))
 		_:
-			Logger.log(self, "[ENVIRONMENT_L2] Unsupported chunk type for environment layer 2: " + str(current_chunk_type))
+			Custom_Logger.log(self, "[ENVIRONMENT_L2] Unsupported chunk type for environment layer 2: " + str(current_chunk_type))
 
 func _set_entity_in_layer_data(x: int, y: int, layer_index: int, scene: PackedScene, world_position: Vector2) -> void:
 	"""Helper function to safely set entity data in the layer array"""
@@ -103,7 +103,7 @@ func _can_place_entity_at(tile_x: int, tile_y: int, tile_width: int, tile_height
 	return true
 
 func _fill_grass_environment_layer_1(start_x: int, start_y: int, layer_index: int, background_context: Array, decorations_context: Array) -> void:
-	Logger.log(self, "[GRASS_ENV_L1] Placing grass entities | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[GRASS_ENV_L1] Placing grass entities | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	var grass_placed = 0
 	var grass_skipped = 0
@@ -124,11 +124,11 @@ func _fill_grass_environment_layer_1(start_x: int, start_y: int, layer_index: in
 				else:
 					grass_skipped += 1
 	
-	Logger.log(self, "[GRASS_ENV_L1] Grass placement complete | Placed: " + str(grass_placed) + " | Skipped (decorations): " + str(grass_skipped))
+	Custom_Logger.log(self, "[GRASS_ENV_L1] Grass placement complete | Placed: " + str(grass_placed) + " | Skipped (decorations): " + str(grass_skipped))
 
 func _find_sidewalk_lines(start_x: int, start_y: int, decorations_context: Array) -> Array:
 	"""Find rows of sidewalk tiles in the decorations context for tree placement."""
-	Logger.log(self, "[FIND_SIDEWALK_LINES] Searching for sidewalk lines | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[FIND_SIDEWALK_LINES] Searching for sidewalk lines | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	var sidewalk_lines: Array = []
 	
@@ -171,17 +171,17 @@ func _find_sidewalk_lines(start_x: int, start_y: int, decorations_context: Array
 				"tiles": line_tiles
 			})
 	
-	Logger.log(self, "[FIND_SIDEWALK_LINES] Found " + str(sidewalk_lines.size()) + " sidewalk lines")
+	Custom_Logger.log(self, "[FIND_SIDEWALK_LINES] Found " + str(sidewalk_lines.size()) + " sidewalk lines")
 	return sidewalk_lines
 
 func _fill_park_environment_layer_1(start_x: int, start_y: int, layer_index: int, background_context: Array, decorations_context: Array) -> void:
-	Logger.log(self, "[PARK_ENV_L1] Placing park grass entities | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[PARK_ENV_L1] Placing park grass entities | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	# For parks, use same logic as grass but potentially with different density
 	_fill_grass_environment_layer_1(start_x, start_y, layer_index, background_context, decorations_context)
 
 func _fill_grass_environment_layer_2(start_x: int, start_y: int, layer_index: int, background_context: Array, decorations_context: Array, env1_context: Array) -> void:
-	Logger.log(self, "[GRASS_ENV_L2] Placing tree entities along sidewalk lines | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[GRASS_ENV_L2] Placing tree entities along sidewalk lines | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	# Tree dimensions: 2 tiles width, 3 tiles height
 	var tree_width = 2
@@ -194,7 +194,7 @@ func _fill_grass_environment_layer_2(start_x: int, start_y: int, layer_index: in
 	var sidewalk_lines = _find_sidewalk_lines(start_x, start_y, decorations_context)
 	
 	if sidewalk_lines.size() == 0:
-		Logger.log(self, "[GRASS_ENV_L2] No sidewalk lines found for tree placement")
+		Custom_Logger.log(self, "[GRASS_ENV_L2] No sidewalk lines found for tree placement")
 		return
 	
 	# Place trees along each sidewalk line
@@ -202,7 +202,7 @@ func _fill_grass_environment_layer_2(start_x: int, start_y: int, layer_index: in
 		var line_tiles = sidewalk_line.tiles
 		var line_y = sidewalk_line.y_pos
 		
-		Logger.log(self, "[GRASS_ENV_L2] Processing sidewalk line at y=" + str(line_y) + " with " + str(line_tiles.size()) + " tiles")
+		Custom_Logger.log(self, "[GRASS_ENV_L2] Processing sidewalk line at y=" + str(line_y) + " with " + str(line_tiles.size()) + " tiles")
 		
 		# Place trees every 3-4 tiles along the line
 		var i = 0
@@ -228,10 +228,10 @@ func _fill_grass_environment_layer_2(start_x: int, start_y: int, layer_index: in
 				trees_skipped += 1
 				i += 1
 	
-	Logger.log(self, "[GRASS_ENV_L2] Tree placement along sidewalks complete | Placed: " + str(trees_placed) + " | Skipped: " + str(trees_skipped))
+	Custom_Logger.log(self, "[GRASS_ENV_L2] Tree placement along sidewalks complete | Placed: " + str(trees_placed) + " | Skipped: " + str(trees_skipped))
 
 func _fill_park_environment_layer_2(start_x: int, start_y: int, layer_index: int, background_context: Array, decorations_context: Array, env1_context: Array) -> void:
-	Logger.log(self, "[PARK_ENV_L2] Placing park tree entities along sidewalk lines | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[PARK_ENV_L2] Placing park tree entities along sidewalk lines | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	# Tree dimensions: 2 tiles width, 3 tiles height
 	var tree_width = 2
@@ -244,7 +244,7 @@ func _fill_park_environment_layer_2(start_x: int, start_y: int, layer_index: int
 	var sidewalk_lines = _find_sidewalk_lines(start_x, start_y, decorations_context)
 	
 	if sidewalk_lines.size() == 0:
-		Logger.log(self, "[PARK_ENV_L2] No sidewalk lines found for tree placement")
+		Custom_Logger.log(self, "[PARK_ENV_L2] No sidewalk lines found for tree placement")
 		return
 	
 	# For parks, place trees more densely along sidewalk lines
@@ -252,7 +252,7 @@ func _fill_park_environment_layer_2(start_x: int, start_y: int, layer_index: int
 		var line_tiles = sidewalk_line.tiles
 		var line_y = sidewalk_line.y_pos
 		
-		Logger.log(self, "[PARK_ENV_L2] Processing park sidewalk line at y=" + str(line_y) + " with " + str(line_tiles.size()) + " tiles")
+		Custom_Logger.log(self, "[PARK_ENV_L2] Processing park sidewalk line at y=" + str(line_y) + " with " + str(line_tiles.size()) + " tiles")
 		
 		# Place trees every 2-3 tiles along the line (denser for parks)
 		var i = 0
@@ -278,4 +278,4 @@ func _fill_park_environment_layer_2(start_x: int, start_y: int, layer_index: int
 				trees_skipped += 1
 				i += 1
 	
-	Logger.log(self, "[PARK_ENV_L2] Park tree placement along sidewalks complete | Placed: " + str(trees_placed) + " | Skipped: " + str(trees_skipped))
+	Custom_Logger.log(self, "[PARK_ENV_L2] Park tree placement along sidewalks complete | Placed: " + str(trees_placed) + " | Skipped: " + str(trees_skipped))

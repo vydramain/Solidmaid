@@ -5,7 +5,7 @@ class_name Outside_Entity_Spawner
 # Logs the request and the result with detailed information.
 func spawn_new_entity_at(entity: PackedScene, new_position: Vector2i, new_z_index: int = 0) -> Node2D:
 	# Log the spawn request with all relevant details
-	Logger.log(self, "[Spawn Request] Scene: %s | Target Position: (%d, %d) | Z-Index: %d" %
+	Custom_Logger.log(self, "[Spawn Request] Scene: %s | Target Position: (%d, %d) | Z-Index: %d" %
 		[str(entity), new_position.x, new_position.y, new_z_index])
 	
 	# Instantiate the entity
@@ -17,7 +17,7 @@ func spawn_new_entity_at(entity: PackedScene, new_position: Vector2i, new_z_inde
 	new_entity.global_position = Vector2(new_position.x, new_position.y)
 	
 	# Log the successful spawn with resulting entity details
-	Logger.log(self, "[Spawn Success] Entity: %s | Global Position: (%f, %f) | Z-Index: %d" %
+	Custom_Logger.log(self, "[Spawn Success] Entity: %s | Global Position: (%f, %f) | Z-Index: %d" %
 		[str(new_entity), new_entity.global_position.x, new_entity.global_position.y, new_entity.z_index])
 	
 	return new_entity

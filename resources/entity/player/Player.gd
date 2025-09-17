@@ -16,17 +16,17 @@ var respawn_position := Vector2(100, 100)
 var attack_ready: bool = true
 
 func _ready() -> void:
-	Logger.log(self, "Spawned object. Groups: " + str(self.get_groups()))
-	Logger.log(self, "Node name: %s, AnimationPlayer ready: %s" % [self.name, ANIMATION_PLAYER])
+	Custom_Logger.log(self, "Spawned object. Groups: " + str(self.get_groups()))
+	Custom_Logger.log(self, "Node name: %s, AnimationPlayer ready: %s" % [self.name, ANIMATION_PLAYER])
 	
 	# Connect timers
 	ATTACK_TIMER.timeout.connect(_on_attack_timer_timeout)
 	INVINCIBILITY_TIMER.timeout.connect(_on_invincibility_timer_timeout)
-	Logger.log(self, "Timers connected successfully.")
+	Custom_Logger.log(self, "Timers connected successfully.")
 
 func _on_attack_timer_timeout() -> void:
 	attack_ready = true
-	Logger.log(self, "Attack timer ended. Player can attack again.")
+	Custom_Logger.log(self, "Attack timer ended. Player can attack again.")
 
 func _physics_process(delta):
 	var input_dir = get_input_direction()
@@ -39,7 +39,7 @@ func _physics_process(delta):
 		
 		if input_dir.x != 0 and sign(SPRITE.scale.x) != sign(input_dir.x):
 			SPRITE.scale.x *= -1
-			Logger.log(self, "Sprite flipped. New scale.x: %s" % SPRITE.scale.x)
+			Custom_Logger.log(self, "Sprite flipped. New scale.x: %s" % SPRITE.scale.x)
 	else:
 		# Player is idle
 		velocity = Vector2.ZERO
@@ -53,19 +53,19 @@ func _physics_process(delta):
 		
 		if attack_dir != Vector2.ZERO:
 			throw_projecttile(attack_dir)
-			Logger.log(self, "Projectile thrown in direction: %s" % attack_dir)
+			Custom_Logger.log(self, "Projectile thrown in direction: %s" % attack_dir)
 	
 	move_and_slide()
 
 func _on_died() -> void:
 	var main = get_tree().root.get_node("Main") # Adjust path if needed
 	if main == null or not main.has_method("load_level"):
-		Logger.log(self, "[ERROR] Main node with 'load_level' method not found!")
+		Custom_Logger.log(self, "[ERROR] Main node with 'load_level' method not found!")
 		return
 
 	var current_level = main.get("current_level")
 	var scene_file = current_level.scene_file_path if current_level else ""
-	Logger.log(self, "Player died. Current level: %s" % scene_file)
+	Custom_Logger.log(self, "Player died. Current level: %s" % scene_file)
 
 	var next_level: PackedScene = null
 	if scene_file == HOME_LEVEL_PATH:
@@ -74,10 +74,10 @@ func _on_died() -> void:
 		next_level = HOME_LEVEL
 
 	if next_level:
-		Logger.log(self, "Loading next level: %s" % next_level.resource_path)
+		Custom_Logger.log(self, "Loading next level: %s" % next_level.resource_path)
 		main.load_level(next_level)
 	else:
-		Logger.log(self, "[ERROR] Unable to determine next level from scene file: %s" % str(scene_file))
+		Custom_Logger.log(self, "[ERROR] Unable to determine next level from scene file: %s" % str(scene_file))
 		
 	self.die()
 
@@ -92,11 +92,11 @@ func throw_projecttile(direction: Vector2) -> void:
 		
 		attack_ready = false
 		ATTACK_TIMER.start()
-		Logger.log(self, "Attack cooldown started.")
+		Custom_Logger.log(self, "Attack cooldown started.")
 		
 		invincibility = true
 		INVINCIBILITY_TIMER.start()
-		Logger.log(self, "Player is temporarily invincible.")
+		Custom_Logger.log(self, "Player is temporarily invincible.")
 
 func get_input_direction() -> Vector2:
 	var input_dir: Vector2 = Vector2.ZERO

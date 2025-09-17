@@ -56,7 +56,7 @@ func _ready() -> void:
 	audio_player.stream = dict.get(state, dict.get("intro"))
 	audio_player.autoplay = true
 	add_child(audio_player)
-	Logger.log(self, "Initialized AudioStreamPlayer with state: '%s'" % state)
+	Custom_Logger.log(self, "Initialized AudioStreamPlayer with state: '%s'" % state)
 
 
 func _process(delta: float) -> void:
@@ -68,16 +68,16 @@ func _process(delta: float) -> void:
 		state = next_state.get(state, state)
 		audio_player.stream = dict.get(state, dict.get("intro"))
 		audio_player.play()
-		Logger.log(self, "Audio finished for state '%s'. Transitioned to next state '%s'" % [previous_state, state])
+		Custom_Logger.log(self, "Audio finished for state '%s'. Transitioned to next state '%s'" % [previous_state, state])
 
 
 func play_next(event: String) -> void:
 	if not events_to_states.has(event):
-		Logger.log(self, "Received unknown event '%s'. No state change applied." % event)
+		Custom_Logger.log(self, "Received unknown event '%s'. No state change applied." % event)
 		return
 
 	var previous_state = state
 	state = events_to_states[event]
 	audio_player.stream = dict.get(state, dict.get("intro"))
 	audio_player.play()
-	Logger.log(self, "Event '%s' triggered. Changed state from '%s' to '%s' and started playback." % [event, previous_state, state])
+	Custom_Logger.log(self, "Event '%s' triggered. Changed state from '%s' to '%s' and started playback." % [event, previous_state, state])

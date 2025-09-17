@@ -8,7 +8,7 @@ var layer_data: Array[Array] = []
 var background_scene: TileMapLayer
 
 func draw_upper_chunk_to_layer_data(current_chunk_type: Outside_Constants.UPPER_CHUNK, current_chunk_index: int, layer_index: int) -> void:
-	Logger.log(self, "[DRAW CHUNK] Starting upper chunk drawing | type=" + str(current_chunk_type) + " | index=" + str(current_chunk_index) + " | layer=" + str(layer_index))
+	Custom_Logger.log(self, "[DRAW CHUNK] Starting upper chunk drawing | type=" + str(current_chunk_type) + " | index=" + str(current_chunk_index) + " | layer=" + str(layer_index))
 	var start_y = 0  # upper chunk always starts at row 0
 	var start_x = current_chunk_index * Outside_Constants.CHUNK_TILE_WIDTH
 	
@@ -22,13 +22,13 @@ func draw_upper_chunk_to_layer_data(current_chunk_type: Outside_Constants.UPPER_
 		Outside_Constants.UPPER_CHUNK.CROSS_END:
 			_fill_cross_horizon_to_layer_data(start_x, start_y, layer_index)
 		Outside_Constants.UPPER_CHUNK.PARK:
-			Logger.log(self, "[DRAW CHUNK] PARK chunk type not implemented yet")
+			Custom_Logger.log(self, "[DRAW CHUNK] PARK chunk type not implemented yet")
 		Outside_Constants.UPPER_CHUNK.FACTORY:
 			_fill_factory_building_to_layer_data(start_x, start_y, layer_index)
 		_:
-			Logger.log(self, "[DRAW CHUNK] Unknown upper chunk type: " + str(current_chunk_type))
+			Custom_Logger.log(self, "[DRAW CHUNK] Unknown upper chunk type: " + str(current_chunk_type))
 	
-	Logger.log(self, "[DRAW CHUNK] Completed drawing upper chunk | type=" + str(current_chunk_type))
+	Custom_Logger.log(self, "[DRAW CHUNK] Completed drawing upper chunk | type=" + str(current_chunk_type))
 
 func _set_tile_in_layer_data(x: int, y: int, layer_index: int, atlas_coords: Vector2i) -> void:
 	"""Helper function to safely set tile data in the layer array"""
@@ -41,7 +41,7 @@ func _set_tile_in_layer_data(x: int, y: int, layer_index: int, atlas_coords: Vec
 				}
 
 func _fill_light_building_to_layer_data(start_x: int, start_y: int, layer_index: int) -> void:
-	Logger.log(self, "[LIGHT BUILDING] Starting drawing at position (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[LIGHT BUILDING] Starting drawing at position (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	# Basement
 	for i in range(Outside_Constants.CHUNK_TILE_WIDTH / Outside_Constants.LIGHT_BUILDING_BASEMENT_TILE_SIZE.x):
@@ -50,7 +50,7 @@ func _fill_light_building_to_layer_data(start_x: int, start_y: int, layer_index:
 		var atlas_coords = Outside_Constants.LIGHT_BUILDING_BASEMENT_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.pick_random()
 		for t in range(Outside_Constants.LIGHT_BUILDING_BASEMENT_TILE_SIZE.x):
 			_set_tile_in_layer_data(x_pos + t, y_pos, layer_index, atlas_coords + Vector2i(t, 0))
-		Logger.log(self, "[LIGHT BUILDING] Basement tiles placed from x=" + str(start_x) + " to x=" + str(x_pos))
+		Custom_Logger.log(self, "[LIGHT BUILDING] Basement tiles placed from x=" + str(start_x) + " to x=" + str(x_pos))
 	
 	# First line of windows
 	var first_indent = 0
@@ -66,7 +66,7 @@ func _fill_light_building_to_layer_data(start_x: int, start_y: int, layer_index:
 		for t_y in range(Outside_Constants.LIGHT_BUILDING_WINDOWS_TILE_SIZE.y):
 			for t_x in range(Outside_Constants.LIGHT_BUILDING_WINDOWS_TILE_SIZE.x):
 				_set_tile_in_layer_data(x_pos + t_x, y_pos + t_y, layer_index, atlas_coords + Vector2i(t_x, t_y))
-	Logger.log(self, "[LIGHT BUILDING] First row of windows placed | total width covered=" + str(first_indent))
+	Custom_Logger.log(self, "[LIGHT BUILDING] First row of windows placed | total width covered=" + str(first_indent))
 	
 	# Second line of windows
 	var second_indent = 0
@@ -82,7 +82,7 @@ func _fill_light_building_to_layer_data(start_x: int, start_y: int, layer_index:
 		for t_y in range(Outside_Constants.LIGHT_BUILDING_WINDOWS_TILE_SIZE.y):
 			for t_x in range(Outside_Constants.LIGHT_BUILDING_WINDOWS_TILE_SIZE.x):
 				_set_tile_in_layer_data(x_pos + t_x, y_pos + t_y, layer_index, atlas_coords + Vector2i(t_x, t_y))
-	Logger.log(self, "[LIGHT BUILDING] Second row of windows placed | total width covered=" + str(second_indent))
+	Custom_Logger.log(self, "[LIGHT BUILDING] Second row of windows placed | total width covered=" + str(second_indent))
 	
 	# Entrance windows
 	for i in range(Outside_Constants.CHUNK_TILE_WIDTH / (Outside_Constants.LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x + Outside_Constants.LIGHT_BUILDING_WINDOWS_TILE_SIZE.x * 2)):
@@ -92,7 +92,7 @@ func _fill_light_building_to_layer_data(start_x: int, start_y: int, layer_index:
 		for t_y in range(Outside_Constants.LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.y):
 			for t_x in range(Outside_Constants.LIGHT_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x):
 				_set_tile_in_layer_data(x_pos + t_x, y_pos + t_y, layer_index, atlas_coords + Vector2i(t_x, t_y))
-	Logger.log(self, "[LIGHT BUILDING] Entrance windows placed along chunk width")
+	Custom_Logger.log(self, "[LIGHT BUILDING] Entrance windows placed along chunk width")
 	
 	# Entrances
 	for i in range(Outside_Constants.CHUNK_TILE_WIDTH / (Outside_Constants.LIGHT_BUILDING_ENTRANCE_TILE_SIZE.x + Outside_Constants.LIGHT_BUILDING_WINDOWS_TILE_SIZE.x * 2)):
@@ -102,11 +102,11 @@ func _fill_light_building_to_layer_data(start_x: int, start_y: int, layer_index:
 		for t_y in range(Outside_Constants.LIGHT_BUILDING_ENTRANCE_TILE_SIZE.y):
 			for t_x in range(Outside_Constants.LIGHT_BUILDING_ENTRANCE_TILE_SIZE.x):
 				_set_tile_in_layer_data(x_pos + t_x, y_pos + t_y, layer_index, atlas_coords + Vector2i(t_x, t_y))
-	Logger.log(self, "[LIGHT BUILDING] Entrances placed along chunk width")
-	Logger.log(self, "[LIGHT BUILDING] Completed drawing light building")
+	Custom_Logger.log(self, "[LIGHT BUILDING] Entrances placed along chunk width")
+	Custom_Logger.log(self, "[LIGHT BUILDING] Completed drawing light building")
 
 func _fill_blue_building_to_layer_data(start_x: int, start_y: int, layer_index: int) -> void:
-	Logger.log(self, "[BLUE BUILDING] Starting drawing at position (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[BLUE BUILDING] Starting drawing at position (" + str(start_x) + ", " + str(start_y) + ")")
 
 	# Basement
 	for i in range(Outside_Constants.CHUNK_TILE_WIDTH / Outside_Constants.BLUE_BUILDING_BASEMENT_TILE_SIZE.x):
@@ -115,7 +115,7 @@ func _fill_blue_building_to_layer_data(start_x: int, start_y: int, layer_index: 
 		var atlas_coords = Outside_Constants.BLUE_BUILDING_BASEMENT_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.pick_random()
 		for t in range(Outside_Constants.BLUE_BUILDING_BASEMENT_TILE_SIZE.x):
 			_set_tile_in_layer_data(x_pos + t, y_pos, layer_index, atlas_coords + Vector2i(t, 0))
-		Logger.log(self, "[BLUE BUILDING] Basement tiles placed from x=" + str(start_x) + " to x=" + str(x_pos))
+		Custom_Logger.log(self, "[BLUE BUILDING] Basement tiles placed from x=" + str(start_x) + " to x=" + str(x_pos))
 
 	# Windows line 1
 	var indent = 0
@@ -127,7 +127,7 @@ func _fill_blue_building_to_layer_data(start_x: int, start_y: int, layer_index: 
 		for t_y in range(Outside_Constants.BLUE_BUILDING_WINDOWS_TILE_SIZE.y):
 			for t_x in range(Outside_Constants.BLUE_BUILDING_WINDOWS_TILE_SIZE.x):
 				_set_tile_in_layer_data(x_pos + t_x, y_pos + t_y, layer_index, atlas_coords + Vector2i(t_x, t_y))
-	Logger.log(self, "[BLUE BUILDING] Windows line 1 placed, total width covered=" + str(indent))
+	Custom_Logger.log(self, "[BLUE BUILDING] Windows line 1 placed, total width covered=" + str(indent))
 
 	# Windows line 2
 	indent = 0
@@ -139,7 +139,7 @@ func _fill_blue_building_to_layer_data(start_x: int, start_y: int, layer_index: 
 		for t_y in range(Outside_Constants.BLUE_BUILDING_WINDOWS_TILE_SIZE.y):
 			for t_x in range(Outside_Constants.BLUE_BUILDING_WINDOWS_TILE_SIZE.x):
 				_set_tile_in_layer_data(x_pos + t_x, y_pos + t_y, layer_index, atlas_coords + Vector2i(t_x, t_y))
-	Logger.log(self, "[BLUE BUILDING] Windows line 2 placed, total width covered=" + str(indent))
+	Custom_Logger.log(self, "[BLUE BUILDING] Windows line 2 placed, total width covered=" + str(indent))
 
 	# Entrance windows (placed over existing windows at specific position)
 	var x_pos = start_x + Outside_Constants.BLUE_BUILDING_WINDOWS_TILE_SIZE.x * 2
@@ -148,7 +148,7 @@ func _fill_blue_building_to_layer_data(start_x: int, start_y: int, layer_index: 
 	for t_y in range(Outside_Constants.BLUE_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.y):
 		for t_x in range(Outside_Constants.BLUE_BUILDING_ENTRANCE_WINDOW_TILE_SIZE.x):
 			_set_tile_in_layer_data(x_pos + t_x, y_pos + t_y, layer_index, atlas_coords + Vector2i(t_x, t_y))
-	Logger.log(self, "[BLUE BUILDING] Entrance windows placed at x=" + str(x_pos) + ", y=" + str(y_pos))
+	Custom_Logger.log(self, "[BLUE BUILDING] Entrance windows placed at x=" + str(x_pos) + ", y=" + str(y_pos))
 
 	# Entrances
 	x_pos = start_x + Outside_Constants.BLUE_BUILDING_WINDOWS_TILE_SIZE.x * 2
@@ -157,11 +157,11 @@ func _fill_blue_building_to_layer_data(start_x: int, start_y: int, layer_index: 
 	for t_y in range(Outside_Constants.BLUE_BUILDING_ENTRANCE_TILE_SIZE.y):
 		for t_x in range(Outside_Constants.BLUE_BUILDING_ENTRANCE_TILE_SIZE.x):
 			_set_tile_in_layer_data(x_pos + t_x, y_pos + t_y, layer_index, atlas_coords + Vector2i(t_x, t_y))
-	Logger.log(self, "[BLUE BUILDING] Entrances placed at x=" + str(x_pos) + ", y=" + str(y_pos))
-	Logger.log(self, "[BLUE BUILDING] Completed drawing blue building")
+	Custom_Logger.log(self, "[BLUE BUILDING] Entrances placed at x=" + str(x_pos) + ", y=" + str(y_pos))
+	Custom_Logger.log(self, "[BLUE BUILDING] Completed drawing blue building")
 
 func _fill_cross_horizon_to_layer_data(start_x: int, start_y: int, layer_index: int) -> void:
-	Logger.log(self, "[CROSS HORIZON] Starting drawing at position (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[CROSS HORIZON] Starting drawing at position (" + str(start_x) + ", " + str(start_y) + ")")
 
 	# Sidewalk tiles
 	var sidewalk_indent = 0
@@ -181,11 +181,11 @@ func _fill_cross_horizon_to_layer_data(start_x: int, start_y: int, layer_index: 
 		var atlas_coords = Outside_Constants.ROAD_BACKGROUND_UPPER_LEFT_CORNER_TILES_ATLAS_COORDS.pick_random()
 		_set_tile_in_layer_data(x_pos, y_pos, layer_index, atlas_coords)
 
-	Logger.log(self, "[CROSS HORIZON] Sidewalk and road tiles placed")
-	Logger.log(self, "[CROSS HORIZON] Completed drawing cross horizon")
+	Custom_Logger.log(self, "[CROSS HORIZON] Sidewalk and road tiles placed")
+	Custom_Logger.log(self, "[CROSS HORIZON] Completed drawing cross horizon")
 
 func _fill_factory_building_to_layer_data(start_x: int, start_y: int, layer_index: int) -> void:
-	Logger.log(self, "[FACTORY BUILDING] Starting drawing factory building at position (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[FACTORY BUILDING] Starting drawing factory building at position (" + str(start_x) + ", " + str(start_y) + ")")
 
 	# Factory windows across 2 floors
 	for floor in range(2):
@@ -198,6 +198,6 @@ func _fill_factory_building_to_layer_data(start_x: int, start_y: int, layer_inde
 			for t_y in range(Outside_Constants.FACTORY_BUILDING_WINDOWS_TILE_SIZE.y):
 				for t_x in range(Outside_Constants.FACTORY_BUILDING_WINDOWS_TILE_SIZE.x):
 					_set_tile_in_layer_data(x_pos + t_x, y_pos + t_y, layer_index, atlas_coords + Vector2i(t_x, t_y))
-		Logger.log(self, "[FACTORY BUILDING] Floor " + str(floor) + " windows placed | total width covered=" + str(indent))
+		Custom_Logger.log(self, "[FACTORY BUILDING] Floor " + str(floor) + " windows placed | total width covered=" + str(indent))
 
-	Logger.log(self, "[FACTORY BUILDING] Completed drawing factory building")
+	Custom_Logger.log(self, "[FACTORY BUILDING] Completed drawing factory building")

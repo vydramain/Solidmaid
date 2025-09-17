@@ -1,5 +1,5 @@
 extends Node
-class_name Logger
+class_name Custom_Logger
 
 enum LogLevel {
 	DEBUG,
@@ -56,16 +56,16 @@ static func log(caller: Object, msg: String, level: LogLevel = LogLevel.INFO) ->
 
 # Convenience methods for different log levels - FIXED
 static func debug(caller: Object, msg: String) -> void:
-	Logger.log(caller, msg, LogLevel.DEBUG)
+	Custom_Logger.log(caller, msg, LogLevel.DEBUG)
 
 static func info(caller: Object, msg: String) -> void:
-	Logger.log(caller, msg, LogLevel.INFO)
+	Custom_Logger.log(caller, msg, LogLevel.INFO)
 
 static func warning(caller: Object, msg: String) -> void:
-	Logger.log(caller, msg, LogLevel.WARNING)
+	Custom_Logger.log(caller, msg, LogLevel.WARNING)
 
 static func error(caller: Object, msg: String) -> void:
-	Logger.log(caller, msg, LogLevel.ERROR)
+	Custom_Logger.log(caller, msg, LogLevel.ERROR)
 
 # Set minimum log level (useful for release builds)
 static func set_log_level(level: LogLevel) -> void:

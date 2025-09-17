@@ -26,7 +26,7 @@ enum LAYER {
 var layer_data: Array[Array] = []
 
 func _ready() -> void:
-	Logger.log(self, "[ChunkManager] Initialization started")
+	Custom_Logger.log(self, "[ChunkManager] Initialization started")
 	
 	# Initialize the 3D array
 	_initialize_layer_data()
@@ -34,12 +34,12 @@ func _ready() -> void:
 	# Add child nodes
 	add_child(upper_background_drawer)
 	add_child(upper_environment_drawer)
-	Logger.log(self, "[ChunkManager] Upper chunk drawers added as child")
+	Custom_Logger.log(self, "[ChunkManager] Upper chunk drawers added as child")
 	
 	add_child(lower_background_drawer)
 	add_child(lower_decorations_drawer)
 	add_child(lower_environment_drawer)
-	Logger.log(self, "[ChunkManager] Lower chunk drawers added as child")
+	Custom_Logger.log(self, "[ChunkManager] Lower chunk drawers added as child")
 	
 	# Assign references to chunk drawers
 	_assign_drawer_references()
@@ -50,7 +50,7 @@ func _ready() -> void:
 	# Convert layer data to actual scene nodes
 	_apply_layer_data_to_scenes()
 	
-	Logger.log(self, "[ChunkManager] Finished drawing all chunks. Total chunks drawn: %d" % Outside_Constants.MAX_CHUNKS)
+	Custom_Logger.log(self, "[ChunkManager] Finished drawing all chunks. Total chunks drawn: %d" % Outside_Constants.MAX_CHUNKS)
 
 func _initialize_layer_data() -> void:
 	# Initialize 3D array: [4 layers][MAX_CHUNKS * CHUNK_TILE_WIDTH][CHUNK_TILE_HEIGHT]
@@ -68,7 +68,7 @@ func _initialize_layer_data() -> void:
 			for y in range(total_height):
 				layer_data[layer_idx][x][y] = null
 	
-	Logger.log(self, "[ChunkManager] Layer data initialized: %d layers, %dx%d size" % [4, total_width, total_height])
+	Custom_Logger.log(self, "[ChunkManager] Layer data initialized: %d layers, %dx%d size" % [4, total_width, total_height])
 
 func _assign_drawer_references() -> void:
 	lower_background_drawer.layer_data = layer_data
@@ -86,7 +86,7 @@ func _assign_drawer_references() -> void:
 	upper_environment_drawer.environment_layer_1 = environment_layer_1_scene
 	upper_environment_drawer.environment_layer_2 = environment_layer_2_scene
 	
-	Logger.log(self, "[ChunkManager] References assigned to all drawers")
+	Custom_Logger.log(self, "[ChunkManager] References assigned to all drawers")
 
 func _draw_all_chunks_layered(chunks_amount: int) -> void:
 	var current_upper_chunk_type = Outside_Constants.UPPER_CHUNK.LIGTH_BUILDING
@@ -105,36 +105,36 @@ func _draw_all_chunks_layered(chunks_amount: int) -> void:
 		var array_of_possible_upper_chunks = Outside_Constants.POSSIBLE_UPPER_CHUNK_BASED_ON_LOWER.get(current_lower_chunk_type)
 		current_upper_chunk_type = array_of_possible_upper_chunks[randi() % array_of_possible_upper_chunks.size()]
 		
-		Logger.log(self, "[ChunkManager] Chunk %d - Lower: %d, Upper: %d" % [chunk_idx, current_lower_chunk_type, current_upper_chunk_type])
+		Custom_Logger.log(self, "[ChunkManager] Chunk %d - Lower: %d, Upper: %d" % [chunk_idx, current_lower_chunk_type, current_upper_chunk_type])
 		
 		# Draw chunk with all layers
 		_draw_chunk_all_layers(current_lower_chunk_type, current_upper_chunk_type, chunk_idx)
 
 func _draw_chunk_all_layers(lower_chunk_type: int, upper_chunk_type: int, chunk_index: int) -> void:
 	# Layer 0: Background
-	Logger.log(self, "[ChunkManager] Drawing background layer for chunk %d" % chunk_index)
+	Custom_Logger.log(self, "[ChunkManager] Drawing background layer for chunk %d" % chunk_index)
 	lower_background_drawer.draw_lower_chunk_to_layer_data(lower_chunk_type, chunk_index, LAYER.BACKGROUND)
 	upper_background_drawer.draw_upper_chunk_to_layer_data(upper_chunk_type, chunk_index, LAYER.BACKGROUND)
 	
 	# Layer 1: Decorations (based on background layer)
-	Logger.log(self, "[ChunkManager] Drawing decorations layer for chunk %d" % chunk_index)
+	Custom_Logger.log(self, "[ChunkManager] Drawing decorations layer for chunk %d" % chunk_index)
 	lower_decorations_drawer.draw_lower_decorations_to_layer_data(lower_chunk_type, chunk_index, LAYER.DECORATIONS, layer_data[LAYER.BACKGROUND])
 	
 	# Layer 2: Environment Layer 1 (based on background and decorations)
-	Logger.log(self, "[ChunkManager] Drawing environment layer 1 for chunk %d" % chunk_index)
+	Custom_Logger.log(self, "[ChunkManager] Drawing environment layer 1 for chunk %d" % chunk_index)
 	var background_context = layer_data[LAYER.BACKGROUND]
 	var decorations_context = layer_data[LAYER.DECORATIONS]
 	lower_environment_drawer.draw_lower_environment_layer_1_to_layer_data(lower_chunk_type, chunk_index, LAYER.ENVIRONMENT_1, background_context, decorations_context)
 	upper_environment_drawer.draw_upper_environment_layer_1_to_layer_data(upper_chunk_type, chunk_index, LAYER.ENVIRONMENT_1, background_context, decorations_context)
 	
 	# Layer 3: Environment Layer 2 (based on all previous layers)
-	Logger.log(self, "[ChunkManager] Drawing environment layer 2 for chunk %d" % chunk_index)
+	Custom_Logger.log(self, "[ChunkManager] Drawing environment layer 2 for chunk %d" % chunk_index)
 	var env1_context = layer_data[LAYER.ENVIRONMENT_1]
 	lower_environment_drawer.draw_lower_environment_layer_2_to_layer_data(lower_chunk_type, chunk_index, LAYER.ENVIRONMENT_2, background_context, decorations_context, env1_context)
 	upper_environment_drawer.draw_upper_environment_layer_2_to_layer_data(upper_chunk_type, chunk_index, LAYER.ENVIRONMENT_2, background_context, decorations_context, env1_context)
 
 func _apply_layer_data_to_scenes() -> void:
-	Logger.log(self, "[ChunkManager] Converting layer data to scene nodes")
+	Custom_Logger.log(self, "[ChunkManager] Converting layer data to scene nodes")
 	
 	# Apply background layer
 	_apply_layer_to_tilemap(LAYER.BACKGROUND, background_scene)
@@ -146,7 +146,7 @@ func _apply_layer_data_to_scenes() -> void:
 	_apply_layer_to_node(LAYER.ENVIRONMENT_1, environment_layer_1_scene)
 	_apply_layer_to_node(LAYER.ENVIRONMENT_2, environment_layer_2_scene)
 	
-	Logger.log(self, "[ChunkManager] All layers applied to scenes")
+	Custom_Logger.log(self, "[ChunkManager] All layers applied to scenes")
 
 func _apply_layer_to_tilemap(layer_index: int, tilemap: TileMapLayer) -> void:
 	var layer = layer_data[layer_index]

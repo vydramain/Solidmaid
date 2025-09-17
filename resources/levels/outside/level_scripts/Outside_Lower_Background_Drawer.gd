@@ -8,7 +8,7 @@ var layer_data: Array[Array] = []
 var background_scene: TileMapLayer
 
 func draw_lower_chunk_to_layer_data(current_chunk_type: Outside_Constants.LOWER_CHUNK, current_chunk_index: int, layer_index: int) -> void:
-	Logger.log(self, "[DRAW_CHUNK] Start drawing lower chunk | Type: " + str(current_chunk_type) + ", Index: " + str(current_chunk_index) + " | layer=" + str(layer_index))
+	Custom_Logger.log(self, "[DRAW_CHUNK] Start drawing lower chunk | Type: " + str(current_chunk_type) + ", Index: " + str(current_chunk_index) + " | layer=" + str(layer_index))
 	
 	var start_y = 0  # Lower chunk always starts at row 0
 	var start_x = current_chunk_index * Outside_Constants.CHUNK_TILE_WIDTH  # Horizontal offset by index
@@ -19,13 +19,13 @@ func draw_lower_chunk_to_layer_data(current_chunk_type: Outside_Constants.LOWER_
 		Outside_Constants.LOWER_CHUNK.ROAD:
 			_fill_road_area_to_layer_data(start_x, start_y, layer_index)
 		Outside_Constants.LOWER_CHUNK.PARK:
-			Logger.log(self, "[DRAW_CHUNK] PARK chunk type currently not implemented")
+			Custom_Logger.log(self, "[DRAW_CHUNK] PARK chunk type currently not implemented")
 		Outside_Constants.LOWER_CHUNK.CROSS_START:
 			_fill_cross_start_area_to_layer_data(start_x, start_y, layer_index)
 		Outside_Constants.LOWER_CHUNK.CROSS_END:
 			_fill_cross_end_area_to_layer_data(start_x, start_y, layer_index)
 		_:
-			Logger.log(self, "[DRAW_CHUNK] Unsupported lower chunk type: " + str(current_chunk_type))
+			Custom_Logger.log(self, "[DRAW_CHUNK] Unsupported lower chunk type: " + str(current_chunk_type))
 
 func _set_tile_in_layer_data(x: int, y: int, layer_index: int, atlas_coords: Vector2i) -> void:
 	"""Helper function to safely set tile data in the layer array"""
@@ -38,7 +38,7 @@ func _set_tile_in_layer_data(x: int, y: int, layer_index: int, atlas_coords: Vec
 				}
 
 func _fill_grass_area_to_layer_data(start_x: int, start_y: int, layer_index: int) -> void:
-	Logger.log(self, "[GRASS] Placing grass tiles | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[GRASS] Placing grass tiles | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	var tile_count = 0
 	for row in range(Outside_Constants.LOWER_CHUNK_TILE_HEIGHT, Outside_Constants.CHUNK_TILE_HEIGHT):
@@ -49,11 +49,11 @@ func _fill_grass_area_to_layer_data(start_x: int, start_y: int, layer_index: int
 			_set_tile_in_layer_data(x_pos, y_pos, layer_index, atlas_coords)
 			tile_count += 1
 			
-	Logger.log(self, "[GRASS] Grass tiles placed | Total tiles: " + str(tile_count))
-	Logger.log(self, "[GRASS] Completed grass area")
+	Custom_Logger.log(self, "[GRASS] Grass tiles placed | Total tiles: " + str(tile_count))
+	Custom_Logger.log(self, "[GRASS] Completed grass area")
 
 func _fill_road_area_to_layer_data(start_x: int, start_y: int, layer_index: int) -> void:
-	Logger.log(self, "[ROAD] Start placing road and sidewalk tiles | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[ROAD] Start placing road and sidewalk tiles | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	var sidewalk_count = 0
 	# Sidewalk
@@ -65,7 +65,7 @@ func _fill_road_area_to_layer_data(start_x: int, start_y: int, layer_index: int)
 			_set_tile_in_layer_data(x_pos, y_pos, layer_index, atlas_coords)
 			sidewalk_count += 1
 	
-	Logger.log(self, "[ROAD] Sidewalk tiles placed | Total tiles: " + str(sidewalk_count))
+	Custom_Logger.log(self, "[ROAD] Sidewalk tiles placed | Total tiles: " + str(sidewalk_count))
 	
 	var road_count = 0
 	# Road
@@ -77,11 +77,11 @@ func _fill_road_area_to_layer_data(start_x: int, start_y: int, layer_index: int)
 			_set_tile_in_layer_data(x_pos, y_pos, layer_index, atlas_coords)
 			road_count += 1
 			
-	Logger.log(self, "[ROAD] Road tiles placed | Total tiles: " + str(road_count))
-	Logger.log(self, "[ROAD] Completed road area")
+	Custom_Logger.log(self, "[ROAD] Road tiles placed | Total tiles: " + str(road_count))
+	Custom_Logger.log(self, "[ROAD] Completed road area")
 
 func _fill_cross_start_area_to_layer_data(start_x: int, start_y: int, layer_index: int) -> void:
-	Logger.log(self, "[CROSS_START] Start placing cross start area tiles | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[CROSS_START] Start placing cross start area tiles | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	var sidewalk_count = 0
 	# Sidewalk pattern
@@ -98,7 +98,7 @@ func _fill_cross_start_area_to_layer_data(start_x: int, start_y: int, layer_inde
 				_set_tile_in_layer_data(x_pos, y_pos, layer_index, atlas_coords)
 				sidewalk_count += 1
 				
-	Logger.log(self, "[CROSS_START] Sidewalk tiles placed | Total tiles: " + str(sidewalk_count))
+	Custom_Logger.log(self, "[CROSS_START] Sidewalk tiles placed | Total tiles: " + str(sidewalk_count))
 	
 	var road_count = 0
 	# Road pattern
@@ -114,11 +114,11 @@ func _fill_cross_start_area_to_layer_data(start_x: int, start_y: int, layer_inde
 				_set_tile_in_layer_data(x_pos, y_pos, layer_index, atlas_coords)
 				road_count += 1
 	
-	Logger.log(self, "[CROSS_START] Cross start tiles placed | Total tiles: " + str(road_count))
-	Logger.log(self, "[CROSS_START] Completed cross start area")
+	Custom_Logger.log(self, "[CROSS_START] Cross start tiles placed | Total tiles: " + str(road_count))
+	Custom_Logger.log(self, "[CROSS_START] Completed cross start area")
 
 func _fill_cross_end_area_to_layer_data(start_x: int, start_y: int, layer_index: int) -> void:
-	Logger.log(self, "[CROSS_END] Start placing cross end area tiles | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
+	Custom_Logger.log(self, "[CROSS_END] Start placing cross end area tiles | Start position: (" + str(start_x) + ", " + str(start_y) + ")")
 	
 	var sidewalk_count = 0
 	# Sidewalk pattern
@@ -135,7 +135,7 @@ func _fill_cross_end_area_to_layer_data(start_x: int, start_y: int, layer_index:
 				_set_tile_in_layer_data(x_pos, y_pos, layer_index, atlas_coords)
 				sidewalk_count += 1
 				
-	Logger.log(self, "[CROSS_ENDS] Sidewalk tiles placed | Total tiles: " + str(sidewalk_count))
+	Custom_Logger.log(self, "[CROSS_ENDS] Sidewalk tiles placed | Total tiles: " + str(sidewalk_count))
 	
 	var road_count = 0
 	# Road pattern
@@ -151,5 +151,5 @@ func _fill_cross_end_area_to_layer_data(start_x: int, start_y: int, layer_index:
 				_set_tile_in_layer_data(x_pos, y_pos, layer_index, atlas_coords)
 				road_count += 1
 	
-	Logger.log(self, "[CROSS_END] Cross end tiles placed | Total tiles: " + str(road_count))
-	Logger.log(self, "[CROSS_END] Completed cross area")
+	Custom_Logger.log(self, "[CROSS_END] Cross end tiles placed | Total tiles: " + str(road_count))
+	Custom_Logger.log(self, "[CROSS_END] Completed cross area")
