@@ -1,8 +1,8 @@
 extends "res://resources/entity/Entity.gd"
 
 func _physics_process(delta: float) -> void:
-	var direction = Vector2.RIGHT.rotated(rotation)
-	global_position += SPEED * direction * delta
+	#var direction = Vector2.RIGHT.rotated(rotation)
+	#global_position += SPEED * direction * delta
 	
 	if global_position.length() > 5000:
 		destroy()

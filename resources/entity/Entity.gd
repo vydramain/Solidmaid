@@ -9,7 +9,7 @@ signal died
 @export var hp_max: int = 100 : set = set_hp_max
 @export var hp: int = hp_max : set = set_hp
 @export var defence: int = 0
-@export var invincibility: bool = false
+@export var invincibility: bool = true
 
 @onready var collision_shape = $CollisionShape2D
 @onready var INVINCIBILITY_TIMER = $InvincibilityTimer
@@ -39,7 +39,7 @@ func _ready() -> void:
 
 
 func _on_invincibility_timer_timeout() -> void:
-	invincibility = false
+	#invincibility = false
 	Custom_Logger.log(self, "Invincibility ended")
 
 

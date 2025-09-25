@@ -12,15 +12,15 @@ height = 11.3137
 [node name="Projecttile" instance=ExtResource("1_kgsmo")]
 collision_layer = 16
 script = ExtResource("2_f2u4q")
-hp_max = 10
 SPEED = 780
+hp_max = 10
 
 [node name="Sprite2D" parent="." index="0"]
 rotation = 1.5708
 scale = Vector2(0.078125, 0.390625)
 texture = ExtResource("3_f2u4q")
 
-[node name="Hutrbox" parent="." index="3"]
+[node name="Hutrbox" parent="." index="2"]
 collision_layer = 16
 
 [node name="CollisionShape2D" parent="Hutrbox" index="0"]

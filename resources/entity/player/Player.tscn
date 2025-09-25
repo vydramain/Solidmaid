@@ -71,6 +71,10 @@ position = Vector2(0, 1)
 collision_layer = 2
 collision_mask = 1
 script = ExtResource("2_oomdy")
+SPEED = null
+hp_max = 100000
+defence = null
+invincibility = null
 
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("3_jnwix")

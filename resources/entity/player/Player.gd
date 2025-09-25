@@ -60,25 +60,9 @@ func _physics_process(delta):
 func _on_died() -> void:
 	var main = get_tree().root.get_node("Main") # Adjust path if needed
 	if main == null or not main.has_method("load_level"):
-		Custom_Logger.log(self, "[ERROR] Main node with 'load_level' method not found!")
+		Custom_Logger.error(self, "[ERROR] Main node with 'load_level' method not found!")
 		return
-
-	var current_level = main.get("current_level")
-	var scene_file = current_level.scene_file_path if current_level else ""
-	Custom_Logger.log(self, "Player died. Current level: %s" % scene_file)
-
-	var next_level: PackedScene = null
-	if scene_file == HOME_LEVEL_PATH:
-		next_level = FACTORY_LEVEL
-	elif scene_file == FACTORY_LEVEL_PATH:
-		next_level = HOME_LEVEL
-
-	if next_level:
-		Custom_Logger.log(self, "Loading next level: %s" % next_level.resource_path)
-		main.load_level(next_level)
-	else:
-		Custom_Logger.log(self, "[ERROR] Unable to determine next level from scene file: %s" % str(scene_file))
-		
+	
 	self.die()
 
 func throw_projecttile(direction: Vector2) -> void:
