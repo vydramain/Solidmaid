@@ -1,27 +1,29 @@
 extends "res://resources/entity/Entity.gd"
 
-const HOME_LEVEL_PATH: String = "res://resources/levels/home/Home_Level.tscn"
-const FACTORY_LEVEL_PATH: String = "res://resources/levels/factory/Factory_Level.tscn"
-const PROJECTTILE_SCENE_PATH: String = "res://resources/entity/environment/birck/Brick.tscn"
+const home_level_path: String = "res://resources/levels/home/Home_Level.tscn"
+const factory_level_path: String = "res://resources/levels/factory/Factory_Level.tscn"
+const projecttile_scene_path: String = "res://resources/entity/environment/birck/Brick.tscn"
 
-@onready var HOME_LEVEL: PackedScene = load(HOME_LEVEL_PATH)
-@onready var FACTORY_LEVEL: PackedScene = load(FACTORY_LEVEL_PATH)
-@onready var PROJECTTILE_SCENE: PackedScene = preload(PROJECTTILE_SCENE_PATH)
+@onready var home_level: PackedScene = load(home_level_path)
+@onready var factiry_level: PackedScene = load(factory_level_path)
+@onready var projecttile_scene: PackedScene = preload(projecttile_scene_path)
 
-@onready var SPRITE = $Sprite2D
-@onready var ATTACK_TIMER = $AttackTimer
-@onready var ANIMATION_PLAYER = $AnimationPlayer
+@onready var sprite = $Sprite2D
+@onready var character_body = $CharacterBody2D
+
+@onready var attack_timer = $AttackTimer
+@onready var animation_player = $AnimationPlayer
 
 var respawn_position := Vector2(100, 100)
 var attack_ready: bool = true
 
 func _ready() -> void:
 	Custom_Logger.log(self, "Spawned object. Groups: " + str(self.get_groups()))
-	Custom_Logger.log(self, "Node name: %s, AnimationPlayer ready: %s" % [self.name, ANIMATION_PLAYER])
+	Custom_Logger.log(self, "Node name: %s, AnimationPlayer ready: %s" % [self.name, animation_player])
 	
 	# Connect timers
-	ATTACK_TIMER.timeout.connect(_on_attack_timer_timeout)
-	INVINCIBILITY_TIMER.timeout.connect(_on_invincibility_timer_timeout)
+	attack_timer.timeout.connect(_on_attack_timer_timeout)
+	invincibility_timer.timeout.connect(_on_invincibility_timer_timeout)
 	Custom_Logger.log(self, "Timers connected successfully.")
 
 func _on_attack_timer_timeout() -> void:
@@ -33,17 +35,23 @@ func _physics_process(delta):
 	
 	if input_dir != Vector2.ZERO:
 		# Player is moving
-		velocity = SPEED * input_dir
-		ANIMATION_PLAYER.play("Moving")
-		ANIMATION_PLAYER.speed_scale = 2.0
+		if character_body == null:
+			pass
 		
-		if input_dir.x != 0 and sign(SPRITE.scale.x) != sign(input_dir.x):
-			SPRITE.scale.x *= -1
-			Custom_Logger.log(self, "Sprite flipped. New scale.x: %s" % SPRITE.scale.x)
+		character_body.velocity = SPEED * input_dir
+		animation_player.play("Moving")
+		animation_player.speed_scale = 2.0
+		
+		if input_dir.x != 0 and sign(sprite.scale.x) != sign(input_dir.x):
+			sprite.scale.x *= -1
+			Custom_Logger.log(self, "Sprite flipped. New scale.x: %s" % sprite.scale.x)
 	else:
 		# Player is idle
-		velocity = Vector2.ZERO
-		ANIMATION_PLAYER.play("Idle")
+		if character_body == null:
+			pass
+		
+		character_body.velocity = Vector2.ZERO
+		animation_player.play("Idle")
 
 	# Handle attack input
 	if Input.is_action_pressed("action_attack") and attack_ready:
@@ -55,7 +63,7 @@ func _physics_process(delta):
 			throw_projecttile(attack_dir)
 			Custom_Logger.log(self, "Projectile thrown in direction: %s" % attack_dir)
 	
-	move_and_slide()
+	character_body.move_and_slide()
 
 func _on_died() -> void:
 	var main = get_tree().root.get_node("Main") # Adjust path if needed
@@ -66,8 +74,8 @@ func _on_died() -> void:
 	self.die()
 
 func throw_projecttile(direction: Vector2) -> void:
-	if PROJECTTILE_SCENE:
-		var projecttile_scene = PROJECTTILE_SCENE.instantiate()
+	if projecttile_scene:
+		var projecttile_scene = projecttile_scene.instantiate()
 		get_tree().current_scene.add_child(projecttile_scene)
 		projecttile_scene.global_position = self.global_position
 		
@@ -75,11 +83,11 @@ func throw_projecttile(direction: Vector2) -> void:
 		projecttile_scene.rotation = projectile_rotation
 		
 		attack_ready = false
-		ATTACK_TIMER.start()
+		attack_timer.start()
 		Custom_Logger.log(self, "Attack cooldown started.")
 		
 		invincibility = true
-		INVINCIBILITY_TIMER.start()
+		invincibility_timer.start()
 		Custom_Logger.log(self, "Player is temporarily invincible.")
 
 func get_input_direction() -> Vector2:

@@ -9,10 +9,6 @@ radius = 3.0
 height = 11.313156
 
 [node name="Brick" instance=ExtResource("1_3fc4l")]
-SPEED = null
-hp_max = null
-defence = null
-invincibility = null
 
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_bkmj8")

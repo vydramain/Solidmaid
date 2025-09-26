@@ -11,9 +11,12 @@ signal died
 @export var defence: int = 0
 @export var invincibility: bool = true
 
-@onready var collision_shape = $CollisionShape2D
-@onready var INVINCIBILITY_TIMER = $InvincibilityTimer
+@onready var physic_box: RigidBody2D = $Physicbox
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
+@onready var invincibility_timer: Timer = $InvincibilityTimer
 
+
+# ================= HP SYSTEM =================
 func set_hp_max(new_hp_max: int) -> void:
 	if new_hp_max != hp_max:
 		var updated_max_hp = max(new_hp_max, 0)
@@ -21,7 +24,6 @@ func set_hp_max(new_hp_max: int) -> void:
 		hp_max = updated_max_hp
 		emit_signal("hp_max_changed", hp_max)
 		Custom_Logger.log(self, "HP max changed to %d, adjusted current HP to %d" % [hp_max, hp])
-
 
 func set_hp(new_hp: int) -> void:
 	hp = clamp(new_hp, 0, hp_max)
@@ -31,21 +33,26 @@ func set_hp(new_hp: int) -> void:
 		emit_signal("died")
 		Custom_Logger.log(self, "Entity died")
 
-
+# ================= INIT =================
 func _ready() -> void:
 	Custom_Logger.log(self, "Spawned Entity '%s': HP = %d / %d, Defence = %d, Speed = %d" % [
 		name, hp, hp_max, defence, SPEED
 	])
 
-func _on_invincibility_timer_timeout() -> void:
-	#invincibility = false
-	Custom_Logger.log(self, "Invincibility ended")
+# ================= MOVEMENT =================
+func _physics_process(delta: float) -> void:
+	# Example: constant movement to the right based on SPEED
+	var direction = Vector2.RIGHT.rotated(rotation)
+	physic_box.linear_velocity = direction * SPEED
+	
+	# Sync root Area2D position with physics box
+	global_position = physic_box.global_position
 
+# ================= DAMAGE =================
 func _on_hutrbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Hitboxes"):
 		Custom_Logger.log(self, "Entered hitbox from %s with damage %d" % [area.get_name(), area.damage])
 		receive_damage(area.damage)
-
 
 func receive_damage(base_damage: int) -> void:
 	if invincibility:
@@ -59,7 +66,12 @@ func receive_damage(base_damage: int) -> void:
 	])
 	self.set_hp(new_hp)
 
-
+# ================= DEATH =================
 func die() -> void:
 	Custom_Logger.log(self, "Entity queued for removal")
 	queue_free()
+
+# ================= TIMER =================
+func _on_invincibility_timer_timeout() -> void:
+	#invincibility = false
+	Custom_Logger.log(self, "Invincibility ended")
