@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://dkoyqpjgswicj"]
+
+[ext_resource type="PackedScene" uid="uid://cqpxy3pumpgkn" path="res://resources/entity/environment/Environment.tscn" id="1_3fc4l"]
+[ext_resource type="Texture2D" uid="uid://cgi880wqef3wk" path="res://assets/textures/projecttiles/brick_1.png" id="2_bkmj8"]
+[ext_resource type="PackedScene" uid="uid://d0gquhibr1mtr" path="res://resources/overlap/Physicbox.tscn" id="4_t6ufc"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kf7pd"]
+radius = 3.0
+height = 11.313156
+
+[node name="Brick" instance=ExtResource("1_3fc4l")]
+SPEED = null
+hp_max = null
+defence = null
+invincibility = null
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_bkmj8")
+
+[node name="Physicbox" parent="." index="4" instance=ExtResource("4_t6ufc")]
+
+[node name="CollisionShape2D" parent="Physicbox" index="0"]
+rotation = 0.77551067
+shape = SubResource("CapsuleShape2D_kf7pd")
+
+[editable path="Physicbox"]

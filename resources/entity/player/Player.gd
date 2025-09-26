@@ -2,7 +2,7 @@ extends "res://resources/entity/Entity.gd"
 
 const HOME_LEVEL_PATH: String = "res://resources/levels/home/Home_Level.tscn"
 const FACTORY_LEVEL_PATH: String = "res://resources/levels/factory/Factory_Level.tscn"
-const PROJECTTILE_SCENE_PATH: String = "res://resources/entity/projecttiles/bircks/Brick.tscn"
+const PROJECTTILE_SCENE_PATH: String = "res://resources/entity/environment/birck/Brick.tscn"
 
 @onready var HOME_LEVEL: PackedScene = load(HOME_LEVEL_PATH)
 @onready var FACTORY_LEVEL: PackedScene = load(FACTORY_LEVEL_PATH)

@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends Area2D
 
 signal hp_max_changed(hp)
 signal hp_changed(hp)
@@ -37,15 +37,9 @@ func _ready() -> void:
 		name, hp, hp_max, defence, SPEED
 	])
 
-
 func _on_invincibility_timer_timeout() -> void:
 	#invincibility = false
 	Custom_Logger.log(self, "Invincibility ended")
-
-
-func _physics_process(delta: float) -> void:
-	move_and_slide()
-
 
 func _on_hutrbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Hitboxes"):
