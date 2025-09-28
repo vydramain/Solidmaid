@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bxp005ph207xb"]
+
+[node name="PhysicLine" type="Area2D"]
+collision_layer = 128
+collision_mask = 88
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]

@@ -83,7 +83,7 @@ shape = SubResource("RectangleShape2D_hexbj")
 
 [node name="CharacterBox" parent="." index="2" instance=ExtResource("4_6vwlr")]
 collision_layer = 2
-collision_mask = 63
+collision_mask = 255
 
 [node name="CollisionShape2D" parent="CharacterBox" index="0"]
 position = Vector2(0, 16)

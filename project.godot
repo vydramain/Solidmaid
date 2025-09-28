@@ -27,6 +27,10 @@ window/size/window_width_override=1280
 window/size/window_height_override=800
 window/stretch/mode="viewport"
 
+[gui]
+
+theme/default_font_antialiasing=2
+
 [input]
 
 move_right={
@@ -82,12 +86,14 @@ action_attack={
 
 [layer_names]
 
-2d_physics/layer_1="Environment"
+2d_physics/layer_1="Background"
 2d_physics/layer_2="Player"
 2d_physics/layer_3="Enemies"
 2d_physics/layer_4="Items"
 2d_physics/layer_5="Projecttiles"
 2d_physics/layer_6="Triggers"
+2d_physics/layer_7="Environment"
+2d_physics/layer_8="Floor Lines"
 2d_physics/stretch/mode="viewport"
 
 [rendering]
