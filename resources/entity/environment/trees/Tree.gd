@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends Area2D
 
 @onready var ANIMATION_PLAYER = $AnimationPlayer
 

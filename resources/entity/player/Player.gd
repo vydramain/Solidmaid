@@ -30,7 +30,7 @@ func _on_attack_timer_timeout() -> void:
 	attack_ready = true
 	Custom_Logger.log(self, "Attack timer ended. Player can attack again.")
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	var input_dir = get_input_direction()
 	
 	if input_dir != Vector2.ZERO:
@@ -68,7 +68,6 @@ func _physics_process(delta):
 	character_box.move_and_slide()
 	character_box.position = Vector2.ZERO  # reset local offset
 	global_position += character_box.velocity * delta
-	#global_position = character_box.global_position
 
 func _on_died() -> void:
 	var main = get_tree().root.get_node("Main") # Adjust path if needed
