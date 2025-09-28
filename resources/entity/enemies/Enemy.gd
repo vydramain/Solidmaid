@@ -9,14 +9,6 @@ func _ready() -> void:
 	# Log spawning using Logger
 	Custom_Logger.log(self, "[Spawned] Name: %s | Position: %s" % [name, global_position])
 
-func _process(delta: float) -> void:
-	if player:
-		var direction = (player.global_position - global_position).normalized()
-		position += direction * SPEED * delta
-		
-		# Optional movement debug
-		# Custom_Logger.log(self, "[Movement] Moving towards player at %s | Delta: %f" % [player.global_position, delta])
-
 func _on_died() -> void:
 	if spawner:
 		spawner.report_enemy_killed()

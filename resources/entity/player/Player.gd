@@ -9,7 +9,7 @@ const projecttile_scene_path: String = "res://resources/entity/environment/birck
 @onready var projecttile_scene: PackedScene = preload(projecttile_scene_path)
 
 @onready var sprite = $Sprite2D
-@onready var character_body = $CharacterBody2D
+@onready var character_box = $CharacterBox
 
 @onready var attack_timer = $AttackTimer
 @onready var animation_player = $AnimationPlayer
@@ -35,10 +35,11 @@ func _physics_process(delta):
 	
 	if input_dir != Vector2.ZERO:
 		# Player is moving
-		if character_body == null:
+		if character_box == null:
 			pass
 		
-		character_body.velocity = SPEED * input_dir
+		# accelerate toward target
+		character_box.velocity = character_box.velocity.move_toward(character_box.speed * input_dir, character_box.accel * delta)
 		animation_player.play("Moving")
 		animation_player.speed_scale = 2.0
 		
@@ -47,10 +48,11 @@ func _physics_process(delta):
 			Custom_Logger.log(self, "Sprite flipped. New scale.x: %s" % sprite.scale.x)
 	else:
 		# Player is idle
-		if character_body == null:
+		if character_box == null:
 			pass
 		
-		character_body.velocity = Vector2.ZERO
+		# decelerate toward zero (friction)
+		character_box.velocity = character_box.velocity.move_toward(Vector2.ZERO, character_box.friction * delta)
 		animation_player.play("Idle")
 
 	# Handle attack input
@@ -63,7 +65,10 @@ func _physics_process(delta):
 			throw_projecttile(attack_dir)
 			Custom_Logger.log(self, "Projectile thrown in direction: %s" % attack_dir)
 	
-	character_body.move_and_slide()
+	character_box.move_and_slide()
+	character_box.position = Vector2.ZERO  # reset local offset
+	global_position += character_box.velocity * delta
+	#global_position = character_box.global_position
 
 func _on_died() -> void:
 	var main = get_tree().root.get_node("Main") # Adjust path if needed

@@ -4,14 +4,11 @@ signal hp_max_changed(hp)
 signal hp_changed(hp)
 signal died
 
-@export var SPEED: int = 50
-
 @export var hp_max: int = 100 : set = set_hp_max
 @export var hp: int = hp_max : set = set_hp
 @export var defence: int = 0
 @export var invincibility: bool = true
 
-@onready var physic_box: RigidBody2D = $Physicbox
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var invincibility_timer: Timer = $InvincibilityTimer
 
@@ -35,18 +32,9 @@ func set_hp(new_hp: int) -> void:
 
 # ================= INIT =================
 func _ready() -> void:
-	Custom_Logger.log(self, "Spawned Entity '%s': HP = %d / %d, Defence = %d, Speed = %d" % [
-		name, hp, hp_max, defence, SPEED
+	Custom_Logger.log(self, "Spawned Entity '%s': HP = %d / %d, Defence = %d" % [
+		name, hp, hp_max, defence
 	])
-
-# ================= MOVEMENT =================
-func _physics_process(delta: float) -> void:
-	# Example: constant movement to the right based on SPEED
-	var direction = Vector2.RIGHT.rotated(rotation)
-	physic_box.linear_velocity = direction * SPEED
-	
-	# Sync root Area2D position with physics box
-	global_position = physic_box.global_position
 
 # ================= DAMAGE =================
 func _on_hutrbox_area_entered(area: Area2D) -> void:
