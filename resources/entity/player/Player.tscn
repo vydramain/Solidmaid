@@ -67,8 +67,6 @@ _data = {
 
 [node name="Player" groups=["Player"] instance=ExtResource("1_v3dkm")]
 position = Vector2(0, 1)
-collision_layer = 2
-collision_mask = 1
 script = ExtResource("2_oomdy")
 hp_max = 100000
 
@@ -83,19 +81,22 @@ shape = SubResource("RectangleShape2D_hexbj")
 
 [node name="CharacterBox" parent="." index="2" instance=ExtResource("4_6vwlr")]
 collision_layer = 2
-collision_mask = 255
+collision_mask = 127
 
 [node name="CollisionShape2D" parent="CharacterBox" index="0"]
 position = Vector2(0, 16)
 shape = SubResource("RectangleShape2D_6vwlr")
 debug_color = Color(0.8402219, 0.0011509025, 0.92396057, 0.41960785)
 
-[node name="AnimationPlayer" parent="." index="3"]
+[node name="FootMarker" type="Marker2D" parent="." index="3"]
+position = Vector2(0, 26)
+
+[node name="AnimationPlayer" parent="." index="4"]
 libraries = {
 &"": SubResource("AnimationLibrary_6vwlr")
 }
 
-[node name="AttackTimer" type="Timer" parent="." index="4"]
+[node name="AttackTimer" type="Timer" parent="." index="5"]
 wait_time = 0.4
 
 [connection signal="died" from="." to="." method="_on_died"]

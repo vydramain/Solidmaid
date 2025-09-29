@@ -9,6 +9,7 @@ const projecttile_scene_path: String = "res://resources/entity/environment/birck
 @onready var projecttile_scene: PackedScene = preload(projecttile_scene_path)
 
 @onready var sprite = $Sprite2D
+@onready var foot_marker = $FootMarker
 @onready var character_box = $CharacterBox
 
 @onready var attack_timer = $AttackTimer
@@ -102,3 +103,6 @@ func get_input_direction() -> Vector2:
 	input_dir = input_dir.normalized()
 	
 	return input_dir
+
+func get_bottom_y() -> float:
+	return foot_marker.global_position.y

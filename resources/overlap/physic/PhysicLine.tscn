@@ -1,7 +1,11 @@
-[gd_scene format=3 uid="uid://bxp005ph207xb"]
+[gd_scene load_steps=2 format=3 uid="uid://bxp005ph207xb"]
 
-[node name="PhysicLine" type="Area2D"]
+[ext_resource type="Script" uid="uid://cfpcta7t00n8r" path="res://resources/overlap/physic/Physic_Line.gd" id="1_bm1he"]
+
+[node name="PhysicLine" type="StaticBody2D"]
 collision_layer = 128
 collision_mask = 88
+script = ExtResource("1_bm1he")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+debug_color = Color(0.25585902, 0.6153617, 0.4513691, 0.41960785)
