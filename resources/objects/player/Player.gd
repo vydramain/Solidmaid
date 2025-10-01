@@ -6,8 +6,8 @@ extends Entity
 @onready var factiry_level: PackedScene = load(Resource_Registry.LEVELS["FACTORY"])
 
 @onready var sprite = $Sprite2D
-@onready var foot_marker = $FootMarker
 @onready var character_box = $CharacterBox
+@onready var foot_marker = $CharacterBox/FootMarker
 
 @onready var attack_timer = $AttackTimer
 @onready var animation_player = $AnimationPlayer
@@ -78,6 +78,7 @@ func _on_died() -> void:
 func throw_projectile(direction: Vector2) -> void:
 	if projectile_scene:
 		var projectile: Brick = projectile_scene.instantiate()
+		projectile.floor_coord_y = foot_marker.global_position.y
 		get_tree().current_scene.add_child(projectile)
 		projectile.global_position = global_position
 
