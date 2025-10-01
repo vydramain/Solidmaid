@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://d14g673ac6wgm"]
+
+[ext_resource type="Script" uid="uid://8ykxb57xwyxk" path="res://resources/managers/EnvironmentManager.gd" id="1_tmn73"]
+[ext_resource type="PackedScene" uid="uid://bxp005ph207xb" path="res://resources/overlap/physic/PhysicLine.tscn" id="2_ej5lb"]
+[ext_resource type="PackedScene" uid="uid://dkoyqpjgswicj" path="res://resources/entity/environment/birck/Brick.tscn" id="3_fuvra"]
+
+[node name="EnvironmentManager" type="Node2D"]
+script = ExtResource("1_tmn73")
+
+[node name="FloorPhysicLineContainer" type="Node2D" parent="."]
+
+[node name="BrickPhysicLine" parent="FloorPhysicLineContainer" instance=ExtResource("2_ej5lb")]
+
+[node name="EnvironmentContainer" type="Node2D" parent="."]
+
+[node name="Brick" parent="EnvironmentContainer" instance=ExtResource("3_fuvra")]
+
+[node name="Brick2" parent="EnvironmentContainer" instance=ExtResource("3_fuvra")]
+
+[node name="Brick3" parent="EnvironmentContainer" instance=ExtResource("3_fuvra")]
+
+[node name="Brick4" parent="EnvironmentContainer" instance=ExtResource("3_fuvra")]
+
+[node name="Brick5" parent="EnvironmentContainer" instance=ExtResource("3_fuvra")]
+
+[editable path="FloorPhysicLineContainer/BrickPhysicLine"]
