@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://dkoyqpjgswicj"]
+
+[ext_resource type="PackedScene" uid="uid://cqpxy3pumpgkn" path="res://resources/objects/environment/Environment.tscn" id="1_3fc4l"]
+[ext_resource type="Texture2D" uid="uid://cgi880wqef3wk" path="res://assets/textures/projecttiles/brick_1.png" id="2_bkmj8"]
+[ext_resource type="Script" uid="uid://dolwurki84upj" path="res://resources/objects/environment/birck/Brick.gd" id="2_lh865"]
+[ext_resource type="PackedScene" uid="uid://d0gquhibr1mtr" path="res://resources/overlap/physic/PhysicBox.tscn" id="4_t6ufc"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lh865"]
+radius = 3.0
+height = 11.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kf7pd"]
+radius = 3.0
+height = 11.0
+
+[node name="Brick" instance=ExtResource("1_3fc4l")]
+script = ExtResource("2_lh865")
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_bkmj8")
+
+[node name="CollisionShape2D" parent="." index="1"]
+rotation = 0.7679449
+shape = SubResource("CapsuleShape2D_lh865")
+
+[node name="PhysicBox" parent="." index="2" instance=ExtResource("4_t6ufc")]
+collision_layer = 64
+collision_mask = 198
+
+[node name="CollisionShape2D" parent="PhysicBox" index="0"]
+rotation = 0.7679449
+shape = SubResource("CapsuleShape2D_kf7pd")
+debug_color = Color(0.819186, 0.40175882, 0.11566668, 0.41960785)
+
+[editable path="PhysicBox"]

@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://dy5xwc7rqy4mk"]
+
+[ext_resource type="PackedScene" uid="uid://by8f7mfnathye" path="res://resources/objects/Entity.tscn" id="1_ufd83"]
+[ext_resource type="Script" uid="uid://k5hf43tsul76" path="res://resources/objects/enemies/Enemy.gd" id="2_428ou"]
+[ext_resource type="Texture2D" uid="uid://d1p51fk2orm6k" path="res://assets/textures/enemies/enemy.png" id="3_wqp4d"]
+[ext_resource type="PackedScene" uid="uid://8clcbxdgnjh5" path="res://resources/overlap/hit/Hitbox.tscn" id="4_17e4g"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wqp4d"]
+radius = 6.0
+height = 26.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lkkvi"]
+radius = 8.0
+height = 26.0
+
+[node name="Enemy" instance=ExtResource("1_ufd83")]
+position = Vector2(2, -2)
+collision_layer = 4
+collision_mask = 21
+script = ExtResource("2_428ou")
+SPEED = 200
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("3_wqp4d")
+
+[node name="Hutrbox#CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
+position = Vector2(-2, 2)
+shape = SubResource("CapsuleShape2D_wqp4d")
+debug_color = Color(0, 0.567573, 0.856747, 0.42)
+
+[node name="Hitbox" parent="." index="4" instance=ExtResource("4_17e4g")]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+position = Vector2(-1, 2)
+shape = SubResource("CapsuleShape2D_lkkvi")
+debug_color = Color(0.786595, 0.406209, 0.40062, 0.42)
+
+[editable path="Hitbox"]

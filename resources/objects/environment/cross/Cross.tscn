@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://ovmjjgop8wk2"]
+
+[ext_resource type="PackedScene" uid="uid://cqpxy3pumpgkn" path="res://resources/objects/environment/Environment.tscn" id="1_osqlp"]
+[ext_resource type="Texture2D" uid="uid://mumoryw1urhl" path="res://assets/textures/outside/cross.png" id="2_wgpd1"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_taibi"]
+radius = 3.0
+height = 10.0
+
+[node name="Cross" instance=ExtResource("1_osqlp")]
+collision_layer = 1
+collision_mask = 31
+
+[node name="Sprite2D" parent="." index="0"]
+position = Vector2(8, 24)
+texture = ExtResource("2_wgpd1")
+
+[node name="CollisionShape2D" parent="." index="1"]
+position = Vector2(8, 40)
+shape = SubResource("CapsuleShape2D_taibi")
+
+[editable path="Hutrbox"]

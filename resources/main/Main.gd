@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var initial_level_scene: PackedScene = preload("res://resources/levels/home/Home_Level.tscn")
+@export var initial_level_scene: PackedScene = preload(Resource_Registry.LEVELS["HOME"])
 
 @onready var level_container = $LevelContainer
 @onready var current_scene = $CurrentScene

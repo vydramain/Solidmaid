@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://cqpxy3pumpgkn"]
+
+[ext_resource type="PackedScene" uid="uid://by8f7mfnathye" path="res://resources/objects/Entity.tscn" id="1_6nhbu"]
+
+[node name="Environment" instance=ExtResource("1_6nhbu")]
