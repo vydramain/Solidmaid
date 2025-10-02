@@ -1,6 +1,7 @@
 extends Area2D
 class_name Brick
 
+@onready var sprite: Sprite2D = $Sprite2D
 @onready var physic_box: RigidBody2D = $PhysicBox
 @onready var physic_line: StaticBody2D = $PhysicLine
 
@@ -11,14 +12,16 @@ func _ready() -> void:
 	physic_box.sleeping = false
 
 func _physics_process(delta: float) -> void:
-	if physic_box == null:
-		pass
+	if sprite != null:
+		sprite.global_position = physic_box.global_position
+		sprite.rotation = physic_box.rotation
 	
-	physic_box.position = Vector2.ZERO
-	global_position += physic_box.linear_velocity * delta
-	if floor_coord_y != null:
-		physic_line.global_position.y = floor_coord_y
-		
+	if physic_box != null:
+		physic_box.position = Vector2.ZERO
+		global_position += physic_box.linear_velocity * delta
+		if floor_coord_y != null:
+			physic_line.global_position.y = floor_coord_y
+
 
 func launch(direction: Vector2, strength: float) -> void:
 	if physic_box:

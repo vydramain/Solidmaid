@@ -15,7 +15,7 @@ radius = 3.0
 height = 11.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0jp1m"]
-size = Vector2(10, 1)
+size = Vector2(20, 1)
 
 [node name="Brick" instance=ExtResource("1_3fc4l")]
 script = ExtResource("2_lh865")
@@ -37,7 +37,7 @@ rotation = 0.7679449
 shape = SubResource("CapsuleShape2D_kf7pd")
 debug_color = Color(0.819186, 0.40175882, 0.11566668, 0.41960785)
 
-[node name="PhysicLine" parent="." index="5" instance=ExtResource("5_0jp1m")]
+[node name="PhysicLine" parent="." index="3" instance=ExtResource("5_0jp1m")]
 
 [node name="CollisionShape2D" parent="PhysicLine" index="0"]
 shape = SubResource("RectangleShape2D_0jp1m")
