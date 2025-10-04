@@ -5,12 +5,13 @@ extends Entity
 @onready var home_level: PackedScene = load(Resource_Registry.LEVELS["HOME"])
 @onready var factiry_level: PackedScene = load(Resource_Registry.LEVELS["FACTORY"])
 
-@onready var sprite = $Sprite2D
 @onready var character_box = $CharacterBox
 @onready var foot_marker = $CharacterBox/FootMarker
 
+@onready var sprite = $SpriteBox
+@onready var animation_player = $SpriteBox/AnimationPlayer
+
 @onready var attack_timer = $AttackTimer
-@onready var animation_player = $AnimationPlayer
 
 var respawn_position := Vector2(100, 100)
 var attack_ready: bool = true
@@ -32,13 +33,13 @@ func _physics_process(delta: float) -> void:
 	var input_dir = get_input_direction()
 	
 	if input_dir != Vector2.ZERO:
-		# Player is moving
+		# Player is Walk
 		if character_box == null:
 			pass
 		
 		# accelerate toward target
 		character_box.velocity = character_box.velocity.move_toward(character_box.speed * input_dir, character_box.accel * delta)
-		animation_player.play("Moving")
+		animation_player.play("Walk")
 		animation_player.speed_scale = 2.0
 		
 		if input_dir.x != 0 and sign(sprite.scale.x) != sign(input_dir.x):

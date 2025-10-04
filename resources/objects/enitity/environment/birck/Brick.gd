@@ -1,7 +1,7 @@
 extends Area2D
 class_name Brick
 
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite_box: Sprite2D = $SpriteBox
 @onready var physic_box: RigidBody2D = $PhysicBox
 @onready var physic_line: StaticBody2D = $PhysicLine
 
@@ -12,9 +12,9 @@ func _ready() -> void:
 	physic_box.sleeping = false
 
 func _physics_process(delta: float) -> void:
-	if sprite != null:
-		sprite.global_position = physic_box.global_position
-		sprite.rotation = physic_box.rotation
+	if sprite_box != null:
+		sprite_box.global_position = physic_box.global_position
+		sprite_box.rotation = physic_box.rotation
 	
 	if physic_box != null:
 		physic_box.position = Vector2.ZERO

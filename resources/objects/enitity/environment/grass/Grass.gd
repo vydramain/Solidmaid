@@ -1,13 +1,12 @@
-extends Node2D
+extends Area2D
 
 @export var tile_size: int = 8
 @export var tile_height: int = 1
 @export var tile_width: int = 8
 @export var sprite_type: int = 0  # 0-3 for four different sprites
 
-# Use regular variables instead of @onready for dynamic instantiation
-var sprite: Sprite2D
-var animation_player: AnimationPlayer
+@onready var sprite_box: Sprite2D = $SpriteBox
+@onready var animation_player: AnimationPlayer = $SpriteBox/AnimationPlayer
 
 # Arrays to hold your sprite textures and animation names
 var sprite_textures: Array[Texture2D] = []
@@ -21,10 +20,6 @@ func _ready():
 	call_deferred("initialize_grass")
 
 func initialize_grass():
-	# Get child nodes manually
-	sprite = get_node_or_null("Sprite2D")
-	animation_player = get_node_or_null("AnimationPlayer")
-	
 	if not validate_scene_structure():
 		return
 	
@@ -37,7 +32,7 @@ func initialize_grass():
 	Custom_Logger.debug(self, "Grass scene initialized at position: " + str(position))
 
 func validate_scene_structure() -> bool:
-	if sprite == null:
+	if sprite_box == null:
 		Custom_Logger.error(self, "Sprite2D node not found! Available children: " + str(get_children()))
 		return false
 	
@@ -80,10 +75,10 @@ func load_textures():
 
 func setup_animation_names():
 	animation_names = [
-		"idle_0",
-		"idle_1", 
-		"idle_2",
-		"idle_3"
+		"Wind",
+		"Wind", 
+		"Wind",
+		"Wind"
 	]
 
 func setup_sprite_and_animation():
@@ -92,7 +87,7 @@ func setup_sprite_and_animation():
 	
 	# Set the sprite texture
 	if sprite_type < sprite_textures.size() and sprite_textures[sprite_type] != null:
-		sprite.texture = sprite_textures[sprite_type]
+		sprite_box.texture = sprite_textures[sprite_type]
 		# Only log texture changes in debug mode, not every setup
 		Custom_Logger.debug(self, "Set texture for sprite type: " + str(sprite_type))
 	else:
@@ -119,7 +114,7 @@ func set_sprite_type(new_type: int):
 			sprite_type = new_type
 			
 			# If already initialized, update immediately
-			if is_initialized and sprite != null:
+			if is_initialized and sprite_box != null:
 				setup_sprite_and_animation()
 	else:
 		Custom_Logger.error(self, "Invalid sprite type: " + str(new_type) + ". Must be 0-3.")

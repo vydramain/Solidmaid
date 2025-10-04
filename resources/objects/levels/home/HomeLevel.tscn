@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://hkx3kn6irysj" path="res://resources/objects/levels/home/HomeLevel.gd" id="1_0f22a"]
 [ext_resource type="PackedScene" uid="uid://jxnl4iig8w7t" path="res://resources/objects/levels/home/HomeMapLayer.tscn" id="2_jnmqs"]
-[ext_resource type="PackedScene" uid="uid://cpmqf62lln6ba" path="res://resources/objects/player/Player.tscn" id="3_mqloh"]
+[ext_resource type="PackedScene" uid="uid://cpmqf62lln6ba" path="res://resources/objects/enitity/player/Player.tscn" id="3_mqloh"]
 [ext_resource type="PackedScene" uid="uid://bncdqhr0e5dl3" path="res://resources/systems/level/loader/LevelLoaderSystem.tscn" id="4_x2u7x"]
 
 [node name="HomeLevel" type="Node2D"]
@@ -14,8 +14,8 @@ script = ExtResource("1_0f22a")
 position = Vector2(232, 72)
 
 [node name="Player" parent="." instance=ExtResource("3_mqloh")]
-position = Vector2(24, 64)
-scale = Vector2(0.75, 0.75)
+position = Vector2(24, 56)
+scale = Vector2(1.25, 1.25)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(128, 81)

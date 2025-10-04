@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cmrx0iyim6w7h" path="res://resources/objects/levels/factory/FactoryLevel.gd" id="1_t6irq"]
 [ext_resource type="PackedScene" uid="uid://fwhpjdq8bi4u" path="res://resources/systems/enemies/EnemySpawnerSystem.tscn" id="2_0bu4c"]
 [ext_resource type="PackedScene" uid="uid://di5tqetq6dy7" path="res://resources/objects/levels/factory/FactoryTileMapLayer.tscn" id="2_ayttb"]
-[ext_resource type="PackedScene" uid="uid://cpmqf62lln6ba" path="res://resources/objects/player/Player.tscn" id="3_y21du"]
+[ext_resource type="PackedScene" uid="uid://cpmqf62lln6ba" path="res://resources/objects/enitity/player/Player.tscn" id="3_y21du"]
 [ext_resource type="PackedScene" uid="uid://bncdqhr0e5dl3" path="res://resources/systems/level/loader/LevelLoaderSystem.tscn" id="4_0bu4c"]
 [ext_resource type="PackedScene" uid="uid://b0mik7r36f1p6" path="res://resources/overlap/StaticBorders.tscn" id="6_5vdh1"]
 

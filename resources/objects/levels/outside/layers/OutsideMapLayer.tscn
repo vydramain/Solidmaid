@@ -1,12 +1,11 @@
-[gd_scene load_steps=8 format=4 uid="uid://c7mxfrjlts61m"]
+[gd_scene load_steps=7 format=4 uid="uid://c7mxfrjlts61m"]
 
 [ext_resource type="Script" uid="uid://bauq1la5fw46a" path="res://resources/objects/levels/outside/layers/OutsideMapLayer.gd" id="1_aa5ui"]
 [ext_resource type="TileSet" uid="uid://sps8t0n70j1f" path="res://resources/objects/levels/outside/layers/TileSetForOutsideMapLayer.tres" id="2_aa5ui"]
 [ext_resource type="Texture2D" uid="uid://dp8yi606abx74" path="res://assets/textures/outside/Skybox_4.png" id="2_w4j8t"]
 [ext_resource type="Texture2D" uid="uid://cxs2olomhlc3m" path="res://assets/textures/outside/Skybox_5.png" id="3_rqdqt"]
 [ext_resource type="Texture2D" uid="uid://crvcyu3fjefnn" path="res://assets/textures/outside/Skybox_3.png" id="4_7184l"]
-[ext_resource type="PackedScene" uid="uid://d15ok0rjcr3m" path="res://resources/objects/environment/grass/Grass.tscn" id="5_t0p5h"]
-[ext_resource type="PackedScene" uid="uid://nb0trdq6a2oo" path="res://resources/objects/environment/trees/Tree.tscn" id="6_w4j8t"]
+[ext_resource type="PackedScene" uid="uid://nb0trdq6a2oo" path="res://resources/objects/enitity/environment/trees/Tree.tscn" id="6_w4j8t"]
 
 [node name="OutsideMapLayer" type="Node2D"]
 script = ExtResource("1_aa5ui")
@@ -52,18 +51,6 @@ tile_map_data = PackedByteArray("AAAAABkAAgAFAAQAAAAAABoAAgAGAAQAAAABABkAAgAFAAQ
 tile_set = ExtResource("2_aa5ui")
 
 [node name="EnvironmentLayer_1" type="Node2D" parent="."]
-
-[node name="Grass" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(0, 360)
-
-[node name="Grass2" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(96, 360)
-
-[node name="Grass3" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(160, 360)
-
-[node name="Grass4" parent="EnvironmentLayer_1" instance=ExtResource("5_t0p5h")]
-position = Vector2(256, 360)
 
 [node name="EnvironmentLayer_2" type="Node2D" parent="."]
 

@@ -1,14 +1,10 @@
 [gd_scene load_steps=9 format=3 uid="uid://dkoyqpjgswicj"]
 
-[ext_resource type="PackedScene" uid="uid://cqpxy3pumpgkn" path="res://resources/objects/environment/Environment.tscn" id="1_3fc4l"]
+[ext_resource type="PackedScene" uid="uid://cqpxy3pumpgkn" path="res://resources/objects/enitity/environment/Environment.tscn" id="1_3fc4l"]
 [ext_resource type="Texture2D" uid="uid://cgi880wqef3wk" path="res://assets/textures/projecttiles/brick_1.png" id="2_bkmj8"]
-[ext_resource type="Script" uid="uid://dolwurki84upj" path="res://resources/objects/environment/birck/Brick.gd" id="2_lh865"]
+[ext_resource type="Script" uid="uid://dolwurki84upj" path="res://resources/objects/enitity/environment/birck/Brick.gd" id="2_lh865"]
 [ext_resource type="PackedScene" uid="uid://d0gquhibr1mtr" path="res://resources/overlap/physic/PhysicBox.tscn" id="4_t6ufc"]
 [ext_resource type="PackedScene" uid="uid://bxp005ph207xb" path="res://resources/overlap/physic/PhysicLine.tscn" id="5_0jp1m"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lh865"]
-radius = 3.0
-height = 11.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kf7pd"]
 radius = 3.0
@@ -17,18 +13,18 @@ height = 11.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0jp1m"]
 size = Vector2(20, 1)
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lh865"]
+radius = 3.0
+height = 11.0
+
 [node name="Brick" instance=ExtResource("1_3fc4l")]
 script = ExtResource("2_lh865")
 floor_coord_y = null
 
-[node name="Sprite2D" parent="." index="0"]
+[node name="SpriteBox" parent="." index="0"]
 texture = ExtResource("2_bkmj8")
 
-[node name="CollisionShape2D" parent="." index="1"]
-rotation = 0.7679449
-shape = SubResource("CapsuleShape2D_lh865")
-
-[node name="PhysicBox" parent="." index="2" instance=ExtResource("4_t6ufc")]
+[node name="PhysicBox" parent="." index="1" instance=ExtResource("4_t6ufc")]
 collision_layer = 64
 collision_mask = 198
 
@@ -37,10 +33,15 @@ rotation = 0.7679449
 shape = SubResource("CapsuleShape2D_kf7pd")
 debug_color = Color(0.819186, 0.40175882, 0.11566668, 0.41960785)
 
-[node name="PhysicLine" parent="." index="3" instance=ExtResource("5_0jp1m")]
+[node name="PhysicLine" parent="." index="2" instance=ExtResource("5_0jp1m")]
 
 [node name="CollisionShape2D" parent="PhysicLine" index="0"]
 shape = SubResource("RectangleShape2D_0jp1m")
 
+[node name="CollisionShape2D" parent="." index="3"]
+rotation = 0.7679449
+shape = SubResource("CapsuleShape2D_lh865")
+
+[editable path="SpriteBox"]
 [editable path="PhysicBox"]
 [editable path="PhysicLine"]
