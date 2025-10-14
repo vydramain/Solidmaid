@@ -40,7 +40,7 @@ func _physics_process(delta: float) -> void:
 		# accelerate toward target
 		character_box.velocity = character_box.velocity.move_toward(character_box.speed * input_dir, character_box.accel * delta)
 		animation_player.play("Walk")
-		animation_player.speed_scale = 2.0
+		animation_player.speed_scale = character_box.speed / 10
 		
 		if input_dir.x != 0 and sign(sprite.scale.x) != sign(input_dir.x):
 			sprite.scale.x *= -1
