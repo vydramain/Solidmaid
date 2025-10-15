@@ -7,9 +7,6 @@
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_2isnj")
-hp_max = null
-defence = null
-invincibility = null
 
 [node name="SpriteBox" parent="." instance=ExtResource("2_bc3h3")]
 
@@ -17,5 +14,7 @@ invincibility = null
 
 [node name="InvincibilityTimer" type="Timer" parent="."]
 wait_time = 0.2
+
+[connection signal="died" from="." to="." method="_on_died"]
 
 [editable path="SpriteBox"]

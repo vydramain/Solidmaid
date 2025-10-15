@@ -30,6 +30,7 @@ window/stretch/mode="viewport"
 [global_group]
 
 FloorPhysicLines="Group used for correct position of environment object in scene"
+PhysicBox=""
 
 [gui]
 

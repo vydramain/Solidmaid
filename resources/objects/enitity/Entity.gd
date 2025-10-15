@@ -47,7 +47,7 @@ func receive_damage(base_damage: int) -> void:
 	if invincibility:
 		Custom_Logger.log(self, "Damage ignored due to invincibility: %d" % base_damage)
 		return
-
+	
 	var actual_damage: int = max(base_damage - self.defence, 0)
 	var new_hp: int = self.hp - actual_damage
 	Custom_Logger.log(self, "Received damage: %d (after defence %d), HP will change from %d to %d" % [
@@ -64,3 +64,7 @@ func die() -> void:
 func _on_invincibility_timer_timeout() -> void:
 	#invincibility = false
 	Custom_Logger.log(self, "Invincibility ended")
+
+
+func _on_died() -> void:
+	die()

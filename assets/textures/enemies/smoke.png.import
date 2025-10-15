@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cgi880wqef3wk"
-path="res://.godot/imported/brick_1.png-3d9296173f98f235605b13655d06cb5d.ctex"
+uid="uid://bj678qbk2wa01"
+path="res://.godot/imported/smoke.png-437a716915fa2605e6e9943c6ca6802a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/projecttiles/brick_1.png"
-dest_files=["res://.godot/imported/brick_1.png-3d9296173f98f235605b13655d06cb5d.ctex"]
+source_file="res://assets/textures/enemies/smoke.png"
+dest_files=["res://.godot/imported/smoke.png-437a716915fa2605e6e9943c6ca6802a.ctex"]
 
 [params]
 

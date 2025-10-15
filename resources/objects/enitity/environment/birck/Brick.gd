@@ -29,3 +29,7 @@ func launch(direction: Vector2, strength: float) -> void:
 
 func setup_floor_physic_line(flr: Physic_Line) -> void:
 	collision_mask = 1 << flr.line_id
+
+
+func _on_physic_box_body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int) -> void:
+	pass # Replace with function body.

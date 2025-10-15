@@ -35,7 +35,7 @@ position_smoothing_speed = 10.0
 [node name="EnemiesContainer" type="Node2D" parent="."]
 
 [node name="Enemy" parent="EnemiesContainer" instance=ExtResource("4_n6qnk")]
-position = Vector2(187, 84)
+position = Vector2(188, 101)
 
 [node name="NextLevel" parent="." instance=ExtResource("3_o0ypk")]
 position = Vector2(784, 120)
