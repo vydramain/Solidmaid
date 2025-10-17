@@ -79,12 +79,12 @@ func _on_died() -> void:
 func throw_projectile(direction: Vector2) -> void:
 	if projectile_scene:
 		var projectile: Brick = projectile_scene.instantiate()
-		projectile.floor_coord_y = foot_marker.global_position.y
-		get_tree().current_scene.add_child(projectile)
+		projectile.setup_floor_y(foot_marker.global_position.y)
 		projectile.global_position = global_position
+		get_tree().current_scene.add_child(projectile)
 
-		var impulse_strength := 300.0  # tweak as needed
-		projectile.launch(direction, impulse_strength)
+		var throw_strength := 300  # tweak as needed
+		projectile.throw(direction, throw_strength)
 
 		attack_ready = false
 		attack_timer.start()
