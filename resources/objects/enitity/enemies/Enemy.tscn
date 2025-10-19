@@ -3,35 +3,41 @@
 [ext_resource type="PackedScene" uid="uid://by8f7mfnathye" path="res://resources/objects/enitity/Entity.tscn" id="1_ufd83"]
 [ext_resource type="Script" uid="uid://k5hf43tsul76" path="res://resources/objects/enitity/enemies/Enemy.gd" id="2_428ou"]
 [ext_resource type="Texture2D" uid="uid://d1p51fk2orm6k" path="res://assets/textures/enemies/enemy.png" id="3_wqp4d"]
-[ext_resource type="PackedScene" uid="uid://8clcbxdgnjh5" path="res://resources/overlap/hit/Hitbox.tscn" id="4_17e4g"]
-[ext_resource type="PackedScene" uid="uid://bxp005ph207xb" path="res://resources/overlap/physic/PhysicLine.tscn" id="5_btnqv"]
+[ext_resource type="PackedScene" uid="uid://cfdvm6q5tp67i" path="res://resources/overlap/hit/Hurtbox.tscn" id="5_bex74"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_my4me"]
-size = Vector2(20, 1)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6nv03"]
+radius = 4.0
+height = 20.0
 
-[node name="Enemy" instance=ExtResource("1_ufd83")]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_btnqv"]
+radius = 4.0
+height = 20.0
+
+[node name="Enemy" groups=["Enemy"] instance=ExtResource("1_ufd83")]
 collision_layer = 4
-collision_mask = 21
+collision_mask = 15
 script = ExtResource("2_428ou")
+hp = 100
 
 [node name="SpriteBox" parent="." index="0"]
 position = Vector2(-4.7683716e-07, 0)
 scale = Vector2(0.40625, 0.40625)
 texture = ExtResource("3_wqp4d")
 
-[node name="PhysicLine" parent="." index="2" instance=ExtResource("5_btnqv")]
+[node name="CollisionShape2D" parent="." index="1"]
+position = Vector2(-1, 1)
+shape = SubResource("CapsuleShape2D_6nv03")
 
-[node name="CollisionShape2D" parent="PhysicLine" index="0"]
-position = Vector2(0, 12)
-shape = SubResource("RectangleShape2D_my4me")
-
-[node name="Hitbox" parent="." index="4" instance=ExtResource("4_17e4g")]
+[node name="Hurtbox" parent="." index="3" instance=ExtResource("5_bex74")]
 collision_layer = 4
-collision_mask = 2
+collision_mask = 8
 
-[node name="CollisionShape2D" parent="Hitbox" index="0"]
-debug_color = Color(0.786595, 0.406209, 0.40062, 0.42)
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2(-1, 1)
+shape = SubResource("CapsuleShape2D_btnqv")
+debug_color = Color(0.1309526, 0.6469031, 0, 0.41960785)
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 
 [editable path="SpriteBox"]
-[editable path="PhysicLine"]
-[editable path="Hitbox"]
+[editable path="Hurtbox"]

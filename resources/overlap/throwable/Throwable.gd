@@ -22,7 +22,8 @@ var current_velocity: Vector2  # Track current velocity for bouncing
 var throw_time: float = 0.0
 var initial_rotation: float = 0.0
 
-func _ready():
+
+func _ready() -> void:
 	if floor_y == null:
 		floor_y = global_position.y
 
@@ -76,7 +77,6 @@ func _handle_ground_contact():
 		_bounce()
 	else:
 		# Wrong angle - force bounce even if velocity is low
-		print("Wrong angle: ", normalized_rotation, "° (need ~180°) - forcing bounce")
 		_force_bounce()
 
 func _force_bounce():
@@ -93,9 +93,6 @@ func _force_bounce():
 	initial_position = global_position
 	initial_velocity = Vector2(current_velocity.x * 0.8, -bounce_velocity)  # Reduce horizontal velocity too
 	throw_time = 0.0
-	
-	# Keep rotation speed to allow it to rotate to correct angle
-	print("Forced bounce #", bounce_count, " - Velocity: ", bounce_velocity)
 
 func _bounce():
 	"""Normal bounce when angle is correct"""
@@ -119,8 +116,6 @@ func _bounce():
 	
 	# Reduce rotation speed with each bounce
 	rotation_speed *= bounce_damping
-	
-	print("Bounce #", bounce_count, " - Velocity: ", new_vertical_velocity)
 
 func _land():
 	"""Final landing - only happens when angle is correct and velocity is low"""
@@ -129,8 +124,7 @@ func _land():
 	
 	has_landed = true
 	is_throwing = false
-	
-	print("Successfully landed after ", bounce_count, " bounces at position: ", global_position)
+
 
 func throw(throw_direction: Vector2, throw_strength: float = 300.0):
 	if is_throwing:
@@ -145,6 +139,32 @@ func throw(throw_direction: Vector2, throw_strength: float = 300.0):
 	
 	is_throwing = true
 	has_landed = false
+
+func on_impact(normal: Vector2):
+	"""
+	Called externally (e.g., from Brick) when object hits an obstacle.
+	Reverses velocity based on collision normal and triggers a bounce arc.
+	"""
+	if not is_throwing or has_landed:
+		return
+	
+	bounce_count += 1
+	
+	# Reflect current velocity using collision normal
+	current_velocity = current_velocity.bounce(normal)
+	
+	# Apply damping to reduce energy
+	current_velocity *= bounce_damping
+	
+	# Reset trajectory origin and time
+	initial_position = global_position
+	initial_velocity = current_velocity
+	throw_time = 0.0
+	
+	# Slightly randomize rotation speed to simulate spin change
+	rotation_speed *= bounce_damping * randf_range(0.8, 1.2)
+	
+	is_bouncing = true
 
 func reset_to_floor():
 	global_position = Vector2(global_position.x, floor_y)

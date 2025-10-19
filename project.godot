@@ -31,6 +31,7 @@ window/stretch/mode="viewport"
 
 FloorPhysicLines="Group used for correct position of environment object in scene"
 PhysicBox=""
+Enemy=""
 
 [gui]
 

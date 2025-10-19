@@ -5,9 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://bt7nf7y7m6k4t" path="res://assets/textures/player/player.png" id="3_y052s"]
 [ext_resource type="PackedScene" uid="uid://depc4dbj25g2q" path="res://resources/overlap/character/CharacterBox.tscn" id="4_6vwlr"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hexbj"]
-size = Vector2(12, 36)
-
 [sub_resource type="Animation" id="Animation_6sc36"]
 resource_name = "Idle"
 length = 3.0
@@ -64,6 +61,9 @@ _data = {
 &"Walk": SubResource("Animation_es8hl")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hexbj"]
+size = Vector2(12, 36)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6vwlr"]
 size = Vector2(12, 17)
 
@@ -74,11 +74,7 @@ collision_mask = 32
 script = ExtResource("2_oomdy")
 hp_max = 100000
 
-[node name="CollisionShape2D" parent="." index="0"]
-position = Vector2(0, 8)
-shape = SubResource("RectangleShape2D_hexbj")
-
-[node name="SpriteBox" parent="." index="1"]
+[node name="SpriteBox" parent="." index="0"]
 position = Vector2(-7.1054274e-15, 3.7500002)
 scale = Vector2(0.74999994, 0.8515624)
 texture = ExtResource("3_y052s")
@@ -89,6 +85,10 @@ vframes = 2
 libraries = {
 &"": SubResource("AnimationLibrary_q36un")
 }
+
+[node name="CollisionShape2D" parent="." index="1"]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_hexbj")
 
 [node name="CharacterBox" parent="." index="2" instance=ExtResource("4_6vwlr")]
 collision_layer = 2
