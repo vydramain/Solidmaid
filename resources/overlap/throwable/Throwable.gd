@@ -57,27 +57,23 @@ func _process(delta: float):
 	global_position = new_position
 
 func _handle_ground_contact():
-	"""Check if brick can land based on rotation"""
-	# Normalize rotation to 0-360 range
-	var normalized_rotation = fmod(rotation_degrees, 360.0)
-	if normalized_rotation < 0:
-		normalized_rotation += 360.0
+	var angle: float = fposmod(rotation_degrees, 360.0)
 	
-	# Check if rotation is near 180° (π radians) - upright position
-	var angle_diff = abs(normalized_rotation - 180.0)
-	# Also check wrapped around (e.g., 350° is close to 10°, but we want 180°)
-	if angle_diff > 180.0:
-		angle_diff = 360.0 - angle_diff
+	var dist_to_0: float = abs(angle)
+	var dist_to_180: float = abs(angle - 180.0)
+	if dist_to_180 > 180.0:
+		dist_to_180 = 360.0 - dist_to_180
 	
-	var can_land = angle_diff <= landing_angle_tolerance
+	var min_dist: float = min(dist_to_0, dist_to_180)
 	
-	if can_land:
-		# Snap rotation to exactly 180° for clean landing
-		rotation_degrees = 180.0
+	if min_dist <= landing_angle_tolerance:
+		rotation_degrees = 180.
+		if (dist_to_0 < dist_to_180):
+			rotation_degrees = 0. 
 		_bounce()
 	else:
-		# Wrong angle - force bounce even if velocity is low
 		_force_bounce()
+
 
 func _force_bounce():
 	"""Force a bounce when landing angle is wrong"""

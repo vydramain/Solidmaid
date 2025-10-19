@@ -1,15 +1,14 @@
 extends Entity
 
-@onready var projectile_scene: PackedScene = preload(Resource_Registry.ENVIRONMENT["BRICK"])
+@onready var brick_item_scene: PackedScene = preload(Resource_Registry.ENVIRONMENT["BRICK"])
 
 @onready var home_level: PackedScene = load(Resource_Registry.LEVELS["HOME"])
 @onready var factiry_level: PackedScene = load(Resource_Registry.LEVELS["FACTORY"])
 
-@onready var character_box = $CharacterBox
-@onready var foot_marker = $CharacterBox/FootMarker
-
 @onready var sprite = $SpriteBox
 @onready var animation_player = $SpriteBox/AnimationPlayer
+
+@onready var character_box = $CharacterBox
 
 @onready var attack_timer = $AttackTimer
 
@@ -61,8 +60,8 @@ func _physics_process(delta: float) -> void:
 		attack_dir.y = Input.get_action_strength("look_down") - Input.get_action_strength("look_up")
 		
 		if attack_dir != Vector2.ZERO:
-			throw_projectile(attack_dir)
-			Custom_Logger.log(self, "Projectile thrown in direction: %s" % attack_dir)
+			throw_new_item(attack_dir)
+			Custom_Logger.log(self, "new_item thrown in direction: %s" % attack_dir)
 	
 	character_box.move_and_slide()
 	character_box.position = Vector2.ZERO  # reset local offset
@@ -76,20 +75,23 @@ func _on_died() -> void:
 	
 	self.die()
 
-func throw_projectile(direction: Vector2) -> void:
-	if projectile_scene:
-		var projectile: Brick = projectile_scene.instantiate()
-		projectile.setup_floor_y(foot_marker.global_position.y)
-		projectile.global_position = global_position
-		get_tree().current_scene.add_child(projectile)
-
+func throw_new_item(direction: Vector2) -> void:
+	if brick_item_scene:
+		var new_item: Brick = brick_item_scene.instantiate()
+		new_item.setup_floor_y(foot_marker.global_position.y)
+		new_item.global_position = global_position
+		
+		var container = get_tree().get_first_node_in_group("LevelItems")
+		if container:
+			container.add_child(new_item)
+		
 		var throw_strength := 300  # tweak as needed
-		projectile.throw(direction, throw_strength)
-
+		new_item.throw(direction, throw_strength)
+		
 		attack_ready = false
 		attack_timer.start()
 		Custom_Logger.log(self, "Attack cooldown started.")
-
+		
 		invincibility = true
 		invincibility_timer.start()
 		Custom_Logger.log(self, "Player is temporarily invincible.")

@@ -8,7 +8,7 @@ const LEVELS := {
 }
 
 const ENVIRONMENT := {
-	"BRICK": "uid://dkoyqpjgswicj",
+	"BRICK": "uid://b2uo2q0myx2fo",
 	"FENCE": "uid://cpjhtmuio5q8e",
 	"GRASS": "uid://c4x60ghndvali",
 	"TREE": "uid://nb0trdq6a2oo"

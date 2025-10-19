@@ -20,6 +20,13 @@ position = Vector2(0, -16)
 [node name="Sprite2DParalaxLayer_3" parent="OutsideMapLayer/ParallaxBackground/ParallaxLayer3" index="0"]
 position = Vector2(0, -16)
 
+[node name="ContainerForEnemies" type="Node2D" parent="."]
+
+[node name="Enemy" parent="ContainerForEnemies" instance=ExtResource("4_n6qnk")]
+position = Vector2(188, 101)
+
+[node name="ContainersForItems" type="Node2D" parent="." groups=["LevelItems"]]
+
 [node name="Player" parent="." instance=ExtResource("2_o0ypk")]
 position = Vector2(80, 80)
 scale = Vector2(0.75, 0.75)
@@ -31,11 +38,6 @@ limit_top = 1
 limit_bottom = 161
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
-
-[node name="EnemiesContainer" type="Node2D" parent="."]
-
-[node name="Enemy" parent="EnemiesContainer" instance=ExtResource("4_n6qnk")]
-position = Vector2(188, 101)
 
 [node name="NextLevel" parent="." instance=ExtResource("3_o0ypk")]
 position = Vector2(784, 120)

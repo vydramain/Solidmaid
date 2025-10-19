@@ -11,7 +11,18 @@ signal died
 @export var invincibility: bool = false
 
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
+@onready var foot_marker = $FootMarker
 @onready var invincibility_timer: Timer = $InvincibilityTimer
+
+
+func _process(_delta: float) -> void:
+	z_index = int(foot_marker.global_position.y)
+
+func _on_invincibility_timer_timeout() -> void:
+	invincibility = false
+
+func _on_died() -> void:
+	die()
 
 
 func set_hp_max(new_hp_max: int) -> void:
@@ -37,9 +48,3 @@ func receive_damage(base_damage: int) -> void:
 
 func die() -> void:
 	queue_free()
-
-func _on_invincibility_timer_timeout() -> void:
-	invincibility = false
-
-func _on_died() -> void:
-	die()

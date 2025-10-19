@@ -3,6 +3,7 @@ extends Node2D
 @export var initial_level_scene: PackedScene = preload(Resource_Registry.LEVELS["OUTSIDE"])
 
 @onready var level_container = $LevelContainer
+
 @onready var current_scene = $CurrentScene
 
 var current_level: Node = null

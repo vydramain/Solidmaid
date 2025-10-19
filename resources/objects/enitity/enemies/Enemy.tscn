@@ -28,6 +28,9 @@ texture = ExtResource("3_wqp4d")
 position = Vector2(-1, 1)
 shape = SubResource("CapsuleShape2D_6nv03")
 
+[node name="FootMarker" parent="." index="2"]
+position = Vector2(0, 12)
+
 [node name="Hurtbox" parent="." index="3" instance=ExtResource("5_bex74")]
 collision_layer = 4
 collision_mask = 8
