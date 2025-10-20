@@ -19,5 +19,6 @@ wait_time = 0.2
 
 [connection signal="died" from="." to="." method="_on_died"]
 [connection signal="hp_changed" from="." to="." method="_on_hp_changed"]
+[connection signal="timeout" from="InvincibilityTimer" to="." method="_on_invincibility_timer_timeout"]
 
 [editable path="SpriteBox"]

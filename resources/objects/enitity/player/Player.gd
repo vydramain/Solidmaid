@@ -15,15 +15,6 @@ extends Entity
 var respawn_position := Vector2(100, 100)
 var attack_ready: bool = true
 
-func _ready() -> void:
-	Custom_Logger.log(self, "Spawned object. Groups: " + str(self.get_groups()))
-	Custom_Logger.log(self, "Node name: %s, AnimationPlayer ready: %s" % [self.name, animation_player])
-	
-	# Connect timers
-	attack_timer.timeout.connect(_on_attack_timer_timeout)
-	invincibility_timer.timeout.connect(_on_invincibility_timer_timeout)
-	Custom_Logger.log(self, "Timers connected successfully.")
-
 func _on_attack_timer_timeout() -> void:
 	attack_ready = true
 	Custom_Logger.log(self, "Attack timer ended. Player can attack again.")
@@ -67,6 +58,10 @@ func _physics_process(delta: float) -> void:
 	character_box.position = Vector2.ZERO  # reset local offset
 	global_position += character_box.velocity * delta
 
+func _on_hitbox_area_entered(area: Area2D) -> void:
+	if (area.is_in_group("Hurtboxes")):
+		self.receive_damage(100)
+
 func _on_died() -> void:
 	var main = get_tree().root.get_node("Main") # Adjust path if needed
 	if main == null or not main.has_method("load_level"):
@@ -74,6 +69,8 @@ func _on_died() -> void:
 		return
 	
 	self.die()
+
+
 
 func throw_new_item(direction: Vector2) -> void:
 	if brick_item_scene:
@@ -95,7 +92,6 @@ func throw_new_item(direction: Vector2) -> void:
 		invincibility = true
 		invincibility_timer.start()
 		Custom_Logger.log(self, "Player is temporarily invincible.")
-
 
 func get_input_direction() -> Vector2:
 	var input_dir: Vector2 = Vector2.ZERO

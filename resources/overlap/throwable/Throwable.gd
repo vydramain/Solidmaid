@@ -76,7 +76,6 @@ func _handle_ground_contact():
 
 
 func _force_bounce():
-	"""Force a bounce when landing angle is wrong"""
 	# Snap to floor
 	global_position = Vector2(global_position.x, floor_y)
 	
@@ -91,7 +90,6 @@ func _force_bounce():
 	throw_time = 0.0
 
 func _bounce():
-	"""Normal bounce when angle is correct"""
 	# Snap to floor
 	global_position = Vector2(global_position.x, floor_y)
 	
@@ -114,7 +112,6 @@ func _bounce():
 	rotation_speed *= bounce_damping
 
 func _land():
-	"""Final landing - only happens when angle is correct and velocity is low"""
 	global_position = Vector2(global_position.x, floor_y)
 	rotation_degrees = 180.0  # Ensure exactly upright
 	
@@ -137,10 +134,6 @@ func throw(throw_direction: Vector2, throw_strength: float = 300.0):
 	has_landed = false
 
 func on_impact(normal: Vector2):
-	"""
-	Called externally (e.g., from Brick) when object hits an obstacle.
-	Reverses velocity based on collision normal and triggers a bounce arc.
-	"""
 	if not is_throwing or has_landed:
 		return
 	

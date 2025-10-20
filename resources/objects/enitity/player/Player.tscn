@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://cpmqf62lln6ba"]
+[gd_scene load_steps=13 format=3 uid="uid://cpmqf62lln6ba"]
 
 [ext_resource type="PackedScene" uid="uid://by8f7mfnathye" path="res://resources/objects/enitity/Entity.tscn" id="1_v3dkm"]
 [ext_resource type="Script" uid="uid://du0pi4loqyvkk" path="res://resources/objects/enitity/player/Player.gd" id="2_oomdy"]
 [ext_resource type="Texture2D" uid="uid://bt7nf7y7m6k4t" path="res://assets/textures/player/player.png" id="3_y052s"]
 [ext_resource type="PackedScene" uid="uid://depc4dbj25g2q" path="res://resources/overlap/character/CharacterBox.tscn" id="4_6vwlr"]
+[ext_resource type="PackedScene" uid="uid://8clcbxdgnjh5" path="res://resources/overlap/hit/Hitbox.tscn" id="5_6sc36"]
 
 [sub_resource type="Animation" id="Animation_6sc36"]
 resource_name = "Idle"
@@ -67,15 +68,15 @@ size = Vector2(12, 36)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6vwlr"]
 size = Vector2(12, 17)
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_es8hl"]
+radius = 6.0
+height = 18.0
+
 [node name="Player" groups=["Player"] instance=ExtResource("1_v3dkm")]
-visibility_layer = 4
 position = Vector2(0, 1)
 collision_layer = 2
-collision_mask = 32
 script = ExtResource("2_oomdy")
 hp_max = 100000
-defence = null
-invincibility = null
 
 [node name="SpriteBox" parent="." index="0"]
 position = Vector2(-7.1054274e-15, 3.7500002)
@@ -96,9 +97,8 @@ shape = SubResource("RectangleShape2D_hexbj")
 [node name="FootMarker" parent="." index="2"]
 position = Vector2(0, 26)
 
-[node name="CharacterBox" parent="." index="3" instance=ExtResource("4_6vwlr")]
+[node name="CharacterBox" parent="." index="4" instance=ExtResource("4_6vwlr")]
 collision_layer = 2
-collision_mask = 127
 accel = 150.0
 
 [node name="CollisionShape2D" parent="CharacterBox" index="0"]
@@ -106,8 +106,21 @@ position = Vector2(0, 17.5)
 shape = SubResource("RectangleShape2D_6vwlr")
 debug_color = Color(0.8402219, 0.0011509025, 0.92396057, 0.41960785)
 
-[node name="AttackTimer" type="Timer" parent="." index="4"]
+[node name="Hitbox" parent="." index="5" instance=ExtResource("5_6sc36")]
+collision_layer = 2
+collision_mask = 24
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+position = Vector2(0, 17)
+shape = SubResource("CapsuleShape2D_es8hl")
+debug_color = Color(0.49513334, 0.5823811, 0.07451079, 0.41960785)
+
+[node name="AttackTimer" type="Timer" parent="." index="6"]
 wait_time = 0.4
+
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
 
 [editable path="SpriteBox"]
 [editable path="CharacterBox"]
+[editable path="Hitbox"]

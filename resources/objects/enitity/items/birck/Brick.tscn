@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cgi880wqef3wk" path="res://assets/textures/projecttiles/brick_1.png" id="2_bkmj8"]
 [ext_resource type="Script" uid="uid://bde5e6tqcrjgl" path="res://resources/objects/enitity/items/birck/Brick.gd" id="2_lh865"]
 [ext_resource type="PackedScene" uid="uid://c1yjs6j4jxnha" path="res://resources/overlap/throwable/Throwable.tscn" id="4_trngp"]
-[ext_resource type="PackedScene" uid="uid://8clcbxdgnjh5" path="res://resources/overlap/hit/Hitbox.tscn" id="5_qgsdw"]
+[ext_resource type="PackedScene" uid="uid://cfdvm6q5tp67i" path="res://resources/overlap/hit/Hurtbox.tscn" id="5_gsvuy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_j4tn0"]
 radius = 2.0
@@ -31,15 +31,17 @@ position = Vector2(0, 3)
 
 [node name="Throwable" parent="." index="3" instance=ExtResource("4_trngp")]
 
-[node name="Hitbox" parent="." index="4" instance=ExtResource("5_qgsdw")]
-rotation = 1.5707964
+[node name="Hurtbox" parent="." index="4" instance=ExtResource("5_gsvuy")]
 collision_layer = 8
-collision_mask = 4
+collision_mask = 6
 
-[node name="CollisionShape2D" parent="Hitbox" index="0"]
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_gsvuy")
-debug_color = Color(0.97148913, 0, 0.4508493, 0.41960785)
+debug_color = Color(0.84740543, 0.24598578, 0.71292126, 0.41960785)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
 
 [editable path="SpriteBox"]
 [editable path="Throwable"]
-[editable path="Hitbox"]
+[editable path="Hurtbox"]
