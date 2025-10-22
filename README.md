@@ -1,81 +1,99 @@
-# Solidmaid: Alkoldun Vasiliusavich
+# Solidmaid
 
-**Description**
-
-*Solidmaid: Alkoldun Vasiliusavich* is a 2D pixel art beat'em up game set in an alternate 1990s Russia, blending gritty post-Soviet vibes with Russian folklore. Play as Vasiliusavich, a mystical alcoholic navigating a procedurally generated street filled with foes like gopniks, leshy-dachnitsy, and other quirky enemies. Buff up with alcohol and snacks, fight at lampposts, and multitask at the factory to craft lampposts while battling bosses. With roguelite progression, tactical lamppost upgrades, and a satirical twist, this game offers replayable chaos and humor.
+Prototype of a top-down brawler built with Godot 4.5. You guide Vasiliusavich through a loop of three locations — a cramped apartment, an endlessly tiled street, and a factory floor — while experimenting with throwables, enemy behaviors, and level-to-level handoffs.
 
 ---
 
-## Content
+## Overview
 
-- [Installation](#installation)
-- [Features](#features)
-- [Codestyle](#codestyle)
-- [Design Document](#design-document)
-- [Requirements](#requirements)
-- [Author](#author)
-- [License](#license)
+- **Engine:** Godot 4.5 (`renderer: gl_compatibility`).
+- **Main entry point:** `res://resources/main/Main.tscn` (autoloads `MusicPlayerSystem.gd`).
+- **Scene flow:** Home → Outside street → Factory → loops back to Home through trigger volumes.
+- **Current focus:** Implementing traversal, combat prototypes (brick throwing + cloud attack), layered street generation, and tooling (logging, resource registry, music system).
+
+The long-term vision is still under exploration. See [`docs/GDD.md`](docs/GDD.md) for the up-to-date design snapshot.
 
 ---
 
-## Installation
+## Current Gameplay Slice
+
+- **Home level:** Static apartment layout with interactable floor lines and a transition trigger to leave the house.
+- **Outside level:** Chunk-based street generator (`OutsideMapLayer`, layered tilemaps, environment pop-in) that instantiates background, decoration, and environment nodes per chunk.
+- **Factory level:** Prototype arena with an enemy spawner scaffold and loop-back trigger.
+- **Player abilities:** WASD-style movement via `CharacterBox`, sprite facing swap, timed brick throwing (`Brick` + `Throwable` physics), temporary invincibility, and basic HP tracking inherited from `Entity`.
+- **Enemies:** Placeholder `Enemy` scene using `CloudAttack` (animated hurtbox) that shares the `Entity` foundation.
+- **Level transitions:** `LevelLoaderSystem` watches for player collisions and hands control to `Main.gd` to instance the next level packed scene.
+- **Audio:** `MusicPlayerSystem` autoload maintains looping tracks and events (`home`, `work`, `factory`, `boss`, etc.) with stateful transitions.
+
+---
+
+## Project Structure
+
+```
+assets/                Art and audio (pixel sprites, tiles, music MP3s)
+docs/                  Codestyle (CGS) and design document (GDD)
+resources/
+  main/                Main scene that orchestrates level loading
+  objects/             Gameplay scenes (levels, player, enemies, items)
+  overlap/             Shared building blocks (physics, hit/hurt boxes, throwables, VFX)
+  systems/             Gameplay and world systems (audio, enemies, procedural level code)
+scripts/utils/         Autoload-style helpers (Custom Logger, Resource Registry)
+```
+
+IDs inside `Resource_Registry.gd` resolve UID strings to packed scenes and environment prefabs; the project relies on these mappings instead of hard-coded file paths.
+
+---
+
+## Controls
+
+| Action          | Default Binding                          |
+|-----------------|-------------------------------------------|
+| Move            | `W`, `A`, `S`, `D` (left stick on gamepad)|
+| Attack / Throw  | Left mouse button (`action_attack`)       |
+| Throw direction | Right stick (`look_*` actions)            |
+
+Throw direction is currently read from the `look_*` axis actions. If you play with keyboard + mouse, add additional bindings in *Project Settings → Input Map* (for example, arrow keys) so the `Player` can compute a throw vector.
+
+---
+
+## Getting Started
 
 1. Clone the repository:
    ```bash
    git clone https://github.com/vydramain/Solidmaid.git
-   ```
-2. Navigate to the project directory:
-   ```bash
    cd Solidmaid
    ```
-3. Open the project in Godot Engine 4.4.1:
-   - Launch Godot Engine.
-   - Select "Import" and choose the `project.godot` file in the `Solidmaid` folder.
+2. Open `project.godot` with **Godot Engine 4.5** or newer.
+3. Ensure the `MUSIC_PLAYER` autoload is enabled (importer sets it up automatically).
+4. Run the project (F5) — the main scene loads the outside level by default and listens for level triggers.
 
-No additional prerequisites are required, as Godot Engine includes all necessary tools.
-
----
-
-## Features
-
-- **Procedural Street Levels:** Navigate a dynamically generated 1990s Russian street with randomized enemies and environments.
-- **Alcohol Alchemy System:** Mix drinks and snacks for buffs with risks, like speed boosts or "hangover" debuffs.
-- **Tactical Lampposts:** Upgrade and place lampposts as combat hubs with unique effects (e.g., AOE attacks, enemy lures).
-- **Multitasking Factory Fights:** Battle bosses while assembling lampposts in a rhythm-based mini-game.
-- **Cultural Satire:** Face evolving enemies blending 90s memes and folklore, with random "folklore mix" events.
-- **Replayability:** Campaign (8 levels), endless mode, achievements (e.g., "Sober Challenge"), and shareable level seeds.
+All dependencies are committed; no external packages are required.
 
 ---
 
-## Codestyle
+## Development Notes
 
-For consistent code quality, follow the [Solidmaid Codestyle (CGS)](docs/CGS.md).
-
----
-
-## Design Document
-
-For detailed game mechanics, story, and level design, see the [Solidmaid Design Document (GDD)](docs/GDD.md).
-
----
-
-## Requirements
-
-- **Godot Engine**: Version 4.4.1 or later (download from [godotengine.org](https://godotengine.org)).
-- **OS**: Windows, Linux, or macOS.
-- **Hardware**: Basic setup for running Godot (2GB RAM, integrated GPU).
+- **Logging:** Use `Custom_Logger` (`scripts/utils/CustomLogger.gd`) to respect rate limiting and colored log levels.
+- **Resource access:** `Resource_Registry.gd` provides UID lookups for levels, environment props, and entity scenes.
+- **Procedural street:** `OutsideMapLayer.gd` manages a 3D array of layer data, delegating to drawer systems that stamp tile/scene data into background, decoration, and environment layers before applying them to tilemaps or node containers.
+- **Combat helpers:** Common hit/hurt boxes, throwable physics, and animation-driven attack collision live in `resources/overlap/`.
+- **Audio system:** `MusicPlayerSystem.gd` keeps an `AudioStreamPlayer` child around, advances through state machines, and reacts to gameplay events (`play_next("home")`, etc.).
+- **Enemy spawner:** `EnemySpawnerSystem.gd` scaffolds timed spawning around the player; the actual `spawn_enemy()` call is currently commented out.
 
 ---
 
-## Author
+## Roadmap & Known Gaps
 
-- **Name**: [Your Name]
-- **Email**: my_email@example.com
+- Enable the enemy spawner once combat balancing is ready.
+- Expand the factory encounter and add gameplay objectives.
+- Integrate non-gamepad aiming options by default.
+- Fill out lamppost/interactable systems referenced in the design goals.
+- Add automated tests or debug scenes for chunk generation regressions.
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contribute ideas or fixes through pull requests or issues.
 
 ---
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+Released under the MIT License. See [`LICENSE`](LICENSE) for details.

@@ -1,155 +1,187 @@
 # Game Design Document: Solidmaid — Alkoldun Vasiliusavich
 
+---
+
 ## 1. Overview
+
 ### Title
 Solidmaid: Alkoldun Vasiliusavich
 
-### Genre
-Experimental Pixel-Art FPS / Immersive Sim with Roguelite and Surreal Narrative Elements.
+### Genre Snapshot
+Top-down brawler / roguelite experiment with strong narrative tone and procedural street traversal.
 
-### Platform
-PC (Windows/Linux), future export potential to other platforms via Godot 4.x.
+### Engine & Platform
+- **Engine:** Godot 4.5 (GDScript).
+- **Primary platform:** PC (Windows / Linux). macOS builds are feasible once input is finalised.
 
-### Target Audience
-Adults 18+, primarily players interested in narrative-driven indie experiences with philosophical, surreal, and cultural undertones.  
-Comparable references: **Cruelty Squad**, **Hypnagogia**, **Signalis**, **HROT**, **Ultrakill** (stylistically distant, spiritually relevant).
+### Visual & Audio Direction
+- Pixel-art sprites with exaggerated proportions, parallax backgrounds, and 16px tilemaps.
+- Muted industrial palette punctuated by neon folklore touches.
+- Lo-fi industrial ambient soundtrack with state-driven transitions handled by the in-game music player.
 
-### Core Vision
-A deeply atmospheric, surreal journey through the decaying psyche of Alkoldun Vasiliusavich — a mystical worker at a lamppost factory.  
-Gameplay and narrative explore themes of **alienation, cyclical meaninglessness, and self-deception through productivity**.
-
-The game’s structure is built around **routine loops** that mirror real-life existential fatigue.
-
-### Core Loop
-1. **Home (Preparation)** — the illusion of rest. Player interacts with the environment to prepare (drinks, snacks, self-dialogue).
-2. **Street (Commute)** — traversal through surreal procedural landscapes, interacting with distorted NPCs or enemies.
-3. **Factory (Work)** — task-based boss encounters combining labor, combat, and absurd dialogue.
-4. **Return (Reflection)** — cycle repeats with slight world shifts and growing surrealism.
-
-Each loop subtly alters visuals, tone, and dialogue — reinforcing the protagonist’s mental disintegration.
-
-### Unique Selling Points
-- **Satirical Existential Narrative**: Post-Soviet life as dark folklore.
-- **Pixel-Art 3D Visuals**: A distinct low-res FPS aesthetic (retro shading, pixel dithering, stylized lighting).
-- **Psychological Mechanics**: Alcohol and fatigue alter perception, control, and world geometry.
-- **Procedural Routine Generation**: Repetition with variance — the illusion of progress.
-- **Meta-Philosophical Twist**: The player’s persistence mirrors the worker’s delusion of purpose.
+### Elevator Pitch
+Relive the exhausting loop of an alternate 1990s factory worker. Wake up in a cramped apartment, trudge through a repeating street, report to the factory, and return home. Improvised combat (brick throwing, close brawls) collides with surreal events, while the world subtly mutates to mirror the protagonist’s fraying psyche.
 
 ---
 
-## 2. Story and Setting
-### Premise
-In an alternate 1990s Russia, folklore collides with industrial decay.  
-Alkoldun Vasiliusavich, a mystical yet broken lamppost factory worker, drifts between work, home, and the streets.  
-Reality fragments — lampposts glow with occult energy, bosses morph into mythical creatures, and time loops endlessly.
+## 2. Core Pillars
 
-### Narrative Approach
-- Minimal exposition.
-- Environmental storytelling, cryptic monologues, fragmented dreams.
-- Dialogues written in absurdist or bureaucratic tone.
-
-### Ending
-The loop collapses as Vasiliusavich realizes his “factory” exists only within his decaying mind.  
-Players can “choose” to return to work — or to stop.
+1. **Routine as Narrative:** The Home → Street → Factory → Home loop communicates monotony and psychological erosion. Small changes matter more than spectacle.
+2. **Gritty Street Combat:** Encounters emphasise improvised tools, positioning, and deliberate timing. Throw physics and invincibility windows must feel weighty.
+3. **Satirical Folk Horror:** Humor and dread coexist. Post-Soviet mundanity twists into folklore caricature backed by unsettling soundscapes.
+4. **Procedural Familiarity:** Chunk-based street generation mixes recognisable blocks to feel both routine and uncanny, supporting replayable loops.
 
 ---
 
-## 3. Gameplay Mechanics
+## 3. Current Prototype Snapshot
 
-### Core Controls (FPS-oriented)
-- **Movement**: Standard WASD + jump/crouch.
-- **Combat**: Throw bricks, bottles, or debris (physics-based).
-- **Interact**: Drink, eat, or manipulate lampposts (power conduits).
-- **Perception Shift**: Alcohol alters FOV, lighting, and sound.
+Implemented in the repository today:
 
-### Primary Systems
-
-#### 3.1 Alcohol Mechanics (Psychophysical System)
-- **Alcohol = Buff/Debuff Blend**: Grants power (strength, speed, visual insight) but destabilizes aim and reality.
-- **Overconsumption**: Screen distortions, hallucinations, time loops.
-- **Sobriety Mode**: Clarity but existential despair (color desaturation, reduced stamina).
-
-#### 3.2 Lamppost System
-- Lampposts act as **anchors** or **checkpoints** in the surreal cityscape.
-- Collect, repair, and install them using resources from the factory.
-- Lampposts influence the environment: some repel enemies, others distort space or grant temporary buffs.
-
-#### 3.3 Factory Work (Combat Arena / Puzzle Hybrid)
-- Boss encounters integrated with “production tasks.”
-- Tasks simulate meaningless labor (e.g., assembling glowing lampposts under time pressure).
-- Player must multitask between **combat and repetitive mechanical actions**.
-- Alcohol rhythm affects timing and perception of these tasks.
-
-#### 3.4 Procedural Routine
-- Each loop procedurally regenerates the streets and tasks with minor alterations.
-- The illusion of change conceals narrative stagnation — a metaphor for Vasiliusavich’s condition.
+- **Playable loop** across Home, Outside, and Factory scenes with automatic cycling.
+- **Player system**: WASD / left-stick movement, sprite flipping, timed brick throwing with bounce physics, temporary invulnerability, HP tracking via the shared `Entity` base class.
+- **Enemy placeholder**: `Enemy` + `CloudAttack` demonstrates timed hurtboxes and shared entity infrastructure.
+- **Street generator**: `OutsideMapLayer` assembles tilemap layers using drawer systems, populating background, decorations, and environment props.
+- **Audio state machine**: `MusicPlayerSystem` autoload swaps tracks on `home`, `work`, and `factory` events.
+- **Tooling**: `Custom_Logger` for rate-limited logs, `Resource_Registry` for UID lookups, reusable hit/hurt boxes and throwable physics.
+- **Known gaps**: Enemy spawner disabled, lamppost gameplay not yet implemented, keyboard aiming requires manual bindings, factory arena is a stub.
 
 ---
 
-## 4. Visual and Audio Design
-### Visual Style
-- **3D Pixel Aesthetic**: Retro PS1-era rendering (Godot 4 shader-based pixelation).
-- **Colors**: Muted industrial palette with bursts of magical neon.
-- **Design Inspiration**: Eastern European brutalism meets absurdist folklore.
-- **Animation**: Skeletal animation for character rigs (Godot AnimationTree + pixel-art shading).
+## 4. Core Loop (Intended Experience)
 
-### Audio
-- **Music**: Lo-fi industrial ambient with occasional chiptune motifs.
-- **Sound Design**: Emphasize monotony (machines, breathing, flickering lamps).
-- **Dialogue**: Distorted Russian/English hybrid, deliberately hard to parse.
+1. **Home — Preparation**
+   - Explore the apartment, trigger flavour interactions, and optionally apply buffs/debuffs (future alcohol or ritual systems).
+   - Exit trigger hands control back to `Main`, loading the Outside scene.
 
----
+2. **Outside — Commute & Encounter**
+   - Chunk generator builds a repeating street (sidewalks, buildings, fences, props).
+   - Player travels forward, fights enemies, scavenges items, and encounters surreal events.
+   - Transition trigger leads toward the factory once objectives are met.
 
-## 5. Progression and Replayability
-- **Core Progression**: Unlock lamppost upgrades, alcohol recipes, and internal “memories.”
-- **Replay Motivation**: New world variations, surreal dialogue branches, visual hallucinations.
-- **Final Goal**: Reach realization (“Break the Loop” ending).
+3. **Factory — Work Under Fire**
+   - Arena-style encounter that pairs combat with “productive” tasks (assembling lamppost segments under pressure).
+   - Boss or wave mechanics escalate tension.
+   - Success (or survival timer) returns the player home.
 
----
+4. **Return — Reflection & Mutation**
+   - Home scene updates with new props, dialogue beats, or tone shifts.
+   - Difficulty modifiers, street seeds, and narrative flags adjust upcoming loops.
 
-## 6. Technical Specifications
-- **Engine**: Godot 4.x (GDScript + optional C# modules).
-- **Rendering**: 3D Pixel Shader pipeline (custom post-process).
-- **Resolution**: 320x240 scaled (integer upscale to HD).
-- **Input**: Keyboard + Mouse (controller support later).
+Repeat with incremental escalation until narrative climax (to be defined).
 
 ---
 
-## 7. Production Roadmap
-| Phase | Duration | Goals |
-|--------|-----------|--------|
-| **Prototype (Month 1–2)** | Build FPS base, alcohol physics, lamppost interaction |
-| **Vertical Slice (Month 3–4)** | Add factory boss, one complete loop |
-| **Pre-Alpha (Month 5–7)** | Procedural streets, dialogue, hallucinations |
-| **Alpha (Month 8+)** | Visual refinement, narrative tuning, playtesting |
-| **Beta & Release** | Distribution via itch.io / Steam Early Access |
+## 5. Systems Detail
+
+### 5.1 Player
+- Based on `Entity` (`Area2D`) with HP, invincibility, and death signals.
+- Nested `CharacterBox` (`CharacterBody2D`) handles movement physics.
+- `Player.gd` manages animation switching, sprite facing, attack cooldowns, and throwable instantiation.
+- `Brick` + `Throwable` provide parabolic arcs, bounces, and landing checks.
+- Planned additions: stamina/fatigue management, alcohol buffs, contextual interactions in Home.
+
+### 5.2 Combat & Items
+- **Brick**: Default throwable using physics-based arcs and animation-driven hurtboxes.
+- **Hit/Hurt boxes**: Shared scenes grouped by purpose (`Hitboxes`, `Hurtboxes`) for reusable collision logic.
+- **Invincibility windows**: Timer-based invulnerability after throws or damage.
+- Roadmap: Expand arsenal (bottles, lamppost components), introduce melee chains and parries.
+
+### 5.3 Enemies
+- Current `Enemy` showcases base stats and a cloud-like area attack.
+- `EnemySpawnerSystem` scaffolds timed radial spawning around the player (spawn call re-enabled once AI is stable).
+- Planned archetypes:
+  - **Gopnik bruiser** — close-range pressure, crowd control resistance.
+  - **Folkloric spirit** — ranged disruption, hallucinatory effects.
+  - **Factory foreman (boss)** — multi-phase fight combining labour tasks and attacks.
+
+### 5.4 Level Structure
+- **Home**: Hand-authored TileMap layers (`HomeMapLayer`) with background, furniture, walls, and wallpaper front/back.
+- **Outside**: `OutsideMapLayer` maintains a 3D layer array (background, decorations, environment layers) and delegates drawing to lower/upper drawer systems. Sidewalk detection and prop placement prepared for future variations.
+- **Factory**: TileMap arena with `EnemySpawnerSystem`, placeholders for UI, and loop-back trigger.
+- **Transitions**: `LevelLoaderSystem` (Area2D) calls `Main.load_level(next_scene)` while logging current state.
+
+### 5.5 Audio & Atmosphere
+- `MusicPlayerSystem.gd` autoload keeps a persistent `AudioStreamPlayer`, steps through state machines (`intro`, `home`, `work`, `factory`, `boss`, `victory`, `defeat`).
+- Future work: Ambient SFX layers, dynamic reverb per location, event-driven stingers.
+
+### 5.6 UI / UX
+- Current HUD limited (kill counter scaffold in factory).
+- Planned features: stamina meter, buff icons, dialogue overlays, day counter, procedural street map.
 
 ---
 
-## 8. Risks and Mitigation
-- **Scope Creep**: Strict feature lock per milestone.
-- **Visual Inconsistency**: Limit shader and model count; stylize via pixel filter.
-- **Tone Confusion**: Use consistent absurdist tone to avoid misinterpretation as parody.
-- **Performance**: Optimize 3D lighting and post-processing early.
+## 6. Content Plan
+
+| Area    | Current Content                                       | Next Steps                                                      |
+|---------|--------------------------------------------------------|-----------------------------------------------------------------|
+| Home    | Static apartment TileMap, exit trigger, music change   | Interactive props, buff systems, narrative beats, visual decay  |
+| Outside | Procedural chunks, placeholder enemy, level trigger    | Enable enemy waves, add lamppost sockets, inject surreal events |
+| Factory | Arena TileMap, spawner scaffold, loop trigger          | Implement labour tasks, boss behaviour, win/fail conditions     |
 
 ---
 
-## 9. Development Focus Questions
-Use these as development checkpoints and creative alignment prompts:
+## 7. Technical Snapshot
 
-1. What emotion should dominate each loop (hope, dread, apathy)?
-2. How can lampposts embody both “progress” and “futility”?
-3. When does alcohol enhance clarity vs. chaos — mechanically and thematically?
-4. What makes this world believable within its absurdity?
-5. How can humor and despair coexist in the same moment?
-6. What should the player feel when they throw a brick — empowerment or desperation?
-7. Is the player’s persistence rewarded or punished by the narrative loop?
-8. How much randomness vs. authored meaning should procedural generation convey?
-9. Should “breaking the loop” be an attainable goal — or an illusion?
-10. What will remain in the player’s mind after credits roll?
+- **Main scene** (`res://resources/main/Main.tscn`): root `Node2D` with `LevelContainer`. Handles cleanup and instantiation.
+- **Resource registry** (`scripts/utils/ResourceRegistry.gd`): UID dictionaries for levels, environment prefabs, and enemies.
+- **Outside generator**: Drawer systems operate on the shared `layer_data` array before committing to TileMaps or nodes, allowing debug inspection and custom edits.
+- **Shared overlap assets**: Contain physics primitives, sprite holders, VFX, and reusable hit/hurt boxes to prevent duplication.
+- **Logging**: `Custom_Logger` enforces rate limiting, duplicate suppression, and leveled output.
+- **Audio autoload**: `MUSIC_PLAYER` configured in `project.godot` for global playback.
+- **Physics layers/groups**: Defined in `project.godot` (`Player`, `Enemies`, `Items`, `Projectiles`, `Triggers`, `Environment`, `Floor Lines`) to keep collisions deterministic.
 
 ---
 
-## 10. Final Note
-*Solidmaid* is not just a parody or surreal experiment — it’s an exploration of **routine, alienation, and coping mechanisms** disguised as a game.  
-The project’s success depends on clarity of tone and emotional precision, not on technical excess.
+## 8. Roadmap
+
+1. **Combat Prototype Completion**
+   - Restore enemy spawning with basic AI and telegraphed attacks.
+   - Improve hit feedback (particles, camera shake, audio cues).
+   - Finalise non-gamepad aiming defaults.
+
+2. **Loop Cohesion**
+   - Implement home buffs, alcohol systems, and narrative state tracking.
+   - Develop factory encounter structure with labour tasks + boss.
+   - Persist loop variables (fatigue, morale, world corruption).
+
+3. **Content Expansion**
+   - Grow chunk library (parks, kiosks, industrial stretches).
+   - Script authored surreal events and NPC encounters.
+   - Introduce lamppost crafting/placement with gameplay payoff.
+
+4. **UX & Polish**
+   - HUD/menu implementation, pause flow, settings.
+   - Audio mix pass, bespoke SFX, dialogue system.
+   - Optimisation and tooling (debug overlays, profiler hooks).
+
+5. **Release Prep**
+   - QA, balancing, playtest iteration.
+   - Platform builds and distribution planning (itch.io, Steam).
+
+---
+
+## 9. Risks & Mitigation
+
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| Narrative scope creep | Timeline blow-up | Maintain milestone feature lock; treat optional beats as stretch goals |
+| Procedural monotony | Player fatigue | Increase chunk variety, weave authored events into generator |
+| Combat lacks punch | Low retention | Iterate on throw physics, telegraphs, hitstop, and enemy behaviours |
+| Audio repetition | Mood collapse | Expand music library, add ambient layers, mix based on location |
+
+---
+
+## 10. Open Questions
+
+1. How should alcohol buffs/debuffs influence combat and narrative states?
+2. What does lamppost placement unlock (checkpoints, buffs, alternate routes)?
+3. How is progress tracked between loops — by days survived, tasks completed, or narrative breakthroughs?
+4. Which procedural events recur, and which remain one-offs to preserve surprise?
+5. How does productivity in the factory influence endings or world corruption?
+6. What accessibility options (controls, colour modes) are required for broader reach?
+
+---
+
+## 11. Closing Note
+
+Solidmaid aims to make the mundane oppressive and the absurd familiar. Every system — from chunk generators to throwables — should reinforce the emotional loop of exhaustion, fleeting agency, and inevitable return to routine. Keep satire empathetic, keep mechanics grounded, and let each iteration of the day feel a little stranger than the last.

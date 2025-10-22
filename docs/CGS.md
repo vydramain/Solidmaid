@@ -21,7 +21,7 @@ SOLID principles help create flexible, testable code in Godot's node system.
 
 - **Single Responsibility Principle (SRP)**: Each node or script handles one concern. For instance, separate movement logic from collision handling—use a `KinematicBody2D` for physics and a separate script for AI.
 - **Open-Closed Principle (OCP)**: Design nodes to be extensible without modification. Extend built-in nodes (e.g., create a custom `Enemy` extending `CharacterBody2D`) and use signals for event-driven extensions.
-- \*\*Liskov Substitution Principle (LSP)\*\*urul: Subtypes must be substitutable for base types without breaking behavior. Ensure custom nodes (e.g., a `FlyingEnemy` extending `Enemy`) adhere to the parent's contracts.
+- **Liskov Substitution Principle (LSP)**: Subtypes must be substitutable for base types without breaking behavior. Ensure custom nodes (e.g., a `FlyingEnemy` extending `Enemy`) adhere to the parent's contracts.
 - **Interface Segregation Principle (ISP)**: Prefer small, specific interfaces. In Godot, use signals and groups instead of large monolithic classes—e.g., define separate signals for "damaged" and "died" rather than a broad "state_changed."
 - **Dependency Inversion Principle (DIP)**: Depend on abstractions, not concretes. Inject dependencies via `@export` variables or autoloads, and use signals for loose coupling between systems.
 
@@ -31,7 +31,7 @@ SOLID principles help create flexible, testable code in Godot's node system.
 - **When to Use Scenes vs. Scripts**: Use scenes for reusable, visual elements (e.g., a prefab enemy). Use scripts for pure logic (e.g., a utility class for pathfinding). Avoid scripts on scenes unless they add behavior.
 - **Autoloads vs. Regular Nodes**: Use autoloads (singletons) sparingly for global managers (e.g., GameState, AudioManager). Prefer instanced nodes for scene-specific singletons to avoid global state issues.
 - **Naming Conventions**: Use PascalCase for class names (e.g., `PlayerController`), snake_case for variables (e.g., `max_speed`), and descriptive names. Prefix private members with `_`.
-- **File Structure**: Keep scripts in `res://scripts/`, scenes in `res://scenes/`, and assets in subfolders (e.g., `res://assets/sprites/`). Use folders to group related files (e.g., `player/` for all player-related scenes and scripts).
+- **File Structure**: Follow the current repository convention — shared gameplay scenes live under `res://resources/` (grouped by purpose such as `objects/`, `overlap/`, `systems/`), while global helpers are under `res://scripts/utils/` and art/audio assets under `res://assets/`. Keep related content together (e.g., `resources/objects/enitity/player/` for player scenes and scripts) to make UID-based lookups in `Resource_Registry.gd` reliable.
 
 ## Scripting Best Practices
 
