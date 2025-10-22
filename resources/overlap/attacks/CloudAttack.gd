@@ -3,7 +3,8 @@ extends Node2D
 @onready var sprite_box: Sprite2D = $CloudSmoke/SpriteBox
 @onready var animation_player: AnimationPlayer = $CloudSmoke/SpriteBox/AnimationPlayer
 
-@onready var hitbox_shape: CollisionShape2D = $Hitbox/CollisionShape2D
+@onready var hurtbox_shape: CollisionShape2D = $Hurtbox/CollisionShape2D
+@onready var hitbox: Area2D = $Hitbox
 
 @onready var attack_timer: Timer = $AttackTimer
 
@@ -22,16 +23,17 @@ var _attack_ability: bool = true
 func _ready() -> void:
 	attack_timer.autostart = false
 	attack_timer.wait_time = 3.
+	
 	attack()
 
 func _set_hurtbox(data: Dictionary) -> void:
-	var shape := hitbox_shape.shape
+	var shape := hurtbox_shape.shape
 	if shape is CapsuleShape2D:
 		shape.radius = data["radius"]
 		shape.height = data["height"]
 	
-	hitbox_shape.position = Vector2(data["x"], data["y"])
-	hitbox_shape.rotation_degrees = data["rot"]
+	hurtbox_shape.position = Vector2(data["x"], data["y"])
+	hurtbox_shape.rotation_degrees = data["rot"]
 
 func _on_sprite_box_frame_changed() -> void:
 	if not animation_player.get_current_animation() == "Smoke":
@@ -39,10 +41,10 @@ func _on_sprite_box_frame_changed() -> void:
 	
 	if FRAME_COLLISION.has(sprite_box.frame):
 		var data = FRAME_COLLISION[sprite_box.frame]
-		hitbox_shape.disabled = false
+		hurtbox_shape.disabled = false
 		_set_hurtbox(data)
 	else:
-		hitbox_shape.disabled = true
+		hurtbox_shape.disabled = true
 		_set_hurtbox(DEFAULT_COLLISION)
 
 func _on_attack_timer_timeout() -> void:

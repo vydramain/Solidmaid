@@ -3,7 +3,6 @@
 [node name="Hurtbox" type="Area2D" groups=["Hurtboxes"]]
 collision_layer = 0
 collision_mask = 0
-monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 modulate = Color(1, 0.227451, 0.243137, 1)

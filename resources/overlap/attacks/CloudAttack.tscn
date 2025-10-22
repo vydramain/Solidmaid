@@ -2,23 +2,21 @@
 
 [ext_resource type="Script" uid="uid://mhw10h1ujv1f" path="res://resources/overlap/attacks/CloudAttack.gd" id="1_0trbp"]
 [ext_resource type="PackedScene" uid="uid://d33r368m8dmmc" path="res://resources/overlap/vfx/CloudSmoke.tscn" id="2_8vxbx"]
-[ext_resource type="PackedScene" uid="uid://8clcbxdgnjh5" path="res://resources/overlap/hit/Hitbox.tscn" id="3_0trbp"]
+[ext_resource type="PackedScene" uid="uid://cfdvm6q5tp67i" path="res://resources/overlap/hit/Hurtbox.tscn" id="3_0trbp"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0trbp"]
-radius = 0.0
-height = 0.0
 
 [node name="CloudAttack" type="Node2D"]
 script = ExtResource("1_0trbp")
 
 [node name="CloudSmoke" parent="." instance=ExtResource("2_8vxbx")]
 
-[node name="Hitbox" parent="." instance=ExtResource("3_0trbp")]
+[node name="Hurtbox" parent="." instance=ExtResource("3_0trbp")]
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" parent="Hitbox" index="0"]
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
 shape = SubResource("CapsuleShape2D_0trbp")
-disabled = true
-debug_color = Color(0.79939026, 0.3300163, 0.67461455, 0.41960785)
 
 [node name="AttackTimer" type="Timer" parent="."]
 
@@ -27,4 +25,4 @@ debug_color = Color(0.79939026, 0.3300163, 0.67461455, 0.41960785)
 
 [editable path="CloudSmoke"]
 [editable path="CloudSmoke/SpriteBox"]
-[editable path="Hitbox"]
+[editable path="Hurtbox"]
