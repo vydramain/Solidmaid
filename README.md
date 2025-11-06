@@ -1,17 +1,18 @@
 # Solidmaid
 
-Prototype of a top-down brawler built with Godot 4.5. You guide Vasiliusavich through a loop of three locations — a cramped apartment, an endlessly tiled street, and a factory floor — while experimenting with throwables, enemy behaviors, and level-to-level handoffs.
+Project reboot: first-person folk-horror shooter (FPS) built with Godot 4.5. You guide Vasiliusavich through a loop of three locations — a cramped apartment, an uncanny street, and a factory floor — using improvised tools (bricks, pipes) and a brief ritual/assembly under pressure. The current repository still contains the legacy top‑down prototype; the FPS slice is being developed per the new GDD.
 
 ---
 
 ## Overview
 
 - **Engine:** Godot 4.5 (`renderer: gl_compatibility`).
-- **Main entry point:** `res://resources/main/Main.tscn` (autoloads `MusicPlayerSystem.gd`).
-- **Scene flow:** Home → Outside street → Factory → loops back to Home through trigger volumes.
-- **Current focus:** Implementing traversal, combat prototypes (brick throwing + cloud attack), layered street generation, and tooling (logging, resource registry, music system).
+- **Design direction:** FPS reboot per `docs/design/GDD_v2.md` (legacy 2D systems remain until replaced).
+- **Legacy entry point:** `res://resources/main/Main.tscn` (autoloads `MusicPlayerSystem.gd`).
+- **Legacy scene flow:** Home → Outside street → Factory → loops back to Home.
+- **Current focus:** Building the FPS vertical slice (first‑person controller, brick/pipe combat, street blockouts, factory ritual).
 
-The long-term vision is still under exploration. See `docs/design/GDD_v2.md` for the up-to-date design snapshot.
+See `docs/design/GDD_v2.md` for the up-to-date design snapshot.
 
 ---
 

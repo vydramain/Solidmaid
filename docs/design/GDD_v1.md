@@ -1,4 +1,4 @@
-# Game Design Document: Solidmaid — Alkoldun Vasiliusavich Version 1
+# Game Design Document: Solidmaid — Alkoldun Vasiliusavich (Version 1)
 
 ---
 
