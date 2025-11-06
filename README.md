@@ -11,7 +11,7 @@ Prototype of a top-down brawler built with Godot 4.5. You guide Vasiliusavich th
 - **Scene flow:** Home → Outside street → Factory → loops back to Home through trigger volumes.
 - **Current focus:** Implementing traversal, combat prototypes (brick throwing + cloud attack), layered street generation, and tooling (logging, resource registry, music system).
 
-The long-term vision is still under exploration. See [`docs/GDD.md`](docs/GDD.md) for the up-to-date design snapshot.
+The long-term vision is still under exploration. See `docs/design/GDD_v2.md` for the up-to-date design snapshot.
 
 ---
 
