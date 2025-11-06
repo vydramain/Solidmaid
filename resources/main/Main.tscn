@@ -6,3 +6,6 @@
 script = ExtResource("1_sporg")
 
 [node name="LevelContainer" type="Node2D" parent="."]
+
+[node name="GDExample" type="GDExample" parent="."]
+position = Vector2(2.4381106, 8.581835)
