@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=3 uid="uid://ddfdvmbmclroc"]
+
+[ext_resource type="Script" uid="uid://dmr64ylqd3opt" path="res://resources/objects/character/character.gd" id="1_2dn6d"]
+[ext_resource type="PackedScene" uid="uid://bxkksibsc6esk" path="res://resources/overlap/vitality/Vitality.tscn" id="2_2ejwt"]
+[ext_resource type="Script" uid="uid://nyujmlrr8wmq" path="res://resources/objects/character/interactor.gd" id="2_d7ljh"]
+[ext_resource type="PackedScene" uid="uid://bcgj83svp1tsv" path="res://resources/overlap/locomotion/Locomotion.tscn" id="2_m67xt"]
+[ext_resource type="PackedScene" uid="uid://bnqlnu56hwm0d" path="res://resources/overlap/abilities/Ability.tscn" id="4_2ejwt"]
+[ext_resource type="PackedScene" uid="uid://cdt58pkaip6mv" path="res://resources/overlap/controller_slot/ControllerSlot.tscn" id="5_m8xh5"]
+
+[node name="Character" type="Node3D"]
+script = ExtResource("1_2dn6d")
+
+[node name="Locomotion" parent="." instance=ExtResource("2_m67xt")]
+speed = 0.0
+acceleration = 0.0
+sensitivity = 0.0
+gravity = 0.0
+
+[node name="CameraRig" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+current = true
+
+[node name="Interactor" type="RayCast3D" parent="."]
+script = ExtResource("2_d7ljh")
+
+[node name="Vitality" parent="." instance=ExtResource("2_2ejwt")]
+
+[node name="Abilities" type="Node" parent="."]
+
+[node name="AbilityToMelee" parent="Abilities" instance=ExtResource("4_2ejwt")]
+ability_kind = 1
+
+[node name="AbilityToThrow" parent="Abilities" instance=ExtResource("4_2ejwt")]
+ability_kind = 2
+
+[node name="ControllerSlot" parent="." instance=ExtResource("5_m8xh5")]
+controller_kind = 2

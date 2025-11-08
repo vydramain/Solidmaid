@@ -32,28 +32,29 @@ See `docs/design/GDD_v2.md` for the up-to-date design snapshot.
 
 ```
 assets/                Art and audio (pixel sprites, tiles, music MP3s)
-docs/                  Codestyle (CGS) and design document (GDD)
+docs/                  Codestyle (CGS) and design documents (GDD)
 resources/
-  main/                Main scene that orchestrates level loading
-  objects/             Gameplay scenes (levels, player, enemies, items)
-  overlap/             Shared building blocks (physics, hit/hurt boxes, throwables, VFX)
-  systems/             Gameplay and world systems (audio, enemies, procedural level code)
-scripts/utils/         Autoload-style helpers (Custom Logger, Resource Registry)
+  main/                Legacy entry (2D) and scene orchestration
+  objects/
+    character/         FPS V2 character scene (`Character.tscn`) + glue (`character.gd`)
+    enitity/           Legacy 2D entities (existing gameplay loop)
+  overlap/
+    locomotion/        CharacterBody3D movement (`Locomotion.tscn/.gd`)
+    controller_slot/   Controller slot + Player/AI controllers
+    abilities/         Ability shell + `Melee.tscn`, `Throw.tscn`
+    vitality/          Health/HP component
+  systems/             Gameplay/world systems (audio, enemies, procedural level code)
+scripts/utils/         Helpers (e.g., `CustomLogger.gd`)
 ```
 
-IDs inside `Resource_Registry.gd` resolve UID strings to packed scenes and environment prefabs; the project relies on these mappings instead of hard-coded file paths.
+- FPS V2 scaffolding is not yet wired into the main entry scene; it lives under `resources/objects/character/` and `resources/overlap/` for now.
 
 ---
 
 ## Controls
 
-| Action          | Default Binding                          |
-|-----------------|-------------------------------------------|
-| Move            | `W`, `A`, `S`, `D` (left stick on gamepad)|
-| Attack / Throw  | Left mouse button (`action_attack`)       |
-| Throw direction | Right stick (`look_*` actions)            |
-
-Throw direction is currently read from the `look_*` axis actions. If you play with keyboard + mouse, add additional bindings in *Project Settings → Input Map* (for example, arrow keys) so the `Player` can compute a throw vector.
+- Legacy 2D prototype: uses `move_up/down/left/right` and `action_attack`.
+- FPS V2 (scaffold): `ControllerForPlayer.gd` expects look via mouse motion and move axes. Recommended to add actions: `move_forward`, `move_backward`, `move_left`, `move_right`, `throw`, `interact` in Project Settings → Input Map.
 
 ---
 

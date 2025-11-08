@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://d4anv7i2dcbc0"]
 
-[ext_resource type="Script" uid="uid://mhw10h1ujv1f" path="res://resources/overlap/attacks/CloudAttack.gd" id="1_0trbp"]
-[ext_resource type="PackedScene" uid="uid://d33r368m8dmmc" path="res://resources/overlap/vfx/CloudSmoke.tscn" id="2_8vxbx"]
-[ext_resource type="PackedScene" uid="uid://cfdvm6q5tp67i" path="res://resources/overlap/hit/Hurtbox.tscn" id="3_0trbp"]
+[ext_resource type="Script" uid="uid://mhw10h1ujv1f" path="res://resources/overlap/legacy_attacks/CloudAttack.gd" id="1_0trbp"]
+[ext_resource type="PackedScene" uid="uid://d33r368m8dmmc" path="res://resources/overlap/legacy_vfx/CloudSmoke.tscn" id="2_8vxbx"]
+[ext_resource type="PackedScene" uid="uid://cfdvm6q5tp67i" path="res://resources/overlap/legacy_hit/Hurtbox.tscn" id="3_0trbp"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0trbp"]
 
