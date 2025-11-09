@@ -31,7 +31,7 @@ SOLID principles help create flexible, testable code in Godot's node system.
 - **When to Use Scenes vs. Scripts**: Use scenes for reusable, visual elements (e.g., a prefab enemy). Use scripts for pure logic (e.g., a utility class for pathfinding). Avoid scripts on scenes unless they add behavior.
 - **Autoloads vs. Regular Nodes**: Use autoloads (singletons) sparingly for global managers (e.g., GameState, AudioManager). Prefer instanced nodes for scene-specific singletons to avoid global state issues.
 - **Naming Conventions**: Use PascalCase for class names (e.g., `PlayerController`), snake_case for variables (e.g., `max_speed`), and descriptive names. Prefix private members with `_`.
-- **File Structure**: Follow the current repository convention — shared gameplay scenes live under `res://resources/` (grouped by purpose such as `objects/`, `overlap/`, `systems/`), while global helpers are under `res://scripts/utils/` and art/audio assets under `res://assets/`. Keep related content together (e.g., `resources/objects/enitity/player/` for player scenes and scripts) to make UID-based lookups in `Resource_Registry.gd` reliable.
+- **File Structure**: Follow the current repository convention — shared gameplay scenes live under `res://resources/` (grouped by purpose such as `objects/`, `overlap/`, `systems/`), while global helpers are under `res://scripts/utils/` and art/audio assets under `res://assets/`. Keep related content together (e.g., `resources/objects/legacy_enitity/player/` for legacy 2D player scenes and scripts) to make UID-based lookups reliable.
 
 ## Scripting Best Practices
 

@@ -37,13 +37,17 @@ resources/
   main/                Legacy entry (2D) and scene orchestration
   objects/
     character/         FPS V2 character scene (`Character.tscn`) + glue (`character.gd`)
-    enitity/           Legacy 2D entities (existing gameplay loop)
+    legacy_enitity/    Legacy 2D entities (existing gameplay loop)
   overlap/
     locomotion/        CharacterBody3D movement (`Locomotion.tscn/.gd`)
     controller_slot/   Controller slot + Player/AI controllers
     abilities/         Ability shell + `Melee.tscn`, `Throw.tscn`
     vitality/          Health/HP component
-  systems/             Gameplay/world systems (audio, enemies, procedural level code)
+  systems/
+    legacy_enemies/    Legacy 2D enemy systems
+    legacy_environments/ Legacy 2D environment systems
+    legacy_level/      Legacy 2D level systems (loader, outside)
+    audio/             Shared audio systems (autoload music player)
 scripts/utils/         Helpers (e.g., `CustomLogger.gd`)
 ```
 

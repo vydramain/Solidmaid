@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://di5tqetq6dy7" path="res://resources/objects/levels/factory/FactoryTileMapLayer.tscn" id="2_ayttb"]
 [ext_resource type="PackedScene" uid="uid://cpmqf62lln6ba" path="res://resources/objects/enitity/player/Player.tscn" id="3_y21du"]
 [ext_resource type="PackedScene" uid="uid://bncdqhr0e5dl3" path="res://resources/systems/level/loader/LevelLoaderSystem.tscn" id="4_0bu4c"]
-[ext_resource type="PackedScene" uid="uid://b0mik7r36f1p6" path="res://resources/overlap/StaticBorders.tscn" id="6_5vdh1"]
+[ext_resource type="PackedScene" uid="uid://b0mik7r36f1p6" path="res://resources/overlap/legacy_static/StaticBorders.tscn" id="6_5vdh1"]
 
 [node name="FactoryLevel" type="Node2D"]
 script = ExtResource("1_t6irq")
