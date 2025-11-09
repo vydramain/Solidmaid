@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 @export var initial_level_scene: PackedScene = preload(Resource_Registry.LEVELS["OUTSIDE"])
 

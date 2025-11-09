@@ -1,10 +1,11 @@
-extends Node3D
+extends "res://resources/overlap/locomotion/locomotion.gd"
 
-@onready var body := $"Locomotion"
+var body := self
 @onready var health := $"Vitality"
 @onready var abilities := $"Abilities"
 @onready var interactor := $"Interactor"
 @onready var controller_slot := $"ControllerSlot"
+
 
 func _ready():
 	health.died.connect(_on_died)

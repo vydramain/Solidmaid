@@ -1,15 +1,15 @@
 extends CharacterBody3D
 
-@export var speed: float = .0
-@export var acceleration: float = .0
-@export var sensitivity: float = .0
-@export var gravity: float = .0
-@export var pitch_max: float = deg_to_rad(90)
+@export var speed: float = 5.0
+@export var acceleration: float = 0.0
+@export var sensitivity: float = 0.003
+@export var gravity: float = 30.0
+@export var pitch_max: float = deg_to_rad(85)
 
 var look_yaw := 0.0
 var look_pitch := 0.0
 
-@onready var camera_pivot := $"../CameraRig"
+@onready var camera_pivot := $"CameraRig"
 
 func set_move_input(dir: Vector2): 
 	velocity.x = dir.x * speed

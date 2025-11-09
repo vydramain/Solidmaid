@@ -27,7 +27,7 @@ func _ready() -> void:
 	if scene == null:
 		push_error("Ability kind %d has no associated scene" % ability_kind)
 	else:
-		Custom_Logger.debug(self, "Loaded ability scene: '%s'" % scene.name)
+		Custom_Logger.debug(self, "Loaded ability scene: '%s'" % scene)
 
 
 func request_start(ctx) -> void:
