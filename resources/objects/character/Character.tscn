@@ -13,7 +13,7 @@
 script = ExtResource("1_2dn6d")
 speed = 5.0
 acceleration = 0.0
-sensitivity = 0.003
+sensitivity = 0.006
 gravity = 30.0
 
 [node name="CollisionShape3D" parent="." index="0"]

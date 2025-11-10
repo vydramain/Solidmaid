@@ -4,6 +4,7 @@ var body := self
 @onready var health := $"Vitality"
 @onready var abilities := $"Abilities"
 @onready var interactor := $"Interactor"
+@onready var camera := $"CameraRig/Camera3D"
 @onready var controller_slot := $"ControllerSlot"
 
 

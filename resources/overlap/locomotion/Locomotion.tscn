@@ -4,9 +4,5 @@
 
 [node name="Locomotion" type="CharacterBody3D"]
 script = ExtResource("1_njqar")
-speed = null
-acceleration = null
-sensitivity = null
-gravity = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

@@ -36,6 +36,7 @@ func _physics_process(_dt):
 		Input.get_action_strength("move_backward") - Input.get_action_strength("move_forward")
 	)
 	loco.set_move_input(move)
+	
 	if Input.is_action_just_pressed("attack"):
 		melee_ability.request_start(null)
 	if Input.is_action_just_pressed("throw"):
