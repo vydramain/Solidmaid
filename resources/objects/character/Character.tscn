@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://ddfdvmbmclroc"]
+[gd_scene load_steps=9 format=3 uid="uid://ddfdvmbmclroc"]
 
 [ext_resource type="Script" uid="uid://dmr64ylqd3opt" path="res://resources/objects/character/character.gd" id="1_2dn6d"]
 [ext_resource type="PackedScene" uid="uid://bxkksibsc6esk" path="res://resources/overlap/vitality/Vitality.tscn" id="2_2ejwt"]
@@ -6,34 +6,26 @@
 [ext_resource type="PackedScene" uid="uid://bcgj83svp1tsv" path="res://resources/overlap/locomotion/Locomotion.tscn" id="2_m67xt"]
 [ext_resource type="PackedScene" uid="uid://bnqlnu56hwm0d" path="res://resources/overlap/abilities/Ability.tscn" id="4_2ejwt"]
 [ext_resource type="PackedScene" uid="uid://cdt58pkaip6mv" path="res://resources/overlap/controller_slot/ControllerSlot.tscn" id="5_m8xh5"]
+[ext_resource type="PackedScene" path="res://resources/objects/character/CameraRig.tscn" id="6_2dn6d"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_d7ljh"]
 
 [node name="Character" instance=ExtResource("2_m67xt")]
 script = ExtResource("1_2dn6d")
-speed = 5.0
-acceleration = 0.0
-sensitivity = 0.006
-gravity = 30.0
+camera_rig_scene = ExtResource("6_2dn6d")
 
 [node name="CollisionShape3D" parent="." index="0"]
 shape = SubResource("CapsuleShape3D_d7ljh")
 
-[node name="CameraRig" type="Node3D" parent="." index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-
-[node name="Camera3D" type="Camera3D" parent="CameraRig" index="0"]
-current = true
-
-[node name="Interactor" type="RayCast3D" parent="." index="2"]
+[node name="Interactor" type="RayCast3D" parent="." index="1"]
 script = ExtResource("2_d7ljh")
 
-[node name="ControllerSlot" parent="." index="3" instance=ExtResource("5_m8xh5")]
+[node name="ControllerSlot" parent="." index="2" instance=ExtResource("5_m8xh5")]
 controller_kind = 2
 
-[node name="Vitality" parent="." index="4" instance=ExtResource("2_2ejwt")]
+[node name="Vitality" parent="." index="3" instance=ExtResource("2_2ejwt")]
 
-[node name="Abilities" type="Node" parent="." index="5"]
+[node name="Abilities" type="Node" parent="." index="4"]
 
 [node name="AbilityToMelee" parent="Abilities" index="0" instance=ExtResource("4_2ejwt")]
 ability_kind = 1

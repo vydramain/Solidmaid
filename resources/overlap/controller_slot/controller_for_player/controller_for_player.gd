@@ -5,6 +5,8 @@ var loco
 var throw_ability
 var melee_ability
 var wants_capture := true
+var camera_rig
+var camera: Camera3D
 
 func _ready() -> void:
 	if wants_capture:
@@ -50,3 +52,7 @@ func init(ch):
 	loco = ch.body
 	throw_ability = ch.get_ability("AbilityToThrow")
 	melee_ability = ch.get_ability("AbilityToMelee")
+	camera_rig = character.ensure_camera_rig()
+	camera = character.get_camera()
+	if camera:
+		camera.current = true
