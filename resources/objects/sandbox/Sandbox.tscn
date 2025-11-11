@@ -1,0 +1,37 @@
+[gd_scene load_steps=8 format=3 uid="uid://d10uph0oxrm28"]
+
+[ext_resource type="PackedScene" uid="uid://ddfdvmbmclroc" path="res://resources/objects/character/Character.tscn" id="1_char"]
+[ext_resource type="Texture2D" uid="uid://1fm1h6cggxtp" path="res://assets/textures/outside/Skybox_1.png" id="2_3qsem"]
+
+[sub_resource type="BoxMesh" id="1"]
+size = Vector3(20, 0.1, 20)
+
+[sub_resource type="BoxShape3D" id="2"]
+size = Vector3(20, 0.1, 20)
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_xt2jq"]
+panorama = ExtResource("2_3qsem")
+filter = false
+
+[sub_resource type="Sky" id="Sky_csuqi"]
+sky_material = SubResource("PanoramaSkyMaterial_xt2jq")
+
+[sub_resource type="Environment" id="Environment_vnm58"]
+background_mode = 2
+sky = SubResource("Sky_csuqi")
+
+[node name="Sandbox" type="Node3D"]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="FloorMesh" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("1")
+
+[node name="FloorCol" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("2")
+
+[node name="Character" parent="." instance=ExtResource("1_char")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_vnm58")

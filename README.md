@@ -16,7 +16,7 @@ See `docs/design/GDD_v2.md` for the up-to-date design snapshot.
 
 ---
 
-## Current Gameplay Slice
+## Current Gameplay Slice (legacy top-down)
 
 - **Home level:** Static apartment layout with interactable floor lines and a transition trigger to leave the house.
 - **Outside level:** Chunk-based street generator (`OutsideMapLayer`, layered tilemaps, environment pop-in) that instantiates background, decoration, and environment nodes per chunk.
@@ -32,28 +32,38 @@ See `docs/design/GDD_v2.md` for the up-to-date design snapshot.
 
 ```
 assets/                Art and audio (pixel sprites, tiles, music MP3s)
-docs/                  Codestyle (CGS) and design document (GDD)
+docs/                  Codestyle (CGS) and design documents (GDD)
 resources/
-  main/                Main scene that orchestrates level loading
-  objects/             Gameplay scenes (levels, player, enemies, items)
-  overlap/             Shared building blocks (physics, hit/hurt boxes, throwables, VFX)
-  systems/             Gameplay and world systems (audio, enemies, procedural level code)
-scripts/utils/         Autoload-style helpers (Custom Logger, Resource Registry)
+  main/                Legacy entry (2D) and scene orchestration
+  objects/
+    character/         FPS V2 character scene (`Character.tscn`) + glue (`character.gd`)
+    legacy_enitity/    Legacy 2D entities (existing gameplay loop)
+  overlap/
+    locomotion/        CharacterBody3D movement (`Locomotion.tscn/.gd`)
+    controller_slot/   Controller slot + Player/AI controllers
+    abilities/         Ability shell + `Melee.tscn`, `Throw.tscn`
+    vitality/          Health/HP component
+  systems/
+    legacy_enemies/    Legacy 2D enemy systems
+    legacy_environments/ Legacy 2D environment systems
+    legacy_level/      Legacy 2D level systems (loader, outside)
+    audio/             Shared audio systems (autoload music player)
+scripts/utils/         Helpers (e.g., `CustomLogger.gd`)
 ```
 
-IDs inside `Resource_Registry.gd` resolve UID strings to packed scenes and environment prefabs; the project relies on these mappings instead of hard-coded file paths.
+- FPS V2 scaffolding is not yet wired into the main entry scene; it lives under `resources/objects/character/` and `resources/overlap/` for now.
 
 ---
 
 ## Controls
 
-| Action          | Default Binding                          |
-|-----------------|-------------------------------------------|
-| Move            | `W`, `A`, `S`, `D` (left stick on gamepad)|
-| Attack / Throw  | Left mouse button (`action_attack`)       |
-| Throw direction | Right stick (`look_*` actions)            |
-
-Throw direction is currently read from the `look_*` axis actions. If you play with keyboard + mouse, add additional bindings in *Project Settings → Input Map* (for example, arrow keys) so the `Player` can compute a throw vector.
+- **Legacy prototype:** `move_up/down/left/right` for WASD and `action_attack` on LMB.
+- **FPS V2 sandbox:**
+  - Move: `move_forward/backward/left/right` (WASD) 
+  - Look: mouse (cursor is captured by default, press `Esc` to release, click to recapture)
+  - Attack / melee: `attack` (LMB)
+  - Throw placeholder: `throw` (RMB)
+  - Interact ray: `interact` (`E` / gamepad south button)
 
 ---
 
@@ -67,6 +77,7 @@ Throw direction is currently read from the `look_*` axis actions. If you play wi
 2. Open `project.godot` with **Godot Engine 4.5** or newer.
 3. Ensure the `MUSIC_PLAYER` autoload is enabled (importer sets it up automatically).
 4. Run the project (F5) — the main scene loads the outside level by default and listens for level triggers.
+   - For FPS testing, open `resources/objects/sandbox/Sandbox.tscn` and run that scene instead.
 
 All dependencies are committed; no external packages are required.
 
@@ -80,6 +91,19 @@ All dependencies are committed; no external packages are required.
 - **Combat helpers:** Common hit/hurt boxes, throwable physics, and animation-driven attack collision live in `resources/overlap/`.
 - **Audio system:** `MusicPlayerSystem.gd` keeps an `AudioStreamPlayer` child around, advances through state machines, and reacts to gameplay events (`play_next("home")`, etc.).
 - **Enemy spawner:** `EnemySpawnerSystem.gd` scaffolds timed spawning around the player; the actual `spawn_enemy()` call is currently commented out.
+
+---
+
+## FPS V2 Progress (in-flight)
+
+- **PlayerFPS scene:** `resources/objects/character/Character.tscn` instantiates the `Locomotion` CharacterBody3D as its root with attached camera, interactor, vitality, abilities, and controller slot.
+- **Controller:** `ControllerForPlayer.gd` handles look/move input, cursor capture (Esc releases, click/focus restore), and delegates to ability/interactor components. Stub `ControllerForAI.gd` exists for future NPC behavior.
+- **Locomotion:** `resources/overlap/locomotion/locomotion.gd` provides yaw/pitch, gravity, and configurable speed/sensitivity defaults (5 m/s, 0.003 sens, 30 gravity, ±85° pitch clamp).
+- **Interactor:** Forward RayCast3D that calls either `interact(by)` or an `interactable` group signal when you hit a target (hooked into the controller). UI prompt still TODO.
+- **Sandbox:** `resources/objects/sandbox/Sandbox.tscn` instantiates the Character on a flat floor for quick testing of movement/look/interact. Add a WorldEnvironment/Skybox if you want a horizon reference while prototyping.
+- **Input map:** `project.godot` now defines both legacy (`move_up/down/left/right`, `action_attack`) and FPS actions (`move_forward/backward`, `move_left/right`, `attack`, `throw`, `interact`).
+
+> Until FPS content replaces the legacy loop, launch `Sandbox.tscn` for first-person tests and `Main.tscn` for the top-down slice.
 
 ---
 
