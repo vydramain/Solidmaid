@@ -1,4 +1,5 @@
 extends RayCast3D
+class_name Interactor
 
 ## Minimal interactor: casts forward and calls `interact(by)` on hit target if available.
 

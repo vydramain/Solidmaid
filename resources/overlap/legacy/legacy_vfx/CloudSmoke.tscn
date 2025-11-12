@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://d33r368m8dmmc"]
 
-[ext_resource type="PackedScene" uid="uid://dv1cesc1mjj7b" path="res://resources/overlap/legacy_sprite/SpriteBox.tscn" id="1_80evp"]
+[ext_resource type="PackedScene" uid="uid://dv1cesc1mjj7b" path="res://resources/overlap/legacy/legacy_sprite/SpriteBox.tscn" id="1_80evp"]
 [ext_resource type="Texture2D" uid="uid://bj678qbk2wa01" path="res://assets/textures/enemies/smoke.png" id="2_v050y"]
 
 [sub_resource type="Animation" id="Animation_fpu32"]

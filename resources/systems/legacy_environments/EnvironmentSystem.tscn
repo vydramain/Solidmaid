@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://d14g673ac6wgm"]
 
-[ext_resource type="Script" uid="uid://8ykxb57xwyxk" path="res://resources/systems/environments/EnvironmentSystem.gd" id="1_tmn73"]
-[ext_resource type="PackedScene" uid="uid://bxp005ph207xb" path="res://resources/overlap/legacy_physic/PhysicLine.tscn" id="2_ej5lb"]
+[ext_resource type="Script" uid="uid://8ykxb57xwyxk" path="res://resources/systems/legacy_environments/EnvironmentSystem.gd" id="1_tmn73"]
+[ext_resource type="PackedScene" uid="uid://bxp005ph207xb" path="res://resources/overlap/legacy/legacy_physic/PhysicLine.tscn" id="2_ej5lb"]
 [ext_resource type="PackedScene" path="res://resources/objects/enitity/items/birck/Brick_old.tscn" id="3_fuvra"]
 
 [node name="EnvironmentManager" type="Node2D"]

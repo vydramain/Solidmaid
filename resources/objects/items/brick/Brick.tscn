@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" uid="uid://bey2k0d4slhg7" path="res://resources/objects/items/brick/brick.gd" id="1_i06l1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wne7c"]
+albedo_color = Color(0.557139, 0.247608, 0.181614, 1)
+metallic = 0.0
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_m7yak"]
+size = Vector3(0.32, 0.12, 0.16)
+material = SubResource("StandardMaterial3D_wne7c")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vn0sr"]
+size = Vector3(0.32, 0.12, 0.16)
+
+[node name="Brick" type="RigidBody3D"]
+script = ExtResource("1_i06l1")
+mass = 4.0
+physics_material_override = null
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_vn0sr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_m7yak")

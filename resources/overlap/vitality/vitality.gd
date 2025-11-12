@@ -1,4 +1,5 @@
 extends Node
+class_name Vitality
 
 @export var max_hp: float = 100.0
 @export var hp: float = 100.0

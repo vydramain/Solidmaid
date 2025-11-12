@@ -1,11 +1,12 @@
 extends CharacterBody3D
+class_name Locomotion
 
 @export var speed: float = 5.0
 @export var acceleration: float = 0.0
 @export var sensitivity: float = 0.006
 @export var gravity: float = 30.0
 @export var pitch_max: float = deg_to_rad(85)
-@export var look_pivot_path: NodePath = NodePath("CameraRig")
+@export var look_pivot_path: NodePath = NodePath()
 
 var look_yaw := 0.0
 var look_pitch := 0.0

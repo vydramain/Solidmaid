@@ -1,0 +1,18 @@
+[gd_scene load_steps=1 format=3]
+
+[node name="VisionRig" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="LookPivot" type="Node3D" parent="." index="0"]
+
+[node name="Camera3D" type="Camera3D" parent="LookPivot" index="0"]
+current = true
+
+[node name="HandSockets" type="Node3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -0.35)
+
+[node name="RightHandSlot" type="Marker3D" parent="HandSockets" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0, 0)
+
+[node name="LeftHandSlot" type="Marker3D" parent="HandSockets" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0, 0)

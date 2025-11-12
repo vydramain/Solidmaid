@@ -1,4 +1,5 @@
 extends Node
+class_name ControllerSlot
 
 @export_enum("None", "AI", "Player")
 var controller_kind := 0

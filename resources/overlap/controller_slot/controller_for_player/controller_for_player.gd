@@ -5,9 +5,8 @@ var loco
 var throw_ability
 var melee_ability
 var wants_capture := true
-var camera_rig
-var camera: Camera3D
-
+var vision_rig
+var vision_camera: Camera3D
 func _ready() -> void:
 	if wants_capture:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -39,12 +38,19 @@ func _physics_process(_dt):
 	)
 	loco.set_move_input(move)
 	
-	if Input.is_action_just_pressed("attack"):
-		melee_ability.request_start(null)
-	if Input.is_action_just_pressed("throw"):
-		throw_ability.request_start(null)
+	var right_hand_pressed := Input.is_action_just_pressed("hand_right") or Input.is_action_just_pressed("attack")
+	if right_hand_pressed:
+		if not _handle_hand_slot(CarrySlots.SLOT_RIGHT):
+			melee_ability.request_start(null)
+	var left_hand_pressed := Input.is_action_just_pressed("hand_left") or Input.is_action_just_pressed("throw")
+	if left_hand_pressed:
+		if not _handle_hand_slot(CarrySlots.SLOT_LEFT):
+			if character and not character.request_throw():
+				throw_ability.request_start(null)
 	if Input.is_action_just_pressed("interact"):
-		character.interactor.interact()
+		var interact_component = character.get_interactor()
+		if interact_component:
+			interact_component.interact()
 
 
 func init(ch):
@@ -52,7 +58,42 @@ func init(ch):
 	loco = ch.body
 	throw_ability = ch.get_ability("AbilityToThrow")
 	melee_ability = ch.get_ability("AbilityToMelee")
-	camera_rig = character.ensure_camera_rig()
-	camera = character.get_camera()
-	if camera:
-		camera.current = true
+	vision_rig = character.ensure_vision_rig()
+	vision_camera = character.get_vision_camera()
+	if vision_camera:
+		vision_camera.current = true
+
+
+func _handle_hand_slot(slot_name: String) -> bool:
+	if character == null:
+		return false
+	var hand_label := slot_name.capitalize()
+	
+	var slots: CarrySlots = character.get_carry_slots()
+	if slots:
+		var slot_item := slots.get_item(slot_name)
+		if slot_item:
+			var did_throw: bool = character.request_throw(slot_name)
+			if did_throw:
+				Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, slot_item.name, hand_label])
+			return did_throw
+
+	var target = _get_interactor_target()
+	if target:
+		if target.has_method("interact"):
+			target.interact(character)
+			Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, target.name, hand_label])
+			return true
+		if target is Node and (target as Node).is_in_group("interactable"):
+			(target as Node).emit_signal.call_deferred("interacted", character)
+			Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, target.name, hand_label])
+			return true
+
+	return false
+
+
+func _get_interactor_target():
+	var current_interactor: Interactor = character.get_interactor()
+	if current_interactor:
+		return current_interactor.get_current_target()
+	return null

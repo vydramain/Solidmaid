@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://by8f7mfnathye"]
 
-[ext_resource type="Script" uid="uid://c48sol1km4y6r" path="res://resources/objects/enitity/Entity.gd" id="1_2isnj"]
-[ext_resource type="PackedScene" uid="uid://dv1cesc1mjj7b" path="res://resources/overlap/legacy_sprite/SpriteBox.tscn" id="2_bc3h3"]
+[ext_resource type="Script" uid="uid://c48sol1km4y6r" path="res://resources/objects/legacy_enitity/Entity.gd" id="1_2isnj"]
+[ext_resource type="PackedScene" uid="uid://dv1cesc1mjj7b" path="res://resources/overlap/legacy/legacy_sprite/SpriteBox.tscn" id="2_bc3h3"]
 
 [node name="Entity" type="Area2D"]
 collision_layer = 0
