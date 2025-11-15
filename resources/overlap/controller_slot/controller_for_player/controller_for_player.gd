@@ -1,5 +1,7 @@
 extends Node
 
+const HUD_SCENE := preload("res://resources/overlap/ui/FpsHud.tscn")
+
 var character
 var loco
 var throw_ability
@@ -7,9 +9,15 @@ var melee_ability
 var wants_capture := true
 var vision_rig
 var vision_camera: Camera3D
+var fps_hud: CanvasLayer
 func _ready() -> void:
 	if wants_capture:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func _exit_tree() -> void:
+	if character and character.interactor_ready.is_connected(_on_interactor_ready):
+		character.interactor_ready.disconnect(_on_interactor_ready)
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -58,10 +66,14 @@ func init(ch):
 	loco = ch.body
 	throw_ability = ch.get_ability("AbilityToThrow")
 	melee_ability = ch.get_ability("AbilityToMelee")
+	if character and not character.interactor_ready.is_connected(_on_interactor_ready):
+		character.interactor_ready.connect(_on_interactor_ready)
+	_ensure_hud()
 	vision_rig = character.ensure_vision_rig()
 	vision_camera = character.get_vision_camera()
 	if vision_camera:
 		vision_camera.current = true
+	_on_interactor_ready(character.get_interactor())
 
 
 func _handle_hand_slot(slot_name: String) -> bool:
@@ -97,3 +109,15 @@ func _get_interactor_target():
 	if current_interactor:
 		return current_interactor.get_current_target()
 	return null
+
+
+func _ensure_hud() -> void:
+	if fps_hud:
+		return
+	fps_hud = HUD_SCENE.instantiate()
+	add_child(fps_hud)
+
+
+func _on_interactor_ready(new_interactor: Interactor) -> void:
+	if fps_hud:
+		fps_hud.bind_interactor(new_interactor)

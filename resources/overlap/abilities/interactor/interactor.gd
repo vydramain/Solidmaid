@@ -3,10 +3,25 @@ class_name Interactor
 
 ## Minimal interactor: casts forward and calls `interact(by)` on hit target if available.
 
+signal target_changed(target)
+
+var _current_target
+
+
+func _ready() -> void:
+	set_physics_process(true)
+	_update_target_state(get_current_target())
+
+
+func _physics_process(_dt: float) -> void:
+	_update_target_state(get_current_target())
+
+
 func get_current_target():
 	if is_colliding():
 		return get_collider()
 	return null
+
 
 func interact() -> void:
 	var target = get_current_target()
@@ -19,3 +34,10 @@ func interact() -> void:
 	# Group-based fallback
 	if target is Node and (target as Node).is_in_group("interactable"):
 		(target as Node).emit_signal.call_deferred("interacted", get_owner())
+
+
+func _update_target_state(new_target) -> void:
+	if new_target == _current_target:
+		return
+	_current_target = new_target
+	target_changed.emit(_current_target)

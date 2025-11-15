@@ -1,5 +1,7 @@
 extends Locomotion
 
+signal interactor_ready(interactor)
+
 const VISION_RIG_NODE_NAME := "VisionRig"
 
 var body := self
@@ -107,6 +109,7 @@ func _update_carry_slots_aim():
 func register_ability_dependency(node: Node) -> void:
 	if node is Interactor:
 		interactor = node
+		interactor_ready.emit(interactor)
 	elif node is Node3D and node.name == VISION_RIG_NODE_NAME:
 		_set_vision_rig(node)
 	_attach_interactor_to_pivot()
