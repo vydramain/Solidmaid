@@ -1,6 +1,6 @@
 extends Node
 
-const HUD_SCENE := preload("res://resources/overlap/ui/FpsHud.tscn")
+const HUD_SCENE := preload("uid://cp1xgv8y1d6im")
 
 var character
 var loco
@@ -9,11 +9,12 @@ var melee_ability
 var wants_capture := true
 var vision_rig
 var vision_camera: Camera3D
-var fps_hud: CanvasLayer
+var hud: CanvasLayer
+
+
 func _ready() -> void:
 	if wants_capture:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
 
 func _exit_tree() -> void:
 	if character and character.interactor_ready.is_connected(_on_interactor_ready):
@@ -45,7 +46,6 @@ func _physics_process(_dt):
 		Input.get_action_strength("move_backward") - Input.get_action_strength("move_forward")
 	)
 	loco.set_move_input(move)
-	
 	var right_hand_pressed := Input.is_action_just_pressed("hand_right") or Input.is_action_just_pressed("attack")
 	if right_hand_pressed:
 		if not _handle_hand_slot(CarrySlots.SLOT_RIGHT):
@@ -60,27 +60,10 @@ func _physics_process(_dt):
 		if interact_component:
 			interact_component.interact()
 
-
-func init(ch):
-	character = ch
-	loco = ch.body
-	throw_ability = ch.get_ability("AbilityToThrow")
-	melee_ability = ch.get_ability("AbilityToMelee")
-	if character and not character.interactor_ready.is_connected(_on_interactor_ready):
-		character.interactor_ready.connect(_on_interactor_ready)
-	_ensure_hud()
-	vision_rig = character.ensure_vision_rig()
-	vision_camera = character.get_vision_camera()
-	if vision_camera:
-		vision_camera.current = true
-	_on_interactor_ready(character.get_interactor())
-
-
 func _handle_hand_slot(slot_name: String) -> bool:
 	if character == null:
 		return false
 	var hand_label := slot_name.capitalize()
-	
 	var slots: CarrySlots = character.get_carry_slots()
 	if slots:
 		var slot_item := slots.get_item(slot_name)
@@ -89,7 +72,6 @@ func _handle_hand_slot(slot_name: String) -> bool:
 			if did_throw:
 				Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, slot_item.name, hand_label])
 			return did_throw
-
 	var target = _get_interactor_target()
 	if target:
 		if target.has_method("interact"):
@@ -103,21 +85,40 @@ func _handle_hand_slot(slot_name: String) -> bool:
 
 	return false
 
-
 func _get_interactor_target():
 	var current_interactor: Interactor = character.get_interactor()
 	if current_interactor:
 		return current_interactor.get_current_target()
 	return null
 
-
 func _ensure_hud() -> void:
-	if fps_hud:
+	if hud:
 		return
-	fps_hud = HUD_SCENE.instantiate()
-	add_child(fps_hud)
-
+	hud = HUD_SCENE.instantiate()
+	add_child(hud)
+	_bind_hud_character()
 
 func _on_interactor_ready(new_interactor: Interactor) -> void:
-	if fps_hud:
-		fps_hud.bind_interactor(new_interactor)
+	if hud:
+		hud.bind_interactor(new_interactor)
+
+
+func _bind_hud_character() -> void:
+	if hud and character and hud.has_method("bind_character"):
+		hud.bind_character(character)
+
+
+func init(ch):
+	character = ch
+	loco = ch.body
+	throw_ability = ch.get_ability("AbilityToThrow")
+	melee_ability = ch.get_ability("AbilityToMelee")
+	if character and not character.interactor_ready.is_connected(_on_interactor_ready):
+		character.interactor_ready.connect(_on_interactor_ready)
+	_ensure_hud()
+	_bind_hud_character()
+	vision_rig = character.ensure_vision_rig()
+	vision_camera = character.get_vision_camera()
+	if vision_camera:
+		vision_camera.current = true
+	_on_interactor_ready(character.get_interactor())

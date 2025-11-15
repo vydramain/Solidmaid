@@ -22,7 +22,8 @@ MUSIC_PLAYER="*res://resources/systems/audio/player/MusicPlayerSystem.gd"
 [display]
 
 window/size/viewport_width=256
-window/size/viewport_height=162
+window/size/viewport_height=160
+window/size/initial_position_type=0
 window/size/window_width_override=1280
 window/size/window_height_override=800
 window/stretch/mode="viewport"
