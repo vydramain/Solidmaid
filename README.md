@@ -1,18 +1,24 @@
 # Solidmaid
 
-Project reboot: first-person folk-horror shooter (FPS) built with Godot 4.5. You guide Vasiliusavich through a loop of three locations — a cramped apartment, an uncanny street, and a factory floor — using improvised tools (bricks, pipes) and a brief ritual/assembly under pressure. The current repository still contains the legacy top‑down prototype; the FPS slice is being developed per the new GDD.
+Project reboot: first-person folk-horror shooter (FPS) built with Godot 4.5. You guide Vasiliusavich through a loop of three locations — a cramped apartment, an uncanny street, and a factory floor — using improvised tools (bricks, pipes) and a brief ritual/assembly under pressure. The current repository still contains the legacy top‑down prototype; the FPS slice is being developed per the [GDD](docs/design/GDD_v2.md), with day-to-day notes in [`docs/devlog/`](docs/devlog).
 
 ---
 
 ## Overview
 
 - **Engine:** Godot 4.5 (`renderer: gl_compatibility`).
-- **Design direction:** FPS reboot per `docs/design/GDD_v2.md` (legacy 2D systems remain until replaced).
+- **Design direction:** FPS reboot per [`docs/design/GDD_v2.md`](docs/design/GDD_v2.md) (legacy 2D systems remain until replaced).
 - **Legacy entry point:** `res://resources/main/Main.tscn` (autoloads `MusicPlayerSystem.gd`).
 - **Legacy scene flow:** Home → Outside street → Factory → loops back to Home.
 - **Current focus:** Building the FPS vertical slice (first‑person controller, brick/pipe combat, street blockouts, factory ritual).
 
-See `docs/design/GDD_v2.md` for the up-to-date design snapshot.
+See [`docs/design/GDD_v2.md`](docs/design/GDD_v2.md) for the up-to-date design snapshot. Latest session notes live in [`docs/devlog/`](docs/devlog).
+
+---
+
+## Milestone Status
+
+- **M1 — FPS Controller & Feel** *(completed 2025‑11‑16)*: Look/move controller, interact ray + HUD tint, crosshair/head bob, brick pickup/throw, micro-shake + hitstop helper. Work has started on M2 (Combat Core).
 
 ---
 
@@ -32,7 +38,10 @@ See `docs/design/GDD_v2.md` for the up-to-date design snapshot.
 
 ```
 assets/                Art and audio (pixel sprites, tiles, music MP3s)
-docs/                  Codestyle (CGS) and design documents (GDD)
+docs/
+  design/             GDDs and reference plans
+  guides/             Dev guides (before/after checklists, growth plan)
+  templates/          Session TODO template and other rituals
 resources/
   main/                Legacy entry (2D) and scene orchestration
   objects/
@@ -74,12 +83,16 @@ scripts/utils/         Helpers (e.g., `CustomLogger.gd`)
    git clone https://github.com/vydramain/Solidmaid.git
    cd Solidmaid
    ```
-2. Open `project.godot` with **Godot Engine 4.5** or newer.
-3. Ensure the `MUSIC_PLAYER` autoload is enabled (importer sets it up automatically).
-4. Run the project (F5) — the main scene loads the outside level by default and listens for level triggers.
-   - For FPS testing, open `resources/objects/sandbox/Sandbox.tscn` and run that scene instead.
-
-All dependencies are committed; no external packages are required.
+2. Open `project.godot` with **Godot Engine 4.5** (renderer: GL Compatibility). Autoloads (`MUSIC_PLAYER`, `HITSTOP`, etc.) are configured in `project.godot`.
+3. Run targets:
+   - **Legacy loop:** press **F5** (loads `resources/main/Main.tscn` → Home → Street → Factory).
+   - **FPS sandbox:** open `resources/objects/levels/sandbox/Sandbox.tscn` and press **F6** to test the first-person controller, HUD, and hitstop.
+4. For command-line testing/builds:
+   ```bash
+   godot4 --headless --path . --run-tests    # (if/when scripted tests exist)
+   godot4 --headless --path . --export-release "Linux/X11" build/Solidmaid.x86_64
+   ```
+   Adjust the export preset (`Project > Export`) before running the second command. All assets/scripts are committed; no external packages are required.
 
 ---
 

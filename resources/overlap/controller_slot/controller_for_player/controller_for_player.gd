@@ -51,12 +51,14 @@ func _physics_process(_dt):
 		if not _handle_hand_slot(CarrySlots.SLOT_RIGHT):
 			melee_ability.request_start(null)
 			_trigger_camera_shake(0.25, 0.09)  # Empty-hand swing adds a subtle shake.
+			_trigger_hitstop()
 	var left_hand_pressed := Input.is_action_just_pressed("hand_left") or Input.is_action_just_pressed("throw")
 	if left_hand_pressed:
-		if not _handle_hand_slot(CarrySlots.SLOT_LEFT):
-			if character and not character.request_throw():
-				throw_ability.request_start(null)
-				_trigger_camera_shake(0.35, 0.12)
+			if not _handle_hand_slot(CarrySlots.SLOT_LEFT):
+				if character and not character.request_throw():
+					throw_ability.request_start(null)
+					_trigger_camera_shake(0.35, 0.12)
+					_trigger_hitstop()
 	if Input.is_action_just_pressed("interact"):
 		var interact_component = character.get_interactor()
 		if interact_component:
@@ -74,18 +76,21 @@ func _handle_hand_slot(slot_name: String) -> bool:
 			if did_throw:
 				Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, slot_item.name, hand_label])
 				_trigger_camera_shake(0.35, 0.12)  # Throwing a carried object nudges the camera.
-			return did_throw
+				_trigger_hitstop(0.05)
+				return did_throw
 	var target = _get_interactor_target()
 	if target:
 		if target.has_method("interact"):
 			target.interact(character)
 			Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, target.name, hand_label])
 			_trigger_camera_shake(0.2, 0.08)  # Interaction feedback.
+			_trigger_hitstop(0.04, 0.25)
 			return true
 		if target is Node and (target as Node).is_in_group("interactable"):
 			(target as Node).emit_signal.call_deferred("interacted", character)
 			Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, target.name, hand_label])
 			_trigger_camera_shake(0.2, 0.08)
+			_trigger_hitstop(0.04, 0.25)
 			return true
 
 	return false
@@ -116,6 +121,11 @@ func _bind_hud_character() -> void:
 func _trigger_camera_shake(strength: float, duration: float) -> void:
 	if character:
 		character.trigger_camera_shake(strength, duration)
+
+
+func _trigger_hitstop(duration: float = 0.06, time_scale: float = 0.2) -> void:
+	if character:
+		character.trigger_hitstop(duration, time_scale)
 
 
 func init(ch):

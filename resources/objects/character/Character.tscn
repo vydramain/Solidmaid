@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bcgj83svp1tsv" path="res://resources/overlap/locomotion/Locomotion.tscn" id="2_m67xt"]
 [ext_resource type="PackedScene" uid="uid://bnqlnu56hwm0d" path="res://resources/overlap/abilities/Ability.tscn" id="4_2ejwt"]
 [ext_resource type="PackedScene" uid="uid://cdt58pkaip6mv" path="res://resources/overlap/controller_slot/ControllerSlot.tscn" id="5_m8xh5"]
-[ext_resource type="PackedScene" path="res://resources/overlap/abilities/vision/VisionRig.tscn" id="6_2dn6d"]
+[ext_resource type="PackedScene" uid="uid://cgwnc1n04321t" path="res://resources/overlap/abilities/vision/VisionRig.tscn" id="6_2dn6d"]
 [ext_resource type="Script" uid="uid://or1q038skw3q" path="res://resources/overlap/abilities/carry/carry_slots.gd" id="7_r1mdo"]
 [ext_resource type="PackedScene" path="res://resources/overlap/abilities/interactor/InteractorDependency.tscn" id="8_dep"]
 

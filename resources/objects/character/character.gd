@@ -69,6 +69,11 @@ func trigger_camera_shake(strength: float = 1.0, duration: float = -1.0) -> void
 	if vision_rig and vision_rig.has_method("trigger_micro_shake"):
 		vision_rig.trigger_micro_shake(strength, duration)
 
+func trigger_hitstop(duration: float = -1.0, time_scale_override: float = -1.0, shake_strength: float = -1.0) -> void:
+	var hitstop: HitstopSystem = get_tree().get_root().get_node_or_null("HITSTOP")
+	if hitstop:
+		hitstop.trigger(duration, vision_rig, time_scale_override, shake_strength)
+
 func refresh_look_pivot():
 	if vision_rig:
 		var look_pivot_node := vision_rig.get_node_or_null("LookPivot")

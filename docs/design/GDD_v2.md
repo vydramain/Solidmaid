@@ -127,86 +127,124 @@ Acceptance (manual):
 ## 8. Milestones
 
 - M1 — FPS Controller & Feel (week 1): look/move, interact ray, crosshair, brick throw placeholder, camera shake.
-- M2 — Combat Core (week 2): pipe melee, hitstop, two enemy archetypes with telegraphs, capped spawner.
-- M3 — Street Blockout (week 3): 3–5 chunks, gating, basic lighting, performance pass.
-- M4 — Factory Slice (week 4): arena, lamppost assembly (3 steps), single escalate, return trigger.
-- M5 — Cohesion & Polish (week 5): HUD, audio states, home mutation, QA.
+- M2 — Visual Combat Pack (weeks 2–3): learn low‑poly workflow, block out pipe/enemy kits, integrate melee/telegraph/hitstop into the playable FPS slice.
+- M3 — Street Blockout & Dressing (weeks 4–5): greybox → prop pass for 3–5 chunks, gating, basic lighting, perf pass.
+- M4 — Factory Slice (weeks 6–7): arena, lamppost assembly (3 steps), single escalate, return trigger, cinematic touches.
+- M5 — Cohesion & Polish (week 8+): HUD finish, audio states, home mutation, QA, export builds.
+- M6 — High-Fidelity Modeling (optional stretch): upgrade placeholder meshes (hands, weapons, enemies, props) to final art-ready assets.
+- M7 — Animation Polish (optional stretch): finalise first-person hands, enemy telegraphs, ritual animation sets.
+- M8 — Systems Polish & QoL (optional stretch): HUD stretch goals, ability configs, AI tools.
 
 ---
 
 ### 8.1 Micro‑milestones (2h sessions estimates)
 
+> Tasks marked with **(Art)** highlight missing models/animations; there are currently no bespoke meshes in the project, so these will be picked up during future art passes.
+
 - M1 — FPS Controller & Feel (~6 sessions)
-  - [1] Create `PlayerFPS.tscn` (CharacterBody3D, Camera3D) + look/move basics.
-  - [1] Mouse sensitivity + pitch clamp + pause cursor lock.
-  - [1] Interact raycast (2–3m) + prompt UI.
-  - [1] Crosshair + interact tint; simple head bob (optional).
-  - [1] Brick placeholder: hold/throw, cooldown, basic arc.
-  - [1] Camera micro‑shake + simple hitstop helper.
+  - [x] Create `PlayerFPS.tscn` (CharacterBody3D, Camera3D) + look/move basics.
+  - [x] Mouse sensitivity + pitch clamp + pause cursor lock.
+  - [x] Interact raycast (2–3m) + prompt UI.
+  - [x] Crosshair + interact tint; simple head bob (optional).
+  - [x] Brick placeholder: hold/throw, cooldown, basic arc.
+  - [x] Camera micro‑shake + simple hitstop helper.
 
-- M2 — Combat Core (~6–7 sessions)
-  - [1] Pipe melee swing (cone hitbox, cooldown, telegraph).
-  - [1] Enemy: Kipuchka (stun/steal behavior stub without steal first; add steal later).
-  - [1] Enemy: Midnight Smoker (AoE cloud with pre‑warm ring).
-  - [1] Spawner: cap N=5; min distance; 1.5s spawn grace.
-  - [1] Damage/HP/death and optional 10% brick drop.
-  - [1] Telegraph tuning, hitstop, SFX; quick playtest.
-  - [1] Perf sanity: 5 active enemies.
+- M2 — Visual Combat Pack (~9 sessions)
+  - [ ] Pipe melee swing (cone hitbox, cooldown, telegraph) + placeholder pipe mesh for in-editor testing.
+  - [ ] Enemy: Kipuchka (stun/steal behavior stub without steal first; add steal later) + greybox mesh/telegraph indicator.
+  - [ ] Enemy: Midnight Smoker (AoE cloud with pre‑warm ring) + greybox mesh/telegraph indicator.
+  - [ ] Spawner: cap N=5; min distance; 1.5s spawn grace.
+  - [ ] Damage/HP/death and optional 10% brick drop.
+  - [ ] Telegraph tuning, hitstop, SFX; quick playtest.
+  - [ ] Perf sanity: 5 active enemies.
 
-- M3 — Street Blockout (~5 sessions)
-  - [1] Greybox 3 street chunks with clear lanes and collisions.
-  - [1] Add gate/end marker + signage/lighting cues.
-  - [1] Hook spawns by chunk index.
-  - [1] Basic lighting pass (baked/cheap GI); sky/fog.
-  - [1] Perf pass (occlusion/cull where useful).
+- M3 — Street Blockout & Dressing (~6 sessions)
+  - [ ] Greybox 3 street chunks with clear lanes and collisions + placeholder prop placements.
+  - [ ] Add gate/end marker + signage/lighting cues.
+  - [ ] Hook spawns by chunk index.
+  - [ ] Basic lighting pass (baked/cheap GI); sky/fog.
+  - [ ] Perf pass (occlusion/cull where useful).
 
-- M4 — Factory Slice (~5 sessions)
-  - [1] Arena blockout, spawn points, lamppost socket.
-  - [1] Ritual: 3 hold‑interactions with progress bar; interrupt on hit.
-  - [1] Boss slice: Warehouse Manager + Zmey head gimmick (one cycle) or minimal wave escalate.
-  - [1] Return trigger to Home; state handoff.
-  - [1] Perf/readability polish.
+- M4 — Factory Slice (~7 sessions)
+  - [ ] Arena blockout, spawn points, lamppost socket (with placeholder machinery/props).
+  - [ ] Ritual: 3 hold‑interactions with progress bar; interrupt on hit.
+  - [ ] Boss slice: Warehouse Manager + Zmey head gimmick (one cycle) or minimal wave escalate.
+  - [ ] Return trigger to Home; state handoff.
+  - [ ] Perf/readability polish.
 
-- M5 — Cohesion & Polish (~5 sessions)
-  - [1] HUD: HP bar; stamina/cooldown; prompts.
-  - [1] Music states wiring and mixer levels.
-  - [1] Home mutation (prop/light/picture) after successful loop.
-  - [1] QA checklist run; bug fixes.
-  - [1] Package an internal playtest build.
+- M5 — Cohesion & Polish (~6 sessions)
+  - [ ] HUD: HP bar; stamina/cooldown; prompts.
+  - [ ] Music states wiring and mixer levels.
+  - [ ] Home mutation (prop/light/picture) after successful loop.
+  - [ ] QA checklist run; bug fixes.
+  - [ ] Package an internal playtest build.
 
-Total core sessions: ~27–28 (≈ 3–4 weeks at 2h/day, 5 days/week).
+- M6 — High-Fidelity Modeling (~6 sessions, optional stretch)
+  - [ ] FPS hands + weapons: sculpt, unwrap, texture, set up materials for first-person view.
+  - [ ] Enemy batch (Kipuchka + Midnight Smoker) final meshes + LOD/collision.
+  - [ ] Prop passes for Street/Factory (lamps, lamppost sockets, ritual props).
+  - [ ] Boss/Factory centerpiece meshes + lamppost parts.
+  - [ ] Import pipeline checklist (naming, scale, collision) for final assets.
+
+- M7 — Animation Polish (~5 sessions, optional stretch)
+  - [ ] First-person hand animation set (idle, walk, hold, throw, melee).
+  - [ ] Enemy telegraph + attack animations tied to combat timings.
+  - [ ] Boss/ritual animation beats + VFX triggers.
+  - [ ] Hook final animations to hitstop/shake events.
+
+- M8 — Systems Polish & QoL (optional stretch)
+  - [ ] HUD stretch goals: cooldown indicators, ritual/stamina progress, HP bar styling, debug visibility toggle.
+  - [ ] Localise interact prompts or drive them from Scriptable data.
+  - [ ] Ability dependency config `.tres` (no hard-coded lists inside scenes).
+  - [ ] CharacterConfig resource describing default attachments/look pivots.
+  - [ ] Expand AI controller to use the new hand API and target locomotion.
+  - [ ] Shared service locator/autoload for reusable systems (input routing, target selection, etc.).
+  - [ ] Hook hitstop triggers to actual damage/hit events (instead of button presses).
+  - [ ] Sandbox interactable library for rapid testing (beyond bricks).
+
+Total core sessions: ~34 (≈ 6–7 weeks at 2h/day, 5 days/week) — extended to account for learning the low‑poly modeling/animation pipeline. Optional stretches (M6–M8) add 15–17 sessions if pursued.
 
 ---
 
 ## 9. Backlog — Atomic Tasks (by area)
 
+Legend:
+- `[S]` = Small (≤1 session / ~2h).
+- `[M]` = Medium (≤2 sessions / ~4h). Split further if scope creeps beyond that.
+
 Player & Camera
-- [ ] [S] Create `resources/fps/player/PlayerFPS.tscn` with `CharacterBody3D` + `Camera3D`.
-- [ ] [S] Mouse look with clamped pitch; configurable sensitivity.
-- [ ] [S] Raycast interact (2–3m) + on‑screen prompt.
-- [ ] [S] Basic head bob + footstep SFX hook (optional).
+- [x] [S] Create `resources/fps/player/PlayerFPS.tscn` with `CharacterBody3D` + `Camera3D`.
+- [x] [S] Mouse look with clamped pitch; configurable sensitivity.
+- [x] [S] Raycast interact (2–3m) + on-screen prompt.
+- [x] [S] Basic head bob for FPS camera.
+- [ ] [S] Footstep SFX hook + audio variation pass.
+- [ ] [M] Placeholder FPS hand mesh + first-person animation set.
 
 Weapons
-- [ ] [S] Brick: hold/throw states; physics arc; cooldown; impact SFX.
-- [ ] [S] Hitstop helper (0.06–0.1s) + camera micro‑shake (2–4px feel in 3D).
+- [x] [S] Brick: hold/throw states; physics arc; cooldown; impact SFX.
+- [x] [S] Hitstop helper (0.06–0.1s) + camera micro-shake (2–4px feel in 3D).
 - [ ] [S] Pipe: short swing with clear telegraph; cooldown.
+- [ ] [M] Model/texture the pipe + brick variants; animate swings/impacts (see M6).
 
 Enemies & Spawning
 - [ ] [S] Bruiser: chase, 0.4s windup, lunge, recover.
-- [ ] [S] Smog/Spirit: expanding AoE with pre‑warm ring.
+- [ ] [S] Smog/Spirit: expanding AoE with pre-warm ring.
 - [ ] [S] Spawner: cap N=5 active; min distance from player; 1.5s grace.
+- [ ] [M] Low-poly enemy meshes + telegraph animation set (see M6).
 
 World
 - [ ] [S] Home room blockout; interactable radio toggling mood/music.
 - [ ] [S] Street chunks (3–5) with clear lanes and one gate.
 - [ ] [S] Factory arena with lamppost socket and spawn points.
+- [ ] [M] Prop/model batches for Home → Street → Factory (lamps, machines, signage) — coordinate with M6 outputs.
 
 Ritual/Assembly
-- [ ] [S] 3‑step hold‑to‑assemble with progress bar and interrupt on damage.
+- [ ] [S] 3-step hold-to-assemble with progress bar and interrupt on damage.
 - [ ] [S] Escalate wave once at step 2; on complete spawn return trigger.
 
 UI/Audio
-- [ ] [S] Crosshair; HP bar; stamina/cooldown indicators.
+- [x] [S] Crosshair + interact tint overlay.
+- [ ] [S] HP bar; stamina/cooldown indicators + HUD toggle.
 - [ ] [S] Music states: home/street/factory.
 
 Tooling & Perf
@@ -263,7 +301,7 @@ Small, finished, and replayable beats sprawling and unfinished. Ship the FPS sli
 - Daily limit: 2 hours (one focused session); weekends optional.
 - Weekly capacity: ~10 hours (5 weekdays) with a 20% buffer for overruns.
 - Sizing rule: each task must fit in 1 session or be split; anything larger becomes a micro‑milestone item.
-- Tracking: end each session by noting duration, blockers, and next “first click”. Use `docs/SESSION_TODO.md`.
+- Tracking: end each session by noting duration, blockers, and next “first click”. Use `docs/templates/SESSION_TODO.md`.
 
 ---
 
@@ -280,7 +318,7 @@ Small, finished, and replayable beats sprawling and unfinished. Ship the FPS sli
 9) Enemy Midnight Smoker AoE + telegraph (M2).
 10) Spawner cap N=5 + min distance + grace (M2).
 
-After‑work starter checklist (daily): see `docs/AFTER_WORK_CHECKLIST.md`.
+After‑work starter checklist (daily): see `docs/guides/AFTER_WORK_CHECKLIST.md`.
 
 ---
 
