@@ -11,7 +11,7 @@ var body := self
 @onready var abilities: Node = $"Abilities"
 @onready var controller_slot: ControllerSlot = $"ControllerSlot"
 
-var vision_rig: Node3D
+var vision_rig: VisionRig
 var vision_camera: Camera3D
 var interactor: Interactor
 
@@ -65,6 +65,10 @@ func request_throw(slot_name: String = "") -> bool:
 		return false
 	return carry_slots.request_throw(slot_name)
 
+func trigger_camera_shake(strength: float = 1.0, duration: float = -1.0) -> void:
+	if vision_rig and vision_rig.has_method("trigger_micro_shake"):
+		vision_rig.trigger_micro_shake(strength, duration)
+
 func refresh_look_pivot():
 	if vision_rig:
 		var look_pivot_node := vision_rig.get_node_or_null("LookPivot")
@@ -84,7 +88,7 @@ func _update_carry_slots_aim():
 
 
 
-func _set_vision_rig(node: Node3D) -> void:
+func _set_vision_rig(node: VisionRig) -> void:
 	if not node:
 		return
 	vision_rig = node
@@ -137,6 +141,6 @@ func register_ability_dependency(node: Node) -> void:
 	if node is Interactor:
 		interactor = node
 		interactor_ready.emit(interactor)
-	elif node is Node3D and node.name == VISION_RIG_NODE_NAME:
+	elif node is VisionRig and node.name == VISION_RIG_NODE_NAME:
 		_set_vision_rig(node)
 	_attach_interactor_to_pivot()

@@ -1,6 +1,6 @@
 extends Node
 
-@export var initial_level_scene: PackedScene = preload(Resource_Registry.LEVELS["OUTSIDE"])
+@export var initial_level_scene: PackedScene = preload(Resource_Registry.LEVELS["SANDBOX"])
 
 @onready var level_container = $LevelContainer
 

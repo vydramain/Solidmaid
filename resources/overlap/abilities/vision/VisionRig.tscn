@@ -1,18 +1,22 @@
-[gd_scene load_steps=1 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://cgwnc1n04321t"]
+
+[ext_resource type="Script" uid="uid://ba670y6cvy5lv" path="res://resources/overlap/abilities/vision/vision_rig.gd" id="1_vrig"]
 
 [node name="VisionRig" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("1_vrig")
+walk_bob_frequency_hz = 1.0
 
-[node name="LookPivot" type="Node3D" parent="." index="0"]
+[node name="LookPivot" type="Node3D" parent="."]
 
-[node name="Camera3D" type="Camera3D" parent="LookPivot" index="0"]
+[node name="Camera3D" type="Camera3D" parent="LookPivot"]
 current = true
 
-[node name="HandSockets" type="Node3D" parent="." index="1"]
+[node name="HandSockets" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -0.35)
 
-[node name="RightHandSlot" type="Marker3D" parent="HandSockets" index="0"]
+[node name="RightHandSlot" type="Marker3D" parent="HandSockets"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0, 0)
 
-[node name="LeftHandSlot" type="Marker3D" parent="HandSockets" index="1"]
+[node name="LeftHandSlot" type="Marker3D" parent="HandSockets"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0, 0)

@@ -2,7 +2,8 @@ extends CharacterBody3D
 class_name Locomotion
 
 @export var speed: float = 5.0
-@export var acceleration: float = 0.0
+@export var acceleration: float = 12.0
+@export var deceleration: float = 16.0
 @export var sensitivity: float = 0.006
 @export var gravity: float = 30.0
 @export var pitch_max: float = deg_to_rad(85)
@@ -11,12 +12,19 @@ class_name Locomotion
 var look_yaw := 0.0
 var look_pitch := 0.0
 var look_pivot: Node3D
+var _move_input := Vector2.ZERO
 
 
 func _ready():
 	refresh_look_pivot()
 
 func _physics_process(dt) -> void:
+	var desired_horizontal_velocity := _get_desired_horizontal_velocity()
+	var current_horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
+	var accel_rate := acceleration if desired_horizontal_velocity.length() > current_horizontal_velocity.length() else deceleration
+	current_horizontal_velocity = current_horizontal_velocity.move_toward(desired_horizontal_velocity, accel_rate * dt)
+	velocity.x = current_horizontal_velocity.x
+	velocity.z = current_horizontal_velocity.z
 	if not is_on_floor(): velocity.y -= gravity * dt
 	move_and_slide()
 
@@ -41,9 +49,7 @@ func set_camera_correction(dir: Vector2) -> Vector3:
 
 
 func set_move_input(dir: Vector2) -> void: 
-	var move_dir: Vector3 = set_camera_correction(dir)
-	velocity.x = move_dir.x * speed
-	velocity.z = move_dir.z * speed
+	_move_input = dir
 
 
 func set_look_delta(delta: Vector2):
@@ -77,3 +83,9 @@ func set_look_pivot_node(node: Node3D):
 
 func get_look_pivot() -> Node3D:
 	return look_pivot
+
+
+func _get_desired_horizontal_velocity() -> Vector3:
+	var move_dir := set_camera_correction(_move_input)
+	move_dir.y = 0
+	return move_dir * speed

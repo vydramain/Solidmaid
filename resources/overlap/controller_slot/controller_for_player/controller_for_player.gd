@@ -50,11 +50,13 @@ func _physics_process(_dt):
 	if right_hand_pressed:
 		if not _handle_hand_slot(CarrySlots.SLOT_RIGHT):
 			melee_ability.request_start(null)
+			_trigger_camera_shake(0.25, 0.09)  # Empty-hand swing adds a subtle shake.
 	var left_hand_pressed := Input.is_action_just_pressed("hand_left") or Input.is_action_just_pressed("throw")
 	if left_hand_pressed:
 		if not _handle_hand_slot(CarrySlots.SLOT_LEFT):
 			if character and not character.request_throw():
 				throw_ability.request_start(null)
+				_trigger_camera_shake(0.35, 0.12)
 	if Input.is_action_just_pressed("interact"):
 		var interact_component = character.get_interactor()
 		if interact_component:
@@ -71,16 +73,19 @@ func _handle_hand_slot(slot_name: String) -> bool:
 			var did_throw: bool = character.request_throw(slot_name)
 			if did_throw:
 				Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, slot_item.name, hand_label])
+				_trigger_camera_shake(0.35, 0.12)  # Throwing a carried object nudges the camera.
 			return did_throw
 	var target = _get_interactor_target()
 	if target:
 		if target.has_method("interact"):
 			target.interact(character)
 			Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, target.name, hand_label])
+			_trigger_camera_shake(0.2, 0.08)  # Interaction feedback.
 			return true
 		if target is Node and (target as Node).is_in_group("interactable"):
 			(target as Node).emit_signal.call_deferred("interacted", character)
 			Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, target.name, hand_label])
+			_trigger_camera_shake(0.2, 0.08)
 			return true
 
 	return false
@@ -106,6 +111,11 @@ func _on_interactor_ready(new_interactor: Interactor) -> void:
 func _bind_hud_character() -> void:
 	if hud and character and hud.has_method("bind_character"):
 		hud.bind_character(character)
+
+
+func _trigger_camera_shake(strength: float, duration: float) -> void:
+	if character:
+		character.trigger_camera_shake(strength, duration)
 
 
 func init(ch):
