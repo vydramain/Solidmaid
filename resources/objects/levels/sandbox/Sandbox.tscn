@@ -1,14 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://d10uph0oxrm28"]
+[gd_scene load_steps=10 format=3 uid="uid://d10uph0oxrm28"]
 
 [ext_resource type="PackedScene" uid="uid://ddfdvmbmclroc" path="res://resources/objects/character/Character.tscn" id="1_char"]
 [ext_resource type="Texture2D" uid="uid://1fm1h6cggxtp" path="res://assets/textures/outside/Skybox_1.png" id="2_3qsem"]
 [ext_resource type="PackedScene" path="res://resources/objects/items/brick/Brick.tscn" id="3_brick"]
+[ext_resource type="PackedScene" uid="uid://dleao4a5ojcbi" path="res://resources/objects/items/pipe/Pipe.tscn" id="4_t5isg"]
 
 [sub_resource type="BoxMesh" id="1"]
-size = Vector3(20, 0.1, 20)
+size = Vector3(50, 0.1, 50)
 
 [sub_resource type="BoxShape3D" id="2"]
-size = Vector3(20, 0.1, 20)
+size = Vector3(50, 0.1, 50)
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_xt2jq"]
 panorama = ExtResource("2_3qsem")
@@ -32,7 +33,7 @@ mesh = SubResource("1")
 shape = SubResource("2")
 
 [node name="Character" parent="." instance=ExtResource("1_char")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7939116, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vnm58")
@@ -44,3 +45,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.2, -2)
 
 [node name="BrickB" parent="Bricks" instance=ExtResource("3_brick")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, -1.5)
+
+[node name="Pipe" parent="Bricks" instance=ExtResource("4_t5isg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24329567, 0)

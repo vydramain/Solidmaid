@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmnn4rwtl7uv8"
-path="res://.godot/imported/Screenshot_20251116_053002.png-bb99951e65f9a8fe9486942a31298481.ctex"
+uid="uid://0eshnrw75u82"
+path="res://.godot/imported/Iron_Pipe.png-3d1db3c570e0d205af2eba7f7d7ed27f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Screenshot_20251116_053002.png"
-dest_files=["res://.godot/imported/Screenshot_20251116_053002.png-bb99951e65f9a8fe9486942a31298481.ctex"]
+source_file="res://assets/references/Iron_Pipe.png"
+dest_files=["res://.godot/imported/Iron_Pipe.png-3d1db3c570e0d205af2eba7f7d7ed27f.ctex"]
 
 [params]
 

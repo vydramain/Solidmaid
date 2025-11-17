@@ -131,8 +131,12 @@ func _trigger_hitstop(duration: float = 0.06, time_scale: float = 0.2) -> void:
 func init(ch):
 	character = ch
 	loco = ch.body
-	throw_ability = ch.get_ability("AbilityToThrow")
-	melee_ability = ch.get_ability("AbilityToMelee")
+	throw_ability = ch.get_ability(&"throw")
+	if throw_ability == null:
+		throw_ability = ch.get_ability("AbilityToThrow")
+	melee_ability = ch.get_ability(&"melee")
+	if melee_ability == null:
+		melee_ability = ch.get_ability("AbilityToMelee")
 	if character and not character.interactor_ready.is_connected(_on_interactor_ready):
 		character.interactor_ready.connect(_on_interactor_ready)
 	_ensure_hud()

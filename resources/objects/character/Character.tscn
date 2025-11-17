@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ddfdvmbmclroc"]
+[gd_scene load_steps=12 format=3 uid="uid://ddfdvmbmclroc"]
 
 [ext_resource type="Script" uid="uid://dmr64ylqd3opt" path="res://resources/objects/character/character.gd" id="1_2dn6d"]
 [ext_resource type="PackedScene" uid="uid://bxkksibsc6esk" path="res://resources/overlap/vitality/Vitality.tscn" id="2_2ejwt"]
@@ -6,8 +6,10 @@
 [ext_resource type="PackedScene" uid="uid://bnqlnu56hwm0d" path="res://resources/overlap/abilities/Ability.tscn" id="4_2ejwt"]
 [ext_resource type="PackedScene" uid="uid://cdt58pkaip6mv" path="res://resources/overlap/controller_slot/ControllerSlot.tscn" id="5_m8xh5"]
 [ext_resource type="PackedScene" uid="uid://cgwnc1n04321t" path="res://resources/overlap/abilities/vision/VisionRig.tscn" id="6_2dn6d"]
-[ext_resource type="Script" uid="uid://or1q038skw3q" path="res://resources/overlap/abilities/carry/carry_slots.gd" id="7_r1mdo"]
 [ext_resource type="PackedScene" path="res://resources/overlap/abilities/interactor/InteractorDependency.tscn" id="8_dep"]
+[ext_resource type="PackedScene" uid="uid://dhmq6rs2bra72" path="res://resources/overlap/abilities/melee/Melee.tscn" id="9_melee"]
+[ext_resource type="PackedScene" uid="uid://cv4exexfb86ps" path="res://resources/overlap/abilities/throw/Throw.tscn" id="10_throw"]
+[ext_resource type="PackedScene" uid="uid://gyuydixv2g5w" path="res://resources/overlap/abilities/carry/Carry.tscn" id="11_carry"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_d7ljh"]
 
@@ -25,13 +27,19 @@ controller_kind = 2
 [node name="Abilities" type="Node" parent="." index="3"]
 
 [node name="AbilityToMelee" parent="Abilities" index="0" instance=ExtResource("4_2ejwt")]
-ability_kind = 1
+ability_name = &"melee"
+ability_aliases = Array[StringName]([&"attack"])
+ability_scene = ExtResource("9_melee")
 
 [node name="AbilityToThrow" parent="Abilities" index="1" instance=ExtResource("4_2ejwt")]
-ability_kind = 2
+ability_name = &"throw"
+ability_aliases = Array[StringName]([&"ranged"])
+ability_scene = ExtResource("10_throw")
 dependency_scenes = Array[PackedScene]([ExtResource("8_dep"), ExtResource("6_2dn6d")])
 
-[node name="CarrySlots" type="Node" parent="." index="4"]
-script = ExtResource("7_r1mdo")
+[node name="AbilityToCarry" parent="Abilities" index="2" instance=ExtResource("4_2ejwt")]
+ability_name = &"carry"
+ability_aliases = Array[StringName]([&"pickup", &"carry_slots"])
+dependency_scenes = Array[PackedScene]([ExtResource("11_carry")])
 
 [editable path="ControllerSlot"]

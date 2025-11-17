@@ -1,0 +1,118 @@
+[gd_scene load_steps=10 format=3 uid="uid://dleao4a5ojcbi"]
+
+[ext_resource type="PackedScene" uid="uid://d02e2gtddf2l1" path="res://resources/overlap/affordances/carriable/Carriable.tscn" id="1_tjmx0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hp7ov"]
+size = Vector3(0.07183838, 1.7227707, 0.05218506)
+
+[sub_resource type="Shader" id="Shader_w80oa"]
+code = "shader_type spatial;
+render_mode diffuse_lambert, specular_disabled;
+uniform vec3 base_color : source_color = vec3(0.66, 0.66, 0.68);
+uniform float grime_strength : hint_range(0.0, 0.4, 0.01) = 0.12;
+
+float hash(vec3 p) {
+	return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
+}
+
+void fragment() {
+	float grime = hash(VERTEX * 7.13) * grime_strength;
+	ALBEDO = base_color - grime;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qvw6c"]
+render_priority = 0
+shader = SubResource("Shader_w80oa")
+shader_parameter/base_color = Color(0.66, 0.66, 0.68, 1)
+shader_parameter/grime_strength = 0.12
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_thin"]
+material = SubResource("ShaderMaterial_qvw6c")
+top_radius = 0.032
+bottom_radius = 0.032
+height = 1.4
+radial_segments = 12
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_elbow"]
+material = SubResource("ShaderMaterial_qvw6c")
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.2
+radial_segments = 12
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ring"]
+material = SubResource("ShaderMaterial_qvw6c")
+top_radius = 0.05
+bottom_radius = 0.052
+height = 0.06
+radial_segments = 12
+
+[sub_resource type="Animation" id="Animation_swing"]
+resource_name = "swing_horizontal"
+length = 0.35
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshRoot:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.18, 0.35),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, -25, 0), Vector3(0, 40, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_latvt"]
+_data = {
+&"swing_horizontal": SubResource("Animation_swing")
+}
+
+[node name="Pipe" type="RigidBody3D"]
+mass = 5.0
+center_of_mass_mode = 1
+center_of_mass = Vector3(0.01, 0.05, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 3.1391647e-07, -1, 0, 1, 3.1391647e-07, 0.011810303, -0.0033927134, 0.0032829642)
+shape = SubResource("BoxShape3D_hp7ov")
+
+[node name="MeshRoot" type="CSGCombiner3D" parent="."]
+
+[node name="RearSegment" type="CSGMesh3D" parent="MeshRoot"]
+transform = Transform3D(1, 0, 0, 0, -5.0268095e-08, -1, 0, 1.15, -4.371139e-08, 0, 0, -0.043916017)
+mesh = SubResource("CylinderMesh_thin")
+
+[node name="ElbowSweep" type="CSGMesh3D" parent="MeshRoot"]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0.053479217, 0.0025716461, 0.79607785)
+mesh = SubResource("CylinderMesh_elbow")
+
+[node name="RingRear" type="CSGMesh3D" parent="MeshRoot"]
+transform = Transform3D(0.8977959, 0.06994285, 0, -1.976059e-08, 3.131477e-07, -0.9, -0.06294856, 0.997551, 2.825248e-07, 0, 0.001916619, -0.5)
+mesh = SubResource("CylinderMesh_ring")
+
+[node name="RingMidRear" type="CSGMesh3D" parent="MeshRoot"]
+transform = Transform3D(0.9499525, -0.009999833, 0, 2.9821567e-09, 3.1390078e-07, -0.95, 0.009499841, 0.99995, 2.9822064e-07, 0, 0.0010706792, -0.18)
+mesh = SubResource("CylinderMesh_ring")
+
+[node name="RingMidFront" type="CSGMesh3D" parent="MeshRoot"]
+transform = Transform3D(0.99875027, -0.04997917, 0, 1.5689285e-08, 3.1352417e-07, -1, 0.04997917, 0.99875027, 3.1391647e-07, 0, 0.0034821127, 0.1795442)
+mesh = SubResource("CylinderMesh_ring")
+
+[node name="RingForward" type="CSGMesh3D" parent="MeshRoot"]
+transform = Transform3D(0.8977959, -0.069942854, 8.474473e-09, 2.8205418e-08, 3.123482e-07, -0.9, 0.06294857, 0.997551, 2.8239768e-07, 0.01, 0.0031396411, 0.44)
+mesh = SubResource("CylinderMesh_ring")
+
+[node name="RingPreEnd" type="CSGMesh3D" parent="MeshRoot"]
+transform = Transform3D(0.8060375, -0.06279443, 0.06294858, -0.054975096, 0.028481755, 0.89747304, -0.05814918, -0.8973549, 0.02408059, -0.0036139358, -0.00018325448, 0.74893886)
+mesh = SubResource("CylinderMesh_ring")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_latvt")
+}
+
+[node name="Affordances" type="Node" parent="."]
+
+[node name="Carriable" parent="Affordances" instance=ExtResource("1_tjmx0")]

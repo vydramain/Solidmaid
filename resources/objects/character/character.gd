@@ -6,7 +6,7 @@ const VISION_RIG_NODE_NAME := "VisionRig"
 
 var body := self
 
-@onready var carry_slots: CarrySlots = $"CarrySlots"
+var carry_slots: CarrySlots
 @onready var health: Vitality = $"Vitality"
 @onready var abilities: Node = $"Abilities"
 @onready var controller_slot: ControllerSlot = $"ControllerSlot"
@@ -127,8 +127,20 @@ func attach_controller(controller_scene: PackedScene):
 	controller_slot.add_child(c)
 	c.init(self)
 
-func get_ability(ability_name: String):
-	return abilities.get_node_or_null(ability_name)
+func get_ability(ability_name) -> Node:
+	if abilities == null:
+		return null
+	var requested := StringName(ability_name)
+	if requested == StringName():
+		return null
+	for ability_node in abilities.get_children():
+		if ability_node == null:
+			continue
+		if ability_node.has_method("provides") and ability_node.provides(requested):
+			return ability_node
+		if StringName(ability_node.name) == requested:
+			return ability_node
+	return null
 
 func ensure_vision_rig() -> Node3D:
 	if vision_rig and vision_rig.is_inside_tree():
@@ -148,4 +160,9 @@ func register_ability_dependency(node: Node) -> void:
 		interactor_ready.emit(interactor)
 	elif node is VisionRig and node.name == VISION_RIG_NODE_NAME:
 		_set_vision_rig(node)
+	elif node is CarrySlots:
+		carry_slots = node
+		if vision_rig:
+			carry_slots.attach_to_rig(vision_rig)
+		_update_carry_slots_aim()
 	_attach_interactor_to_pivot()

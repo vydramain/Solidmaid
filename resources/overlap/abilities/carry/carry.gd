@@ -6,6 +6,10 @@ class_name CarrySlots
 const SLOT_RIGHT := "right"
 const SLOT_LEFT := "left"
 const _DEFAULT_ORDER := [SLOT_RIGHT, SLOT_LEFT]
+const AFFORDANCE_CONTAINER := "Affordances"
+const AFFORDANCE_CARRIABLE := &"carriable"
+const AFFORDANCE_THROWABLE := &"throwable"
+const Affordance := preload("uid://dmt7xvvxqcc4i")
 
 @export var default_active_slot := SLOT_RIGHT
 @export_range(5.0, 40.0, 0.5, "suffix:m/s") var throw_speed: float = 18.0
@@ -57,6 +61,8 @@ func has_free_slot() -> bool:
 func try_pickup(item: Node3D, preferred_slot: String = "") -> bool:
 	if item == null:
 		return false
+	if not _is_item_carriable(item):
+		return false
 
 	var order: Array = []
 	if preferred_slot in _DEFAULT_ORDER:
@@ -89,6 +95,8 @@ func request_throw(slot_name: String = "") -> bool:
 	var slot := slot_name if slot_name in _slot_items else active_slot
 	var item: Node3D = _slot_items.get(slot, null)
 	if item == null:
+		return false
+	if not _is_item_throwable(item):
 		return false
 
 	var aim_node := _aim_node
@@ -155,3 +163,29 @@ func _detach_item(slot_name: String, item: Node3D, release_velocity: Vector3) ->
 		item.on_released(release_velocity)
 
 	_slot_items[slot_name] = null
+
+
+func _is_item_carriable(item: Node) -> bool:
+	if item == null:
+		return false
+	if item.has_method("has_affordance"):
+		return item.has_affordance(AFFORDANCE_CARRIABLE)
+	return _item_has_child_affordance(item, AFFORDANCE_CARRIABLE)
+
+
+func _is_item_throwable(item: Node) -> bool:
+	if item == null:
+		return false
+	if item.has_method("has_affordance"):
+		return item.has_affordance(AFFORDANCE_THROWABLE)
+	return _item_has_child_affordance(item, AFFORDANCE_THROWABLE)
+
+
+func _item_has_child_affordance(item: Node, input_name: StringName) -> bool:
+	var aff_root: Node = item.get_node_or_null(AFFORDANCE_CONTAINER)
+	if aff_root == null:
+		return false
+	for child in aff_root.get_children():
+		if child is Affordance and child.provides(input_name):
+			return true
+	return false

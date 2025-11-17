@@ -1,20 +1,9 @@
 extends Node
 
-
-@export_enum("None", "Melee", "Throw")
-var ability_kind := 0
-
-const ABILITY_TO_MELEE := preload("uid://dhmq6rs2bra72")
-const ABILITY_TO_THROW := preload("uid://cv4exexfb86ps")
-
+@export var ability_name: StringName
+@export var ability_aliases: Array[StringName] = []
+@export var ability_scene: PackedScene
 @export var dependency_scenes: Array[PackedScene] = []
-
-var ability_scene: PackedScene:
-	get:
-		match ability_kind:
-			1: return ABILITY_TO_MELEE
-			2: return ABILITY_TO_THROW
-			_: return null
 
 var active: bool = false
 var _dependencies_instantiated := false
@@ -31,11 +20,15 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	_instantiate_dependencies()
-	var scene = ability_scene
-	if scene == null:
-		push_error("Ability kind %d has no associated scene" % ability_kind)
+	if ability_name == StringName():
+		ability_name = StringName(name)
+	if ability_scene == null:
+		if dependency_scenes.is_empty():
+			push_error("Ability '%s' has no associated scene" % ability_name)
+		else:
+			Custom_Logger.debug(self, "Ability '%s' configured via dependencies only" % ability_name)
 	else:
-		Custom_Logger.debug(self, "Loaded ability scene: '%s'" % scene)
+		Custom_Logger.debug(self, "Loaded ability scene: '%s'" % ability_scene)
 
 
 func request_start(ctx) -> void:
@@ -56,6 +49,17 @@ func request_stop() -> void:
 
 func is_active() -> bool:
 	return active
+
+
+func provides(name: StringName) -> bool:
+	if name == StringName():
+		return false
+	if ability_name != StringName() and ability_name == name:
+		return true
+	for alias in ability_aliases:
+		if alias == name:
+			return true
+	return false
 
 
 func _instantiate_dependencies() -> void:
