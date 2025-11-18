@@ -8,6 +8,7 @@ Project reboot: first-person folk-horror shooter (FPS) built with Godot 4.5. You
 
 - **Engine:** Godot 4.5 (`renderer: gl_compatibility`).
 - **Design direction:** FPS reboot per [`docs/design/GDD_v2.md`](docs/design/GDD_v2.md) (legacy 2D systems remain until replaced).
+- **Architecture overview:** [`docs/architecture/arch_overview.md`](docs/architecture/arch_overview.md) — объясняет, как объекты, ability и affordance взаимодействуют друг с другом.
 - **Legacy entry point:** `res://resources/main/Main.tscn` (autoloads `MusicPlayerSystem.gd`).
 - **Legacy scene flow:** Home → Outside street → Factory → loops back to Home.
 - **Current focus:** Building the FPS vertical slice (first‑person controller, brick/pipe combat, street blockouts, factory ritual).
@@ -39,6 +40,7 @@ See [`docs/design/GDD_v2.md`](docs/design/GDD_v2.md) for the up-to-date design s
 ```
 assets/                Art and audio (pixel sprites, tiles, music MP3s)
 docs/
+  architecture/       Internal architecture notes (ability/affordance, controller flow)
   design/             GDDs and reference plans
   guides/             Dev guides (before/after checklists, growth plan)
   templates/          Session TODO template and other rituals

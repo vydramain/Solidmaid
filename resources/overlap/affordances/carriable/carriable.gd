@@ -10,7 +10,7 @@ func _ready() -> void:
 	affordance_name = NAME_CARRIABLE
 
 
-func provides(name: StringName) -> bool:
+func provides(provided_name: StringName) -> bool:
 	if not carriable:
 		return false
-	return super.provides(name)
+	return super.provides(provided_name)

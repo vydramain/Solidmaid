@@ -19,12 +19,18 @@ script = ExtResource("1_2dn6d")
 [node name="CollisionShape3D" parent="." index="0"]
 shape = SubResource("CapsuleShape3D_d7ljh")
 
-[node name="ControllerSlot" parent="." index="1" instance=ExtResource("5_m8xh5")]
+[node name="VisionRig" parent="." index="1" instance=ExtResource("6_2dn6d")]
+
+[node name="Interactor" parent="." index="2" instance=ExtResource("8_dep")]
+
+[node name="CarrySlots" parent="." index="3" instance=ExtResource("11_carry")]
+
+[node name="ControllerSlot" parent="." index="4" instance=ExtResource("5_m8xh5")]
 controller_kind = 2
 
-[node name="Vitality" parent="." index="2" instance=ExtResource("2_2ejwt")]
+[node name="Vitality" parent="." index="5" instance=ExtResource("2_2ejwt")]
 
-[node name="Abilities" type="Node" parent="." index="3"]
+[node name="Abilities" type="Node" parent="." index="6"]
 
 [node name="AbilityToMelee" parent="Abilities" index="0" instance=ExtResource("4_2ejwt")]
 ability_name = &"melee"
@@ -35,11 +41,11 @@ ability_scene = ExtResource("9_melee")
 ability_name = &"throw"
 ability_aliases = Array[StringName]([&"ranged"])
 ability_scene = ExtResource("10_throw")
-dependency_scenes = Array[PackedScene]([ExtResource("8_dep"), ExtResource("6_2dn6d")])
+required_node_names = Array[StringName]([&"VisionRig", &"Interactor", &"CarrySlots"])
 
 [node name="AbilityToCarry" parent="Abilities" index="2" instance=ExtResource("4_2ejwt")]
 ability_name = &"carry"
 ability_aliases = Array[StringName]([&"pickup", &"carry_slots"])
-dependency_scenes = Array[PackedScene]([ExtResource("11_carry")])
+required_node_names = Array[StringName]([&"CarrySlots"])
 
 [editable path="ControllerSlot"]

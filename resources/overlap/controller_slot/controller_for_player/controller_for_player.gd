@@ -4,8 +4,6 @@ const HUD_SCENE := preload("uid://cp1xgv8y1d6im")
 
 var character
 var loco
-var throw_ability
-var melee_ability
 var wants_capture := true
 var vision_rig
 var vision_camera: Camera3D
@@ -48,17 +46,10 @@ func _physics_process(_dt):
 	loco.set_move_input(move)
 	var right_hand_pressed := Input.is_action_just_pressed("hand_right") or Input.is_action_just_pressed("attack")
 	if right_hand_pressed:
-		if not _handle_hand_slot(CarrySlots.SLOT_RIGHT):
-			melee_ability.request_start(null)
-			_trigger_camera_shake(0.25, 0.09)  # Empty-hand swing adds a subtle shake.
-			_trigger_hitstop()
+		_handle_hand_slot(CarrySlots.SLOT_RIGHT)
 	var left_hand_pressed := Input.is_action_just_pressed("hand_left") or Input.is_action_just_pressed("throw")
 	if left_hand_pressed:
-			if not _handle_hand_slot(CarrySlots.SLOT_LEFT):
-				if character and not character.request_throw():
-					throw_ability.request_start(null)
-					_trigger_camera_shake(0.35, 0.12)
-					_trigger_hitstop()
+		_handle_hand_slot(CarrySlots.SLOT_LEFT)
 	if Input.is_action_just_pressed("interact"):
 		var interact_component = character.get_interactor()
 		if interact_component:
@@ -68,38 +59,42 @@ func _handle_hand_slot(slot_name: String) -> bool:
 	if character == null:
 		return false
 	var hand_label := slot_name.capitalize()
-	var slots: CarrySlots = character.get_carry_slots()
-	if slots:
-		var slot_item := slots.get_item(slot_name)
-		if slot_item:
-			var did_throw: bool = character.request_throw(slot_name)
-			if did_throw:
-				Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, slot_item.name, hand_label])
-				_trigger_camera_shake(0.35, 0.12)  # Throwing a carried object nudges the camera.
-				_trigger_hitstop(0.05)
-				return did_throw
-	var target = _get_interactor_target()
-	if target:
-		if target.has_method("interact"):
-			target.interact(character)
-			Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, target.name, hand_label])
-			_trigger_camera_shake(0.2, 0.08)  # Interaction feedback.
+	var result = character.interact_hand(slot_name)
+	if typeof(result) != TYPE_DICTIONARY:
+		return false
+	if result.is_empty():
+		return false
+	var action: StringName = result.get("action", Character.HAND_ACTION_NONE)
+	var subject: Node = result.get("subject")
+	if action == Character.HAND_ACTION_NONE:
+		return false
+
+	match action:
+		Character.HAND_ACTION_THROW:
+			if subject:
+				Custom_Logger.debug(self, "Персонаж %s бросает %s %s рукой" % [character.name, subject.name, hand_label])
+			_trigger_camera_shake(0.35, 0.12)
+			_trigger_hitstop(0.05)
+			return true
+		Character.HAND_ACTION_PICKUP:
+			if subject:
+				Custom_Logger.debug(self, "Персонаж %s поднимает %s %s рукой" % [character.name, subject.name, hand_label])
+			_trigger_camera_shake(0.2, 0.08)
 			_trigger_hitstop(0.04, 0.25)
 			return true
-		if target is Node and (target as Node).is_in_group("interactable"):
-			(target as Node).emit_signal.call_deferred("interacted", character)
-			Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s с помощью %s" % [character.name, target.name, hand_label])
+		Character.HAND_ACTION_MELEE:
+			if subject:
+				Custom_Logger.debug(self, "Персонаж %s атакует с помощью %s (%s рука)" % [character.name, subject.name, hand_label])
+			# Melee ability already triggers feedback, keep light touch.
+			return true
+		Character.HAND_ACTION_INTERACT:
+			if subject:
+				Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s %s рукой" % [character.name, subject.name, hand_label])
 			_trigger_camera_shake(0.2, 0.08)
 			_trigger_hitstop(0.04, 0.25)
 			return true
 
 	return false
-
-func _get_interactor_target():
-	var current_interactor: Interactor = character.get_interactor()
-	if current_interactor:
-		return current_interactor.get_current_target()
-	return null
 
 func _ensure_hud() -> void:
 	if hud:
@@ -131,12 +126,6 @@ func _trigger_hitstop(duration: float = 0.06, time_scale: float = 0.2) -> void:
 func init(ch):
 	character = ch
 	loco = ch.body
-	throw_ability = ch.get_ability(&"throw")
-	if throw_ability == null:
-		throw_ability = ch.get_ability("AbilityToThrow")
-	melee_ability = ch.get_ability(&"melee")
-	if melee_ability == null:
-		melee_ability = ch.get_ability("AbilityToMelee")
 	if character and not character.interactor_ready.is_connected(_on_interactor_ready):
 		character.interactor_ready.connect(_on_interactor_ready)
 	_ensure_hud()

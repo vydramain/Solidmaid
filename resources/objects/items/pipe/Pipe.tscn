@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://dleao4a5ojcbi"]
+[gd_scene load_steps=11 format=3 uid="uid://dleao4a5ojcbi"]
 
 [ext_resource type="PackedScene" uid="uid://d02e2gtddf2l1" path="res://resources/overlap/affordances/carriable/Carriable.tscn" id="1_tjmx0"]
+[ext_resource type="PackedScene" uid="uid://c3lugepxtfybs" path="res://resources/overlap/affordances/melee/Melee.tscn" id="2_latvt"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hp7ov"]
 size = Vector3(0.07183838, 1.7227707, 0.05218506)
@@ -116,3 +117,5 @@ libraries = {
 [node name="Affordances" type="Node" parent="."]
 
 [node name="Carriable" parent="Affordances" instance=ExtResource("1_tjmx0")]
+
+[node name="Melee" parent="Affordances" instance=ExtResource("2_latvt")]
