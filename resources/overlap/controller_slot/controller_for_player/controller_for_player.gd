@@ -44,16 +44,12 @@ func _physics_process(_dt):
 		Input.get_action_strength("move_backward") - Input.get_action_strength("move_forward")
 	)
 	loco.set_move_input(move)
-	var right_hand_pressed := Input.is_action_just_pressed("hand_right") or Input.is_action_just_pressed("attack")
+	var right_hand_pressed := Input.is_action_just_pressed("hand_right")
 	if right_hand_pressed:
 		_handle_hand_slot(CarrySlots.SLOT_RIGHT)
-	var left_hand_pressed := Input.is_action_just_pressed("hand_left") or Input.is_action_just_pressed("throw")
+	var left_hand_pressed := Input.is_action_just_pressed("hand_left")
 	if left_hand_pressed:
 		_handle_hand_slot(CarrySlots.SLOT_LEFT)
-	if Input.is_action_just_pressed("interact"):
-		var interact_component = character.get_interactor()
-		if interact_component:
-			interact_component.interact()
 
 func _handle_hand_slot(slot_name: String) -> bool:
 	if character == null:

@@ -72,9 +72,9 @@ scripts/utils/         Helpers (e.g., `CustomLogger.gd`)
 - **FPS V2 sandbox:**
   - Move: `move_forward/backward/left/right` (WASD) 
   - Look: mouse (cursor is captured by default, press `Esc` to release, click to recapture)
-  - Attack / melee: `attack` (LMB)
-  - Throw placeholder: `throw` (RMB)
-  - Interact ray: `interact` (`E` / gamepad south button)
+  - Right hand (primary): `hand_right` (LMB / right trigger)
+  - Left hand (offhand): `hand_left` (RMB / left trigger)
+  - Hand intent decides the outcome: carry/throw/melee/interact are chosen by affordance + ability, not extra keys.
 
 ---
 
@@ -116,7 +116,7 @@ scripts/utils/         Helpers (e.g., `CustomLogger.gd`)
 - **Locomotion:** `resources/overlap/locomotion/locomotion.gd` provides yaw/pitch, gravity, and configurable speed/sensitivity defaults (5 m/s, 0.003 sens, 30 gravity, ±85° pitch clamp).
 - **Interactor:** Forward RayCast3D that calls either `interact(by)` or an `interactable` group signal when you hit a target (hooked into the controller). UI prompt still TODO.
 - **Sandbox:** `resources/objects/sandbox/Sandbox.tscn` instantiates the Character on a flat floor for quick testing of movement/look/interact. Add a WorldEnvironment/Skybox if you want a horizon reference while prototyping.
-- **Input map:** `project.godot` now defines both legacy (`move_up/down/left/right`, `action_attack`) and FPS actions (`move_forward/backward`, `move_left/right`, `attack`, `throw`, `interact`).
+- **Input map:** `project.godot` now defines legacy (`move_up/down/left/right`, `action_attack`) and FPS actions (`move_forward/backward`, `move_left/right`, `hand_right` for LMB/RT, `hand_left` for RMB/LT). Hand presses are the only action buttons; the ability/affordance system decides whether that means pickup, throw, melee, or interaction.
 
 > Until FPS content replaces the legacy loop, launch `Sandbox.tscn` for first-person tests and `Main.tscn` for the top-down slice.
 
