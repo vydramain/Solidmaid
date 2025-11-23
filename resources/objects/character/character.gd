@@ -28,7 +28,7 @@ var _ability_handlers := {}
 
 func _ready():
 	super._ready()
-	health.died.connect(_on_died)
+	health.died.connect(on_died)
 	if not vision_rig:
 		push_error("Character missing VisionRig child node")
 	if not carry_slots:
@@ -37,17 +37,17 @@ func _ready():
 		push_error("Character missing Interactor child node")
 	else:
 		interactor_ready.emit(interactor)
-	_update_vision_reference()
+	update_vision_reference()
 	if controller_slot.controller_scene:
 		attach_controller(controller_slot.controller_scene)
 
-func _on_died():
+func on_died():
 	for a in abilities.get_children():
 		if a.has_method("request_stop"):
 			a.request_stop()
 	controller_slot.process_mode = Node.PROCESS_MODE_DISABLED
 
-func _update_vision_reference():
+func update_vision_reference():
 	if not vision_rig:
 		vision_camera = null
 		set_look_pivot_node(self)
@@ -59,16 +59,16 @@ func _update_vision_reference():
 			set_look_pivot_node(self)
 		look_pivot_node = look_pivot_node if look_pivot_node is Node3D else null
 		vision_camera = look_pivot_node.get_node_or_null("Camera3D") if look_pivot_node else vision_rig.get_node_or_null("LookPivot/Camera3D")
-	_update_camera_current_flag()
-	_update_carry_slots_aim()
-	_attach_interactor_to_pivot()
+	update_camera_current_flag()
+	update_carry_slots_aim()
+	attach_interactor_to_pivot()
 
-func _update_carry_slots_aim():
+func update_carry_slots_aim():
 	if carry_slots:
 		carry_slots.attach_to_rig(vision_rig)
 		carry_slots.set_aim_node(get_look_pivot())
 
-func _update_camera_current_flag() -> void:
+func update_camera_current_flag() -> void:
 	if not vision_camera:
 		return
 	if controller_slot and controller_slot.controller_kind == 2:
@@ -76,7 +76,7 @@ func _update_camera_current_flag() -> void:
 	else:
 		vision_camera.current = false
 
-func _attach_interactor_to_pivot() -> void:
+func attach_interactor_to_pivot() -> void:
 	if interactor == null:
 		return
 	var pivot := get_look_pivot()
@@ -118,8 +118,8 @@ func register_ability_dependency(node: Node) -> void:
 			Custom_Logger.warning(self, "Character already has CarrySlots, ignoring injected instance")
 			return
 		carry_slots = node
-		_update_carry_slots_aim()
-	_attach_interactor_to_pivot()
+		update_carry_slots_aim()
+	attach_interactor_to_pivot()
 
 func get_carry_slots() -> CarrySlots:
 	return carry_slots
@@ -145,52 +145,52 @@ func request_throw(slot_name: String = "") -> bool:
 
 func interact_hand(slot_name: StringName, modifier: StringName = HAND_MODIFIER_NONE) -> Dictionary:
 	if carry_slots == null or slot_name == StringName():
-		return _build_hand_action(HAND_ACTION_NONE, null)
+		return build_hand_action(HAND_ACTION_NONE, null)
 
 	if modifier == HAND_MODIFIER_DROP:
 		var dropped := carry_slots.try_drop(String(slot_name))
 		if dropped:
-			return _build_hand_action(HAND_ACTION_DROP, dropped)
-		return _build_hand_action(HAND_ACTION_NONE, null)
+			return build_hand_action(HAND_ACTION_DROP, dropped)
+		return build_hand_action(HAND_ACTION_NONE, null)
 
 	var slot_key := String(slot_name)
 	var held_item := carry_slots.get_item(slot_key)
 	if held_item:
-		return _interact_with_held_item(slot_key, held_item)
-	return _interact_with_world(slot_key)
+		return interact_with_held_item(slot_key, held_item)
+	return interact_with_world(slot_key)
 
 func get_interactor_target():
 	if interactor:
 		return interactor.get_current_target()
 	return null
 
-func _interact_with_held_item(slot_name: String, held_item: Node3D) -> Dictionary:
-	if _item_has_affordance(held_item, CarrySlots.AFFORDANCE_THROWABLE):
-		var throw_handler: ThrowAbility = _get_throw_handler()
+func interact_with_held_item(slot_name: String, held_item: Node3D) -> Dictionary:
+	if item_has_affordance(held_item, CarrySlots.AFFORDANCE_THROWABLE):
+		var throw_handler: ThrowAbility = get_throw_handler()
 		if throw_handler and throw_handler.perform_throw(self, StringName(slot_name)):
-			return _build_hand_action(HAND_ACTION_THROW, held_item)
-	if _item_has_affordance(held_item, AFFORDANCE_MELEE):
-		var melee_handler: MeleeAbility = _get_melee_handler()
+			return build_hand_action(HAND_ACTION_THROW, held_item)
+	if item_has_affordance(held_item, AFFORDANCE_MELEE):
+		var melee_handler: MeleeAbility = get_melee_handler()
 		if melee_handler and melee_handler.perform_melee(self, held_item, StringName(slot_name)):
-			return _build_hand_action(HAND_ACTION_MELEE, held_item)
-	return _build_hand_action(HAND_ACTION_NONE, held_item)
+			return build_hand_action(HAND_ACTION_MELEE, held_item)
+	return build_hand_action(HAND_ACTION_NONE, held_item)
 
-func _interact_with_world(slot_name: String) -> Dictionary:
+func interact_with_world(slot_name: String) -> Dictionary:
 	var target = get_interactor_target()
 	if target == null:
-		return _build_hand_action(HAND_ACTION_NONE, null)
-	if target is Node3D and _item_has_affordance(target, CarrySlots.AFFORDANCE_CARRIABLE):
+		return build_hand_action(HAND_ACTION_NONE, null)
+	if target is Node3D and item_has_affordance(target, CarrySlots.AFFORDANCE_CARRIABLE):
 		if pickup_holdable(target, slot_name):
-			return _build_hand_action(HAND_ACTION_PICKUP, target)
+			return build_hand_action(HAND_ACTION_PICKUP, target)
 	if target.has_method("interact"):
 		target.interact(self)
-		return _build_hand_action(HAND_ACTION_INTERACT, target)
+		return build_hand_action(HAND_ACTION_INTERACT, target)
 	if target is Node and (target as Node).is_in_group("interactable"):
 		(target as Node).emit_signal.call_deferred("interacted", self)
-		return _build_hand_action(HAND_ACTION_INTERACT, target)
-	return _build_hand_action(HAND_ACTION_NONE, target)
+		return build_hand_action(HAND_ACTION_INTERACT, target)
+	return build_hand_action(HAND_ACTION_NONE, target)
 
-func _item_has_affordance(item: Node, affordance_name: StringName) -> bool:
+func item_has_affordance(item: Node, affordance_name: StringName) -> bool:
 	if item == null or affordance_name == StringName():
 		return false
 	if item.has_method("has_affordance"):
@@ -204,13 +204,13 @@ func _item_has_affordance(item: Node, affordance_name: StringName) -> bool:
 				return true
 	return false
 
-func _get_throw_handler() -> ThrowAbility:
-	return _get_ability_handler(&"throw") as ThrowAbility
+func get_throw_handler() -> ThrowAbility:
+	return get_ability_handler(&"throw") as ThrowAbility
 
-func _get_melee_handler() -> MeleeAbility:
-	return _get_ability_handler(&"melee") as MeleeAbility
+func get_melee_handler() -> MeleeAbility:
+	return get_ability_handler(&"melee") as MeleeAbility
 
-func _get_ability_handler(ability_name: StringName) -> Node:
+func get_ability_handler(ability_name: StringName) -> Node:
 	if _ability_handlers.has(ability_name):
 		return _ability_handlers[ability_name]
 	var ability_node = get_ability(ability_name)
@@ -224,7 +224,7 @@ func _get_ability_handler(ability_name: StringName) -> Node:
 	_ability_handlers[ability_name] = handler_instance
 	return handler_instance
 
-func _build_hand_action(action: StringName, subject: Node) -> Dictionary:
+func build_hand_action(action: StringName, subject: Node) -> Dictionary:
 	return {
 		"action": action,
 		"subject": subject
@@ -248,4 +248,4 @@ func refresh_look_pivot():
 			set_look_pivot_node(self)
 	else:
 		super.refresh_look_pivot()
-	_update_carry_slots_aim()
+	update_carry_slots_aim()

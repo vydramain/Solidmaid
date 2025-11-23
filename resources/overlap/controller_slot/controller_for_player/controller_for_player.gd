@@ -15,8 +15,8 @@ func _ready() -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _exit_tree() -> void:
-	if character and character.interactor_ready.is_connected(_on_interactor_ready):
-		character.interactor_ready.disconnect(_on_interactor_ready)
+	if character and character.interactor_ready.is_connected(on_interactor_ready):
+		character.interactor_ready.disconnect(on_interactor_ready)
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -48,14 +48,14 @@ func _physics_process(_dt):
 	var right_hand_pressed := Input.is_action_just_pressed("hand_right")
 	if right_hand_pressed:
 		var modifier := Character.HAND_MODIFIER_DROP if drop_modifier else Character.HAND_MODIFIER_NONE
-		_handle_hand_slot(CarrySlots.SLOT_RIGHT, modifier)
+		handle_hand_slot(CarrySlots.SLOT_RIGHT, modifier)
 	var left_hand_pressed := Input.is_action_just_pressed("hand_left")
 	if left_hand_pressed:
 		var modifier := Character.HAND_MODIFIER_DROP if drop_modifier else Character.HAND_MODIFIER_NONE
-		_handle_hand_slot(CarrySlots.SLOT_LEFT, modifier)
+		handle_hand_slot(CarrySlots.SLOT_LEFT, modifier)
 
 
-func _handle_hand_slot(slot_name: String, modifier: StringName = Character.HAND_MODIFIER_NONE) -> bool:
+func handle_hand_slot(slot_name: String, modifier: StringName = Character.HAND_MODIFIER_NONE) -> bool:
 	if character == null:
 		return false
 	var hand_label := slot_name.capitalize()
@@ -73,14 +73,14 @@ func _handle_hand_slot(slot_name: String, modifier: StringName = Character.HAND_
 		Character.HAND_ACTION_THROW:
 			if subject:
 				Custom_Logger.debug(self, "Персонаж %s бросает %s %s рукой" % [character.name, subject.name, hand_label])
-			_trigger_camera_shake(0.35, 0.12)
-			_trigger_hitstop(0.05)
+			trigger_camera_shake(0.35, 0.12)
+			trigger_hitstop(0.05)
 			return true
 		Character.HAND_ACTION_PICKUP:
 			if subject:
 				Custom_Logger.debug(self, "Персонаж %s поднимает %s %s рукой" % [character.name, subject.name, hand_label])
-			_trigger_camera_shake(0.2, 0.08)
-			_trigger_hitstop(0.04, 0.25)
+			trigger_camera_shake(0.2, 0.08)
+			trigger_hitstop(0.04, 0.25)
 			return true
 		Character.HAND_ACTION_MELEE:
 			if subject:
@@ -90,8 +90,8 @@ func _handle_hand_slot(slot_name: String, modifier: StringName = Character.HAND_
 		Character.HAND_ACTION_INTERACT:
 			if subject:
 				Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s %s рукой" % [character.name, subject.name, hand_label])
-			_trigger_camera_shake(0.2, 0.08)
-			_trigger_hitstop(0.04, 0.25)
+			trigger_camera_shake(0.2, 0.08)
+			trigger_hitstop(0.04, 0.25)
 			return true
 		Character.HAND_ACTION_DROP:
 			if subject:
@@ -100,29 +100,29 @@ func _handle_hand_slot(slot_name: String, modifier: StringName = Character.HAND_
 
 	return false
 
-func _ensure_hud() -> void:
+func ensure_hud() -> void:
 	if hud:
 		return
 	hud = HUD_SCENE.instantiate()
 	add_child(hud)
-	_bind_hud_character()
+	bind_hud_character()
 
-func _on_interactor_ready(new_interactor: Interactor) -> void:
+func on_interactor_ready(new_interactor: Interactor) -> void:
 	if hud:
 		hud.bind_interactor(new_interactor)
 
 
-func _bind_hud_character() -> void:
+func bind_hud_character() -> void:
 	if hud and character and hud.has_method("bind_character"):
 		hud.bind_character(character)
 
 
-func _trigger_camera_shake(strength: float, duration: float) -> void:
+func trigger_camera_shake(strength: float, duration: float) -> void:
 	if character:
 		character.trigger_camera_shake(strength, duration)
 
 
-func _trigger_hitstop(duration: float = 0.06, time_scale: float = 0.2) -> void:
+func trigger_hitstop(duration: float = 0.06, time_scale: float = 0.2) -> void:
 	if character:
 		character.trigger_hitstop(duration, time_scale)
 
@@ -130,12 +130,12 @@ func _trigger_hitstop(duration: float = 0.06, time_scale: float = 0.2) -> void:
 func init(ch):
 	character = ch
 	loco = ch.body
-	if character and not character.interactor_ready.is_connected(_on_interactor_ready):
-		character.interactor_ready.connect(_on_interactor_ready)
-	_ensure_hud()
-	_bind_hud_character()
+	if character and not character.interactor_ready.is_connected(on_interactor_ready):
+		character.interactor_ready.connect(on_interactor_ready)
+	ensure_hud()
+	bind_hud_character()
 	vision_rig = character.ensure_vision_rig()
 	vision_camera = character.get_vision_camera()
 	if vision_camera:
 		vision_camera.current = true
-	_on_interactor_ready(character.get_interactor())
+	on_interactor_ready(character.get_interactor())

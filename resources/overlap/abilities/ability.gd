@@ -17,12 +17,12 @@ signal failed(reason)
 
 
 func _enter_tree() -> void:
-	_instantiate_dependencies()
+	instantiate_dependencies()
 
 
 func _ready() -> void:
-	_instantiate_dependencies()
-	_requirements_met = _verify_required_nodes()
+	instantiate_dependencies()
+	_requirements_met = verify_required_nodes()
 	if ability_name == StringName():
 		ability_name = StringName(name)
 	if ability_scene == null:
@@ -36,7 +36,7 @@ func _ready() -> void:
 
 func request_start(ctx) -> void:
 	if not _requirements_met:
-		_requirements_met = _verify_required_nodes()
+		_requirements_met = verify_required_nodes()
 	if not _requirements_met:
 		Custom_Logger.warning(self, "Ability '%s' cannot start: missing required nodes" % ability_name)
 		emit_signal("failed", "missing_requirements")
@@ -71,11 +71,11 @@ func provides(input_name: StringName) -> bool:
 	return false
 
 
-func _instantiate_dependencies() -> void:
+func instantiate_dependencies() -> void:
 	if _dependencies_instantiated:
 		return
 
-	var target_parent: Node = _find_dependency_host()
+	var target_parent: Node = find_dependency_host()
 	if target_parent == null:
 		target_parent = self
 
@@ -84,18 +84,18 @@ func _instantiate_dependencies() -> void:
 			continue
 		var dependency_instance = dependency_scene.instantiate()
 		if target_parent.is_node_ready():
-			_add_child_and_register(target_parent, dependency_instance)
+			add_child_and_register(target_parent, dependency_instance)
 		else:
-			call_deferred("_ability_add_dependency_child", dependency_instance)
-			call_deferred("_ability_register_dependency_deferred", dependency_instance)
+			call_deferred("ability_add_dependency_child", dependency_instance)
+			call_deferred("ability_register_dependency_deferred", dependency_instance)
 
 	_dependencies_instantiated = true
 
 
-func _verify_required_nodes() -> bool:
+func verify_required_nodes() -> bool:
 	if required_node_names.is_empty():
 		return true
-	var host := _find_dependency_host()
+	var host := find_dependency_host()
 	var search_root: Node = host if host else get_owner()
 	if search_root == null:
 		search_root = self
@@ -103,7 +103,7 @@ func _verify_required_nodes() -> bool:
 	for node_name in required_node_names:
 		if node_name == StringName():
 			continue
-		if not _node_with_name_exists(search_root, node_name):
+		if not node_with_name_exists(search_root, node_name):
 			missing.append(node_name)
 	if missing.is_empty():
 		return true
@@ -114,7 +114,7 @@ func _verify_required_nodes() -> bool:
 	return false
 
 
-func _find_dependency_host() -> Node:
+func find_dependency_host() -> Node:
 	var node: Node = self
 	while node:
 		if node.has_method("register_ability_dependency"):
@@ -123,8 +123,8 @@ func _find_dependency_host() -> Node:
 	return get_owner()
 
 
-func _ability_add_dependency_child(dependency_instance: Node) -> void:
-	var target_parent: Node = _find_dependency_host()
+func ability_add_dependency_child(dependency_instance: Node) -> void:
+	var target_parent: Node = find_dependency_host()
 	if target_parent == null:
 		target_parent = self
 	if dependency_instance.get_parent() == target_parent:
@@ -134,19 +134,19 @@ func _ability_add_dependency_child(dependency_instance: Node) -> void:
 	target_parent.add_child(dependency_instance)
 
 
-func _ability_register_dependency_deferred(dependency_instance: Node) -> void:
-	var host := _find_dependency_host()
+func ability_register_dependency_deferred(dependency_instance: Node) -> void:
+	var host := find_dependency_host()
 	if host and host.has_method("register_ability_dependency"):
 		host.register_ability_dependency(dependency_instance)
 
 
-func _add_child_and_register(parent: Node, dependency_instance: Node) -> void:
+func add_child_and_register(parent: Node, dependency_instance: Node) -> void:
 	parent.add_child(dependency_instance)
 	if parent.has_method("register_ability_dependency"):
 		parent.register_ability_dependency(dependency_instance)
 
 
-func _node_with_name_exists(search_root: Node, node_name: StringName) -> bool:
+func node_with_name_exists(search_root: Node, node_name: StringName) -> bool:
 	if search_root == null:
 		return false
 	if StringName(search_root.name) == node_name:

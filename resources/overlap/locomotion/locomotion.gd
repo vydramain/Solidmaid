@@ -19,7 +19,7 @@ func _ready():
 	refresh_look_pivot()
 
 func _physics_process(dt) -> void:
-	var desired_horizontal_velocity := _get_desired_horizontal_velocity()
+	var desired_horizontal_velocity := get_desired_horizontal_velocity()
 	var current_horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
 	var accel_rate := acceleration if desired_horizontal_velocity.length() > current_horizontal_velocity.length() else deceleration
 	current_horizontal_velocity = current_horizontal_velocity.move_toward(desired_horizontal_velocity, accel_rate * dt)
@@ -85,7 +85,7 @@ func get_look_pivot() -> Node3D:
 	return look_pivot
 
 
-func _get_desired_horizontal_velocity() -> Vector3:
+func get_desired_horizontal_velocity() -> Vector3:
 	var move_dir := set_camera_correction(_move_input)
 	move_dir.y = 0
 	return move_dir * speed

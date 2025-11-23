@@ -13,15 +13,15 @@ func perform_melee(character, weapon: Node, slot_name: StringName) -> bool:
 	if _cooldown_left > 0.0:
 		return false
 
-	_play_weapon_animation(weapon)
+	play_weapon_animation(weapon)
 
-	_trigger_melee_feedback(character, slot_name, weapon)
+	trigger_melee_feedback(character, slot_name, weapon)
 	_cooldown_left = cooldown_seconds
 	set_process(true)
 	return true
 
 
-func _play_weapon_animation(weapon: Node) -> bool:
+func play_weapon_animation(weapon: Node) -> bool:
 	var animation_player: AnimationPlayer = weapon.get_node_or_null("AnimationPlayer")
 	if animation_player and animation_player.has_animation(default_animation):
 		animation_player.play(default_animation)
@@ -29,7 +29,7 @@ func _play_weapon_animation(weapon: Node) -> bool:
 	return false
 
 
-func _trigger_melee_feedback(character, slot_name: StringName, weapon: Node) -> void:
+func trigger_melee_feedback(character, slot_name: StringName, weapon: Node) -> void:
 	if character == null:
 		return
 	if character.has_method("trigger_camera_shake"):

@@ -10,11 +10,11 @@ var _current_target
 
 func _ready() -> void:
 	set_physics_process(true)
-	_update_target_state(get_current_target())
+	update_target_state(get_current_target())
 
 
 func _physics_process(_dt: float) -> void:
-	_update_target_state(get_current_target())
+	update_target_state(get_current_target())
 
 
 func get_current_target():
@@ -36,7 +36,7 @@ func interact() -> void:
 		(target as Node).emit_signal.call_deferred("interacted", get_owner())
 
 
-func _update_target_state(new_target) -> void:
+func update_target_state(new_target) -> void:
 	if new_target == _current_target:
 		return
 	_current_target = new_target

@@ -36,16 +36,16 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if not _camera:
 		return
-	_update_walk_bob(delta)
+	update_walk_bob(delta)
 	var final_transform := _base_camera_transform
-	final_transform = _apply_walk_bob(final_transform)
+	final_transform = apply_walk_bob(final_transform)
 	if _shake_time_left > 0.0:
 		_shake_time_left = max(0.0, _shake_time_left - delta)
 		var time_ratio := 0.0
 		if _shake_duration > 0.0:
 			time_ratio = 1.0 - (_shake_time_left / _shake_duration)
 		var damping := 1.0 - time_ratio
-		final_transform = _apply_micro_shake(final_transform, damping)
+		final_transform = apply_micro_shake(final_transform, damping)
 	else:
 		_shake_strength = 0.0
 	_camera.transform = final_transform
@@ -59,7 +59,7 @@ func trigger_micro_shake(strength: float = 1.0, duration: float = -1.0) -> void:
 	_shake_strength = max(strength, _shake_strength)
 
 
-func _update_walk_bob(delta: float) -> void:
+func update_walk_bob(delta: float) -> void:
 	if _host_locomotion == null and get_parent() is Locomotion:
 		_host_locomotion = get_parent()
 	if _host_locomotion == null:
@@ -72,7 +72,7 @@ func _update_walk_bob(delta: float) -> void:
 		_walk_phase = fmod(_walk_phase + delta * walk_bob_frequency_hz * TAU, TAU)
 
 
-func _apply_walk_bob(base_transform: Transform3D) -> Transform3D:
+func apply_walk_bob(base_transform: Transform3D) -> Transform3D:
 	if _walk_amount <= 0.001:
 		return base_transform
 	var sin_wave := sin(_walk_phase)
@@ -97,7 +97,7 @@ func _apply_walk_bob(base_transform: Transform3D) -> Transform3D:
 	return transformed
 
 
-func _apply_micro_shake(base_transform: Transform3D, damping: float) -> Transform3D:
+func apply_micro_shake(base_transform: Transform3D, damping: float) -> Transform3D:
 	var pos_amp := default_pos_amplitude * _shake_strength * damping
 	var rot_amp := deg_to_rad(default_rot_amplitude_deg) * _shake_strength * damping
 	var offset := Vector3(
