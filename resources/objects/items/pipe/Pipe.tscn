@@ -1,6 +1,5 @@
-[gd_scene load_steps=14 format=3 uid="uid://dleao4a5ojcbi"]
+[gd_scene load_steps=12 format=3 uid="uid://dleao4a5ojcbi"]
 
-[ext_resource type="Script" uid="uid://chmydujwpy0eq" path="res://resources/objects/items/pipe/pipe_animation_player.gd" id="1_hfcfa"]
 [ext_resource type="PackedScene" uid="uid://d02e2gtddf2l1" path="res://resources/overlap/affordances/carriable/Carriable.tscn" id="1_tjmx0"]
 [ext_resource type="PackedScene" uid="uid://c3lugepxtfybs" path="res://resources/overlap/affordances/melee/Melee.tscn" id="2_latvt"]
 
@@ -50,249 +49,17 @@ bottom_radius = 0.052
 height = 0.06
 radial_segments = 12
 
-[sub_resource type="Animation" id="Animation_hfcfa"]
-length = 0.41
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("MeshRoot:rotation")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.295, 0.33, 0.37, 0.41),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 1.3089969, 0), Vector3(0, 2.6179938, 0), Vector3(0, 2.7043555, 0), Vector3(0, 2.8164008, 0), Vector3(0, 2.9407437, 0), Vector3(0, 3.0738132, 0), Vector3(0, 3.213772, 0), Vector3(0, 3.3594785, 0), Vector3(0, 3.5101447, 0), Vector3(0, 3.6651914, 0), Vector3(0, -2.6179938, 0), Vector3(0, -2.6179938, 0), Vector3(0, -1.3089969, 0), Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("MeshRoot:position")
-tracks/1/interp = 2
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.295, 0.33, 0.37, 0.41),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0.4, -0.05, -0.1), Vector3(0.8, -0.1, -0.2), Vector3(0.6015625, -0.1, -0.064062506), Vector3(0.40625003, -0.1, 0.033749994), Vector3(0.21406251, -0.1, 0.09343749), Vector3(0.025000006, -0.1, 0.114999995), Vector3(-0.16093749, -0.1, 0.09843749), Vector3(-0.34374997, -0.10000001, 0.043749988), Vector3(-0.5234375, -0.1, -0.049062513), Vector3(-0.7, -0.1, -0.18), Vector3(-0.775, -0.105000004, -0.21000001), Vector3(-0.85, -0.11, -0.24), Vector3(-0.425, -0.055, -0.12), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_xyoj7"]
+[sub_resource type="Animation" id="Animation_reset_stub"]
 length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("MeshRoot:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("MeshRoot:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("AnimationPlayer:animation_name")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.001),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"swing_horizontal"]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("AnimationPlayer:reset_animation_name")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0.001),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"RESET"]
-}
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_3ilxb"]
+[sub_resource type="Animation" id="Animation_swing_stub"]
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_stub"]
 _data = {
-&"RESET": SubResource("Animation_xyoj7"),
-&"swing_horizontal": SubResource("Animation_hfcfa")
+&"RESET": SubResource("Animation_reset_stub"),
+&"swing_horizontal": SubResource("Animation_swing_stub")
 }
-
-[sub_resource type="GDScript" id="GDScript_hfcfa"]
-script/source = "@tool
-extends Node
-class_name PipeSwingTool
-
-@export_node_path(\"AnimationPlayer\") var animation_player_path: NodePath = NodePath(\"../AnimationPlayer\")
-@export_node_path(\"Node3D\") var animated_node_path: NodePath = NodePath(\"..\")
-@export var animation_name: StringName = &\"swing_horizontal\"
-
-@export_range(0.05, 1.5, 0.01, \"suffix:s\") var swing_duration: float = 0.35
-@export_range(0.0, 0.5, 0.01, \"suffix:s\") var windup_time: float = 0.08
-@export_range(0.0, 0.6, 0.01, \"suffix:s\") var return_time: float = 0.08
-@export_range(3, 64, 1) var samples: int = 16
-
-@export var start_offset: Vector3 = Vector3(0.52, -0.06, -0.18)
-@export var control_offset: Vector3 = Vector3(0.05, 0.08, 0.9)
-@export var end_offset: Vector3 = Vector3(-0.52, -0.06, -0.12)
-@export var rest_offset: Vector3 = Vector3.ZERO
-
-@export var align_to_tangent: bool = true
-@export var grip_rotation_degrees: Vector3 = Vector3.ZERO
-@export var tangent_rotation_offset_degrees: Vector3 = Vector3(-6.0, 0.0, -65.0)
-@export var fallback_forward: Vector3 = Vector3.FORWARD
-
-@export var rebuild_on_ready: bool = true
-@export var rebuild_in_game: bool = true
-@export var rebuild_now: bool = false : set = _set_rebuild_now
-
-
-func _ready() -> void:
-	if Engine.is_editor_hint():
-		if rebuild_on_ready:
-			rebuild_animation()
-	else:
-		if rebuild_in_game and (rebuild_on_ready or not _has_animation()):
-			rebuild_animation()
-
-
-func _set_rebuild_now(value: bool) -> void:
-	if not value:
-		return
-	rebuild_animation()
-	rebuild_now = false
-
-
-func rebuild_animation() -> void:
-	var player := _get_animation_player()
-	if player == null:
-		push_warning(\"PipeSwingTool: AnimationPlayer not found, cannot rebuild swing animation.\")
-		return
-
-	var animation := player.get_animation(animation_name)
-	if animation == null:
-		animation = Animation.new()
-		player.add_animation(animation_name, animation)
-	else:
-		while animation.get_track_count() > 0:
-			animation.remove_track(animation.get_track_count() - 1)
-
-	var track_path := _get_animation_track_path()
-	var track_idx := animation.add_track(Animation.TYPE_VALUE)
-	animation.track_set_path(track_idx, track_path)
-	animation.value_track_set_update_mode(track_idx, Animation.UPDATE_CONTINUOUS)
-	animation.track_set_interpolation_type(track_idx, Animation.INTERPOLATION_CUBIC)
-
-	var keys := _build_keys()
-	for key in keys:
-		animation.track_insert_key(track_idx, key.time, key.transform, 1.0)
-
-	var final_time := keys[-1].time if keys.size() > 0 else 0.01
-	animation.length = final_time
-	animation.loop_mode = Animation.LOOP_NONE
-
-
-func _build_keys() -> Array:
-	var result: Array = []
-	var rest_transform := _rest_transform()
-	result.append({ \"time\": 0.0, \"transform\": rest_transform })
-
-	var start_time := max(0.0, windup_time)
-	if start_time > 0.0:
-		result.append({ \"time\": start_time, \"transform\": rest_transform })
-
-	var previous_tangent := (control_offset - start_offset)
-	for i in range(samples + 1):
-		var t := float(i) / float(samples)
-		var eased_t := _smooth_step(t)
-		var curve_t := start_time + eased_t * swing_duration
-		var point := _quadratic_point(eased_t)
-		var tangent := _quadratic_tangent(eased_t)
-		if tangent.length_squared() < 0.0001:
-			tangent = previous_tangent
-		previous_tangent = tangent
-
-		var transform := Transform3D(_basis_from_tangent(tangent), rest_offset + point)
-		result.append({ \"time\": curve_t, \"transform\": transform })
-
-	var end_time := start_time + swing_duration
-	if return_time > 0.0:
-		result.append({ \"time\": end_time + return_time, \"transform\": rest_transform })
-	elif result.size() > 0:
-		result.append({ \"time\": end_time, \"transform\": rest_transform })
-
-	return result
-
-
-func _quadratic_point(t: float) -> Vector3:
-	var ab := start_offset.lerp(control_offset, t)
-	var bc := control_offset.lerp(end_offset, t)
-	return ab.lerp(bc, t)
-
-
-func _quadratic_tangent(t: float) -> Vector3:
-	return (control_offset - start_offset) * (2.0 * (1.0 - t)) + (end_offset - control_offset) * (2.0 * t)
-
-
-func _rest_transform() -> Transform3D:
-	return Transform3D(Basis.from_euler(grip_rotation_degrees * deg_to_rad(1.0)), rest_offset)
-
-
-func _basis_from_tangent(tangent: Vector3) -> Basis:
-	var forward := fallback_forward
-	if align_to_tangent and tangent.length_squared() > 0.0001:
-		forward = tangent.normalized()
-
-	var basis := Basis.IDENTITY
-	if forward.length_squared() > 0.0001:
-		basis = Basis.looking_at(forward, Vector3.UP)
-
-	var offset_basis := Basis.from_euler(tangent_rotation_offset_degrees * deg_to_rad(1.0))
-	var grip_basis := Basis.from_euler(grip_rotation_degrees * deg_to_rad(1.0))
-	return basis * offset_basis * grip_basis
-
-
-func _smooth_step(t: float) -> float:
-	return t * t * (3.0 - 2.0 * t)
-
-
-func _get_animation_player() -> AnimationPlayer:
-	if animation_player_path.is_empty():
-		return null
-	return get_node_or_null(animation_player_path) as AnimationPlayer
-
-
-func _get_animation_track_path() -> NodePath:
-	if animated_node_path.is_empty():
-		return NodePath()
-	var target := animated_node_path
-	if target.get_concatenated_subnames() == \"\":
-		target = NodePath(str(target) + \":transform\")
-	elif not str(target).ends_with(\":transform\"):
-		target = NodePath(str(target) + \":transform\")
-	return target
-
-
-func _has_animation() -> bool:
-	var player := _get_animation_player()
-	return player != null and player.has_animation(animation_name)
-"
 
 [node name="Pipe" type="RigidBody3D"]
 mass = 5.0
@@ -335,17 +102,8 @@ mesh = SubResource("CylinderMesh_ring")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-&"": SubResource("AnimationLibrary_3ilxb")
+&"": SubResource("AnimationLibrary_stub")
 }
-script = ExtResource("1_hfcfa")
-animated_node_path = NodePath("../MeshRoot")
-t_follow = 0.06999999999999999
-apex_offset = Vector3(0, -0.1, 0.42)
-end_offset = Vector3(-0.7, -0.1, -0.18)
-follow_offset = Vector3(-0.85, -0.11, -0.24)
-
-[node name="SwingAuthoring" type="Node" parent="."]
-script = SubResource("GDScript_hfcfa")
 
 [node name="Affordances" type="Node" parent="."]
 

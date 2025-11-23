@@ -44,18 +44,22 @@ func _physics_process(_dt):
 		Input.get_action_strength("move_backward") - Input.get_action_strength("move_forward")
 	)
 	loco.set_move_input(move)
+	var drop_modifier := Input.is_action_pressed("drop_modifier")
 	var right_hand_pressed := Input.is_action_just_pressed("hand_right")
 	if right_hand_pressed:
-		_handle_hand_slot(CarrySlots.SLOT_RIGHT)
+		var modifier := Character.HAND_MODIFIER_DROP if drop_modifier else Character.HAND_MODIFIER_NONE
+		_handle_hand_slot(CarrySlots.SLOT_RIGHT, modifier)
 	var left_hand_pressed := Input.is_action_just_pressed("hand_left")
 	if left_hand_pressed:
-		_handle_hand_slot(CarrySlots.SLOT_LEFT)
+		var modifier := Character.HAND_MODIFIER_DROP if drop_modifier else Character.HAND_MODIFIER_NONE
+		_handle_hand_slot(CarrySlots.SLOT_LEFT, modifier)
 
-func _handle_hand_slot(slot_name: String) -> bool:
+
+func _handle_hand_slot(slot_name: String, modifier: StringName = Character.HAND_MODIFIER_NONE) -> bool:
 	if character == null:
 		return false
 	var hand_label := slot_name.capitalize()
-	var result = character.interact_hand(slot_name)
+	var result = character.interact_hand(slot_name, modifier)
 	if typeof(result) != TYPE_DICTIONARY:
 		return false
 	if result.is_empty():
@@ -88,6 +92,10 @@ func _handle_hand_slot(slot_name: String) -> bool:
 				Custom_Logger.debug(self, "Персонаж %s взаимодействует с объектом %s %s рукой" % [character.name, subject.name, hand_label])
 			_trigger_camera_shake(0.2, 0.08)
 			_trigger_hitstop(0.04, 0.25)
+			return true
+		Character.HAND_ACTION_DROP:
+			if subject:
+				Custom_Logger.debug(self, "Персонаж %s отпускает %s рукой предмет %s" % [character.name, hand_label, subject.name])
 			return true
 
 	return false

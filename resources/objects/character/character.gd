@@ -8,7 +8,10 @@ const HAND_ACTION_THROW := &"throw"
 const HAND_ACTION_PICKUP := &"pickup"
 const HAND_ACTION_MELEE := &"melee"
 const HAND_ACTION_INTERACT := &"interact"
+const HAND_ACTION_DROP := &"drop"
 const AFFORDANCE_MELEE := &"melee"
+const HAND_MODIFIER_NONE := &"none"
+const HAND_MODIFIER_DROP := &"drop"
 
 var body := self
 var vision_camera: Camera3D
@@ -140,9 +143,16 @@ func request_throw(slot_name: String = "") -> bool:
 		return false
 	return carry_slots.request_throw(slot_name)
 
-func interact_hand(slot_name: StringName) -> Dictionary:
+func interact_hand(slot_name: StringName, modifier: StringName = HAND_MODIFIER_NONE) -> Dictionary:
 	if carry_slots == null or slot_name == StringName():
 		return _build_hand_action(HAND_ACTION_NONE, null)
+
+	if modifier == HAND_MODIFIER_DROP:
+		var dropped := carry_slots.try_drop(String(slot_name))
+		if dropped:
+			return _build_hand_action(HAND_ACTION_DROP, dropped)
+		return _build_hand_action(HAND_ACTION_NONE, null)
+
 	var slot_key := String(slot_name)
 	var held_item := carry_slots.get_item(slot_key)
 	if held_item:
@@ -153,11 +163,6 @@ func get_interactor_target():
 	if interactor:
 		return interactor.get_current_target()
 	return null
-
-func drop_holdable(slot_name: String) -> Node3D:
-	if carry_slots == null:
-		return null
-	return carry_slots.drop(slot_name)
 
 func _interact_with_held_item(slot_name: String, held_item: Node3D) -> Dictionary:
 	if _item_has_affordance(held_item, CarrySlots.AFFORDANCE_THROWABLE):
@@ -224,6 +229,7 @@ func _build_hand_action(action: StringName, subject: Node) -> Dictionary:
 		"action": action,
 		"subject": subject
 	}
+
 func trigger_camera_shake(strength: float = 1.0, duration: float = -1.0) -> void:
 	if vision_rig and vision_rig.has_method("trigger_micro_shake"):
 		vision_rig.trigger_micro_shake(strength, duration)

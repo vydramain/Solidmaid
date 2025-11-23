@@ -63,7 +63,21 @@ func try_pickup(item: Node3D, preferred_slot: String = "") -> bool:
 		return false
 	if not _is_item_carriable(item):
 		return false
+	
+	var order: Array = []
+	if preferred_slot in _DEFAULT_ORDER:
+		order.append(preferred_slot)
+	for slot_name in _DEFAULT_ORDER:
+		if slot_name != preferred_slot:
+			order.append(slot_name)
+	
+	for slot_name in order:
+		if _slot_items[slot_name] == null:
+			return _attach_item(slot_name, item)
+	return false
 
+
+func try_drop(preferred_slot: String = "") -> Node3D:
 	var order: Array = []
 	if preferred_slot in _DEFAULT_ORDER:
 		order.append(preferred_slot)
@@ -72,20 +86,11 @@ func try_pickup(item: Node3D, preferred_slot: String = "") -> bool:
 			order.append(slot_name)
 
 	for slot_name in order:
-		if _slot_items[slot_name] == null:
-			return _attach_item(slot_name, item)
-	return false
-
-
-func drop(slot_name: String) -> Node3D:
-	if not slot_name in _slot_items:
-		return null
-	var item: Node3D = _slot_items[slot_name]
-	if item == null:
-		return null
-
-	_detach_item(slot_name, item, Vector3.ZERO)
-	return item
+		var item: Node3D = _slot_items.get(slot_name, null)
+		if item != null:
+			_detach_item(slot_name, item, Vector3.ZERO)
+			return item
+	return null
 
 
 func request_throw(slot_name: String = "") -> bool:
@@ -133,17 +138,16 @@ func _attach_item(slot_name: String, item: Node3D) -> bool:
 	if anchor == null:
 		Custom_Logger.warning(self, "Cannot attach to slot '%s': anchor missing" % slot_name)
 		return false
-
+	
 	var previous_parent := item.get_parent()
 	var anchor_tx := anchor.global_transform
 	if previous_parent:
 		previous_parent.remove_child(item)
 	anchor.add_child(item)
 	item.global_transform = anchor_tx
-
-	if item.has_method("on_picked_up"):
-		item.on_picked_up(self, slot_name)
-
+	
+	_notify_pickup_hooks(item, slot_name)
+	
 	_slot_items[slot_name] = item
 	return true
 
@@ -158,9 +162,7 @@ func _detach_item(slot_name: String, item: Node3D, release_velocity: Vector3) ->
 	if world_parent:
 		world_parent.add_child(item)
 	item.global_transform = release_transform
-
-	if item.has_method("on_released"):
-		item.on_released(release_velocity)
+	_notify_release_hooks(item, release_velocity)
 
 	_slot_items[slot_name] = null
 
@@ -189,3 +191,27 @@ func _item_has_child_affordance(item: Node, input_name: StringName) -> bool:
 		if child is Affordance and child.provides(input_name):
 			return true
 	return false
+
+
+func _notify_pickup_hooks(item: Node, slot_name: String) -> void:
+	var handled := _call_affordance_method(item, "on_picked_up", [self, slot_name])
+	if not handled and item.has_method("on_picked_up"):
+		item.on_picked_up(self, slot_name)
+
+
+func _notify_release_hooks(item: Node, release_velocity: Vector3) -> void:
+	var handled := _call_affordance_method(item, "on_released", [release_velocity])
+	if not handled and item.has_method("on_released"):
+		item.on_released(release_velocity)
+
+
+func _call_affordance_method(item: Node, method: StringName, args: Array) -> bool:
+	var aff_root: Node = item.get_node_or_null(AFFORDANCE_CONTAINER)
+	if aff_root == null:
+		return false
+	var invoked := false
+	for child in aff_root.get_children():
+		if child.has_method(method):
+			child.callv(method, args)
+			invoked = true
+	return invoked
