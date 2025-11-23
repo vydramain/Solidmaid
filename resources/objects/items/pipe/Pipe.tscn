@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://d02e2gtddf2l1" path="res://resources/overlap/affordances/carriable/Carriable.tscn" id="1_tjmx0"]
 [ext_resource type="PackedScene" uid="uid://c3lugepxtfybs" path="res://resources/overlap/affordances/melee/Melee.tscn" id="2_latvt"]
+[ext_resource type="Resource" uid="uid://bkb5w1tu9on4e" path="res://resources/objects/items/pipe/pipe_hand_profile.tres" id="3_ejhah"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hp7ov"]
 size = Vector3(0.07183838, 1.7227707, 0.05218506)
@@ -110,3 +111,4 @@ libraries = {
 [node name="Carriable" parent="Affordances" instance=ExtResource("1_tjmx0")]
 
 [node name="Melee" parent="Affordances" instance=ExtResource("2_latvt")]
+hand_animation_profile = ExtResource("3_ejhah")

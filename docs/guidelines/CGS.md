@@ -41,6 +41,7 @@ SOLID principles help create flexible, testable code in Godot's node system.
 - **Error Handling**: Use `assert()` for development checks and `push_error()` for runtime issues. Avoid silent failures.
 - **Code Smells to Avoid**: Refactor god classes (overly large scripts), duplicated code (use inheritance or utilities), and tight coupling (favor dependency injection).
 - **Testing**: Write unit tests using Godot's built-in GUT plugin or manual `_ready()` assertions. Test edge cases like zero health or invalid inputs.
+- **Resource Linking**: Не используйте прямые `path=` в `ext_resource` для скриптов и ассетов, если у ресурса есть UID. Всегда сохраняйте и ссылайтесь через `uid://...` чтобы не ломались ссылки при реорганизации директорий.
 
 ## Version Control (VCS)
 

@@ -13,6 +13,7 @@ func perform_melee(character, weapon: Node, slot_name: StringName) -> bool:
 	if _cooldown_left > 0.0:
 		return false
 
+	var played_anim := play_hand_animation(character, weapon, slot_name)
 	play_weapon_animation(weapon)
 
 	trigger_melee_feedback(character, slot_name, weapon)
@@ -36,6 +37,35 @@ func trigger_melee_feedback(character, slot_name: StringName, weapon: Node) -> v
 		character.trigger_camera_shake(0.25, 0.09)
 	if character.has_method("trigger_hitstop"):
 		character.trigger_hitstop(0.05, 0.35)
+
+
+func play_hand_animation(character, weapon: Node, slot_name: StringName) -> bool:
+	if character == null:
+		return false
+	var profile := get_hand_profile(weapon)
+	if profile == null:
+		return false
+	var anim_name := profile.get_animation(&"melee", "fp")
+	if anim_name == StringName():
+		return false
+	if character.has_method("play_hand_animation"):
+		return character.play_hand_animation(anim_name, slot_name, "fp")
+	return false
+
+
+func get_hand_profile(weapon: Node) -> HandAnimationProfile:
+	if weapon == null:
+		return null
+	if weapon.has_method("get_hand_animation_profile"):
+		return weapon.get_hand_animation_profile()
+	var aff_root := weapon.get_node_or_null("Affordances")
+	if aff_root:
+		for child in aff_root.get_children():
+			if child.has_method("get_hand_animation_profile"):
+				var profile = child.get_hand_animation_profile()
+				if profile:
+					return profile
+	return null
 
 
 func _process(delta: float) -> void:

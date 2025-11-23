@@ -15,6 +15,7 @@ const HAND_MODIFIER_DROP := &"drop"
 
 var body := self
 var vision_camera: Camera3D
+var hand_animator: HandAnimator
 
 @onready var abilities: Node = $"Abilities"
 @onready var health: Vitality = $"Vitality"
@@ -59,6 +60,7 @@ func update_vision_reference():
 			set_look_pivot_node(self)
 		look_pivot_node = look_pivot_node if look_pivot_node is Node3D else null
 		vision_camera = look_pivot_node.get_node_or_null("Camera3D") if look_pivot_node else vision_rig.get_node_or_null("LookPivot/Camera3D")
+		hand_animator = vision_rig.get_node_or_null("LookPivot/Camera3D/HandAnimator")
 	update_camera_current_flag()
 	update_carry_slots_aim()
 	attach_interactor_to_pivot()
@@ -238,6 +240,16 @@ func trigger_hitstop(duration: float = -1.0, time_scale_override: float = -1.0, 
 	var hitstop: HitstopSystem = get_tree().get_root().get_node_or_null("HITSTOP")
 	if hitstop:
 		hitstop.trigger(duration, vision_rig, time_scale_override, shake_strength)
+
+
+func play_hand_animation(anim_name: StringName, slot_name: StringName, perspective: String = "fp", speed: float = 1.0) -> bool:
+	if hand_animator:
+		return hand_animator.play(anim_name, perspective, speed)
+	return false
+
+
+func get_hand_animator() -> HandAnimator:
+	return hand_animator
 
 func refresh_look_pivot():
 	if vision_rig:
