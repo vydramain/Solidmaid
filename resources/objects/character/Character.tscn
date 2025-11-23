@@ -21,6 +21,12 @@ shape = SubResource("CapsuleShape3D_d7ljh")
 
 [node name="VisionRig" parent="." index="1" instance=ExtResource("6_2dn6d")]
 
+[node name="RightHandSlot" parent="VisionRig/HandSockets" index="0"]
+transform = Transform3D(-0.9457352, 0.027827695, -0.32374442, -0.1982669, 0.7399421, 0.6427876, 0.2574395, 0.67209464, -0.69427204, 0.6, 0, -0.6)
+
+[node name="LeftHandSlot" parent="VisionRig/HandSockets" index="1"]
+transform = Transform3D(-0.8051169, 0.49696714, 0.32374442, 0.1982669, 0.7399421, -0.6427876, -0.55899644, -0.4533313, -0.69427204, -0.6, 0, -0.6)
+
 [node name="Interactor" parent="." index="2" instance=ExtResource("8_dep")]
 
 [node name="CarrySlots" parent="." index="3" instance=ExtResource("11_carry")]
@@ -48,4 +54,5 @@ ability_name = &"carry"
 ability_aliases = Array[StringName]([&"pickup", &"carry_slots"])
 required_node_names = Array[StringName]([&"CarrySlots"])
 
+[editable path="VisionRig"]
 [editable path="ControllerSlot"]

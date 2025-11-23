@@ -9,12 +9,19 @@ const _DEFAULT_ORDER := [SLOT_RIGHT, SLOT_LEFT]
 const AFFORDANCE_CONTAINER := "Affordances"
 const AFFORDANCE_CARRIABLE := &"carriable"
 const AFFORDANCE_THROWABLE := &"throwable"
-const Affordance := preload("uid://dmt7xvvxqcc4i")
 
-@export var default_active_slot := SLOT_RIGHT
+const AffordanceClass := preload("uid://dmt7xvvxqcc4i")
+
 @export_range(5.0, 40.0, 0.5, "suffix:m/s") var throw_speed: float = 18.0
 @export_range(0.0, 12.0, 0.1, "suffix:m/s") var throw_upward_boost: float = 4.5
 @export_range(0.1, 3.0, 0.05, "suffix:s") var throw_cooldown_seconds: float = 0.8
+
+@export_node_path("Node3D") var right_slot_path: NodePath = NodePath("")
+@export_node_path("Node3D") var left_slot_path: NodePath = NodePath("")
+
+@export var default_active_slot := SLOT_RIGHT
+@export var right_slot_tag: String = "RightHandSlot"
+@export var left_slot_tag: String = "LeftHandSlot"
 
 var active_slot: String
 var _slot_items := {
@@ -44,10 +51,22 @@ func attach_to_rig(rig: Node3D) -> void:
 	if rig == null:
 		_slot_anchors[SLOT_RIGHT] = null
 		_slot_anchors[SLOT_LEFT] = null
+		push_error("CarrySlots: rig is null, cannot resolve hand anchors.")
+		assert(false, "CarrySlots: rig missing; cannot attach.")
 		return
 
-	_slot_anchors[SLOT_RIGHT] = rig.get_node_or_null("HandSockets/RightHandSlot")
-	_slot_anchors[SLOT_LEFT] = rig.get_node_or_null("HandSockets/LeftHandSlot")
+	_slot_anchors[SLOT_RIGHT] = resolve_anchor(rig, right_slot_path, right_slot_tag)
+	_slot_anchors[SLOT_LEFT] = resolve_anchor(rig, left_slot_path, left_slot_tag)
+
+	var missing: Array[String] = []
+	if _slot_anchors[SLOT_RIGHT] == null:
+		missing.append("right")
+	if _slot_anchors[SLOT_LEFT] == null:
+		missing.append("left")
+	if missing.size() > 0:
+		var message := "CarrySlots: missing hand anchor(s): %s. Check VisionRig setup or tags." % ", ".join(missing)
+		push_error(message)
+		assert(false, message)
 
 
 func set_aim_node(node: Node3D) -> void:
@@ -61,7 +80,7 @@ func has_free_slot() -> bool:
 func try_pickup(item: Node3D, preferred_slot: String = "") -> bool:
 	if item == null:
 		return false
-	if not _is_item_carriable(item):
+	if not is_item_carriable(item):
 		return false
 	
 	var order: Array = []
@@ -73,7 +92,7 @@ func try_pickup(item: Node3D, preferred_slot: String = "") -> bool:
 	
 	for slot_name in order:
 		if _slot_items[slot_name] == null:
-			return _attach_item(slot_name, item)
+			return attach_item_internal(slot_name, item)
 	return false
 
 
@@ -88,7 +107,7 @@ func try_drop(preferred_slot: String = "") -> Node3D:
 	for slot_name in order:
 		var item: Node3D = _slot_items.get(slot_name, null)
 		if item != null:
-			_detach_item(slot_name, item, Vector3.ZERO)
+			detach_item_internal(slot_name, item, Vector3.ZERO)
 			return item
 	return null
 
@@ -101,7 +120,7 @@ func request_throw(slot_name: String = "") -> bool:
 	var item: Node3D = _slot_items.get(slot, null)
 	if item == null:
 		return false
-	if not _is_item_throwable(item):
+	if not is_item_throwable(item):
 		return false
 
 	var aim_node := _aim_node
@@ -111,6 +130,9 @@ func request_throw(slot_name: String = "") -> bool:
 
 	var anchor: Node3D = _slot_anchors.get(slot, null)
 	if anchor == null:
+		var message := "CarrySlots: cannot throw from slot '%s' — anchor missing." % slot
+		push_error(message)
+		assert(false, message)
 		return false
 
 	var forward: Vector3 = -aim_basis.z
@@ -120,7 +142,7 @@ func request_throw(slot_name: String = "") -> bool:
 
 	var release_velocity := forward * throw_speed + Vector3.UP * throw_upward_boost
 
-	_detach_item(slot, item, release_velocity)
+	detach_item_internal(slot, item, release_velocity)
 	_cooldown_timer.start(throw_cooldown_seconds)
 	return true
 
@@ -133,10 +155,12 @@ func get_item(slot_name: String) -> Node3D:
 	return _slot_items.get(slot_name, null)
 
 
-func _attach_item(slot_name: String, item: Node3D) -> bool:
+func attach_item_internal(slot_name: String, item: Node3D) -> bool:
 	var anchor: Node3D = _slot_anchors.get(slot_name, null)
 	if anchor == null:
-		Custom_Logger.warning(self, "Cannot attach to slot '%s': anchor missing" % slot_name)
+		var message := "CarrySlots: cannot attach to slot '%s' — anchor missing." % slot_name
+		push_error(message)
+		assert(false, message)
 		return false
 	
 	var previous_parent := item.get_parent()
@@ -146,66 +170,71 @@ func _attach_item(slot_name: String, item: Node3D) -> bool:
 	anchor.add_child(item)
 	item.global_transform = anchor_tx
 	
-	_notify_pickup_hooks(item, slot_name)
+	notify_pickup_hooks(item, slot_name)
 	
 	_slot_items[slot_name] = item
 	return true
 
 
-func _detach_item(slot_name: String, item: Node3D, release_velocity: Vector3) -> void:
+func detach_item_internal(slot_name: String, item: Node3D, release_velocity: Vector3) -> void:
 	var anchor: Node3D = _slot_anchors.get(slot_name, null)
+	if anchor == null:
+		var message := "CarrySlots: cannot detach from slot '%s' — anchor missing." % slot_name
+		push_error(message)
+		assert(false, message)
+		return
 	var world_parent: Node = _character.get_parent() if _character else get_tree().current_scene
-	var release_transform: Transform3D = anchor.global_transform if anchor else item.global_transform
+	var release_transform: Transform3D = anchor.global_transform
 
 	if item.get_parent():
 		item.get_parent().remove_child(item)
 	if world_parent:
 		world_parent.add_child(item)
 	item.global_transform = release_transform
-	_notify_release_hooks(item, release_velocity)
+	notify_release_hooks(item, release_velocity)
 
 	_slot_items[slot_name] = null
 
 
-func _is_item_carriable(item: Node) -> bool:
+func is_item_carriable(item: Node) -> bool:
 	if item == null:
 		return false
 	if item.has_method("has_affordance"):
 		return item.has_affordance(AFFORDANCE_CARRIABLE)
-	return _item_has_child_affordance(item, AFFORDANCE_CARRIABLE)
+	return item_has_child_affordance(item, AFFORDANCE_CARRIABLE)
 
 
-func _is_item_throwable(item: Node) -> bool:
+func is_item_throwable(item: Node) -> bool:
 	if item == null:
 		return false
 	if item.has_method("has_affordance"):
 		return item.has_affordance(AFFORDANCE_THROWABLE)
-	return _item_has_child_affordance(item, AFFORDANCE_THROWABLE)
+	return item_has_child_affordance(item, AFFORDANCE_THROWABLE)
 
 
-func _item_has_child_affordance(item: Node, input_name: StringName) -> bool:
+func item_has_child_affordance(item: Node, input_name: StringName) -> bool:
 	var aff_root: Node = item.get_node_or_null(AFFORDANCE_CONTAINER)
 	if aff_root == null:
 		return false
 	for child in aff_root.get_children():
-		if child is Affordance and child.provides(input_name):
+		if child is AffordanceClass and child.provides(input_name):
 			return true
 	return false
 
 
-func _notify_pickup_hooks(item: Node, slot_name: String) -> void:
-	var handled := _call_affordance_method(item, "on_picked_up", [self, slot_name])
+func notify_pickup_hooks(item: Node, slot_name: String) -> void:
+	var handled := call_affordance_method(item, "on_picked_up", [self, slot_name])
 	if not handled and item.has_method("on_picked_up"):
 		item.on_picked_up(self, slot_name)
 
 
-func _notify_release_hooks(item: Node, release_velocity: Vector3) -> void:
-	var handled := _call_affordance_method(item, "on_released", [release_velocity])
+func notify_release_hooks(item: Node, release_velocity: Vector3) -> void:
+	var handled := call_affordance_method(item, "on_released", [release_velocity])
 	if not handled and item.has_method("on_released"):
 		item.on_released(release_velocity)
 
 
-func _call_affordance_method(item: Node, method: StringName, args: Array) -> bool:
+func call_affordance_method(item: Node, method: StringName, args: Array) -> bool:
 	var aff_root: Node = item.get_node_or_null(AFFORDANCE_CONTAINER)
 	if aff_root == null:
 		return false
@@ -215,3 +244,32 @@ func _call_affordance_method(item: Node, method: StringName, args: Array) -> boo
 			child.callv(method, args)
 			invoked = true
 	return invoked
+
+
+func resolve_anchor(rig: Node3D, path: NodePath, tag: String) -> Node3D:
+	if path != NodePath("") and rig.has_node(path):
+		var found := rig.get_node_or_null(path)
+		if found is Node3D:
+			return found
+
+	if tag != "":
+		var by_name := rig.find_child(tag, true, false)
+		if by_name is Node3D:
+			return by_name
+
+	var by_group := find_child_by_group(rig, tag)
+	if by_group != null:
+		return by_group
+	return null
+
+
+func find_child_by_group(root: Node, group: String) -> Node3D:
+	if group == "":
+		return null
+	for child in root.get_children():
+		if child is Node3D and child.is_in_group(group):
+			return child
+		var nested := find_child_by_group(child, group)
+		if nested != null:
+			return nested
+	return null

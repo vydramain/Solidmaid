@@ -36,6 +36,7 @@ SOLID principles help create flexible, testable code in Godot's node system.
 ## Scripting Best Practices
 
 - **GDScript Style**: Indent with tabs (4 spaces equivalent). Use type hints (e.g., `var speed: float = 100.0`) for clarity and performance. Keep functions short (under 20 lines) and focused.
+- **Naming and Callbacks**: Godot зарезервировал префикс `_` для своих callback-методов (`_ready`, `_process`, `_physics_process`, `_input`, `_unhandled_input`, `_notification`, и т.п.). Не придумывай произвольные методы с `_` и не вызывай вручную callback-и фреймворка. Свои функции называй обычным snake_case без ведущего `_`, чтобы явно отличать их от системных.
 - **Signals and Groups**: Use signals for event communication (e.g., `signal health_changed(new_health)`). Group nodes (e.g., `$Enemies.add_to_group("enemies")`) for batch operations.
 - **Error Handling**: Use `assert()` for development checks and `push_error()` for runtime issues. Avoid silent failures.
 - **Code Smells to Avoid**: Refactor god classes (overly large scripts), duplicated code (use inheritance or utilities), and tight coupling (favor dependency injection).

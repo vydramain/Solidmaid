@@ -70,8 +70,6 @@ func _update_walk_bob(delta: float) -> void:
 	_walk_amount = lerp(_walk_amount, target_amount, delta * walk_bob_smoothing)
 	if _walk_amount > 0.001:
 		_walk_phase = fmod(_walk_phase + delta * walk_bob_frequency_hz * TAU, TAU)
-	#else:
-		#_walk_phase = 0.0
 
 
 func _apply_walk_bob(base_transform: Transform3D) -> Transform3D:
