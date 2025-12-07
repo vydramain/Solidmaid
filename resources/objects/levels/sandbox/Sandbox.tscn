@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://d10uph0oxrm28"]
+[gd_scene load_steps=11 format=3 uid="uid://d10uph0oxrm28"]
 
 [ext_resource type="PackedScene" uid="uid://ddfdvmbmclroc" path="res://resources/objects/character/Character.tscn" id="1_char"]
 [ext_resource type="Texture2D" uid="uid://1fm1h6cggxtp" path="res://assets/textures/outside/Skybox_1.png" id="2_3qsem"]
-[ext_resource type="PackedScene" path="res://resources/objects/items/brick/Brick.tscn" id="3_brick"]
+[ext_resource type="PackedScene" uid="uid://t7tc4nlxy58s" path="res://resources/overlap/appearance/characters/PlayerAppearance.tscn" id="5_body"]
+[ext_resource type="PackedScene" uid="uid://da130e2hfk42s" path="res://resources/objects/items/brick/Brick.tscn" id="3_brick"]
 [ext_resource type="PackedScene" uid="uid://dleao4a5ojcbi" path="res://resources/objects/items/pipe/Pipe.tscn" id="4_t5isg"]
 
 [sub_resource type="BoxMesh" id="1"]
@@ -35,6 +36,9 @@ shape = SubResource("2")
 [node name="Character" parent="." instance=ExtResource("1_char")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5)
 
+[node name="BodyComponent" parent="Character" index="2"]
+body_scene = ExtResource("5_body")
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vnm58")
 
@@ -48,3 +52,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, -1.5)
 
 [node name="Pipe" parent="Bricks" instance=ExtResource("4_t5isg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24329567, 0)
+
+[editable path="Character"]
+[editable path="Character/VisionRig"]
+[editable path="Character/BodyComponent"]
+[editable path="Character/ControllerSlot"]
