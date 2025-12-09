@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://8ykxb57xwyxk" path="res://resources/systems/legacy_environments/EnvironmentSystem.gd" id="1_tmn73"]
 [ext_resource type="PackedScene" uid="uid://bxp005ph207xb" path="res://resources/overlap/legacy/legacy_physic/PhysicLine.tscn" id="2_ej5lb"]
-[ext_resource type="PackedScene" path="res://resources/objects/enitity/items/birck/Brick_old.tscn" id="3_fuvra"]
+[ext_resource type="PackedScene" uid="uid://b2uo2q0myx2fo" path="res://resources/objects/legacy_enitity/items/birck/Brick.tscn" id="3_fuvra"]
 
 [node name="EnvironmentManager" type="Node2D"]
 script = ExtResource("1_tmn73")
