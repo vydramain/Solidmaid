@@ -45,10 +45,12 @@ func _physics_process(_dt):
 	)
 	loco.set_move_input(move)
 	var drop_modifier := Input.is_action_pressed("drop_modifier")
+	
 	var right_hand_pressed := Input.is_action_just_pressed("hand_right")
 	if right_hand_pressed:
 		var modifier := Character.HAND_MODIFIER_DROP if drop_modifier else Character.HAND_MODIFIER_NONE
 		handle_hand_slot(CarrySlots.SLOT_RIGHT, modifier)
+	
 	var left_hand_pressed := Input.is_action_just_pressed("hand_left")
 	if left_hand_pressed:
 		var modifier := Character.HAND_MODIFIER_DROP if drop_modifier else Character.HAND_MODIFIER_NONE
@@ -58,17 +60,19 @@ func _physics_process(_dt):
 func handle_hand_slot(slot_name: String, modifier: StringName = Character.HAND_MODIFIER_NONE) -> bool:
 	if character == null:
 		return false
+	
 	var hand_label := slot_name.capitalize()
 	var result = character.interact_hand(slot_name, modifier)
-	if typeof(result) != TYPE_DICTIONARY:
+	
+	if typeof(result) != TYPE_DICTIONARY or result.is_empty():
 		return false
-	if result.is_empty():
-		return false
+	
 	var action: StringName = result.get("action", Character.HAND_ACTION_NONE)
 	var subject: Node = result.get("subject")
+	
 	if action == Character.HAND_ACTION_NONE:
 		return false
-
+	
 	match action:
 		Character.HAND_ACTION_THROW:
 			if subject:

@@ -4,8 +4,6 @@ extends Node
 
 @onready var level_container = $LevelContainer
 
-@onready var current_scene = $CurrentScene
-
 var current_level: Node = null
 
 func _ready() -> void:

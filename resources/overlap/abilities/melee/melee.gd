@@ -8,14 +8,12 @@ var _cooldown_left := 0.0
 
 
 func perform_melee(character, weapon: Node, slot_name: StringName) -> bool:
-	if weapon == null:
+	if weapon == null or _cooldown_left > 0.0:
 		return false
-	if _cooldown_left > 0.0:
-		return false
-
+	
 	var played_anim := play_hand_animation(character, weapon, slot_name)
 	play_weapon_animation(weapon)
-
+	
 	trigger_melee_feedback(character, slot_name, weapon)
 	_cooldown_left = cooldown_seconds
 	set_process(true)
@@ -42,14 +40,18 @@ func trigger_melee_feedback(character, slot_name: StringName, weapon: Node) -> v
 func play_hand_animation(character, weapon: Node, slot_name: StringName) -> bool:
 	if character == null:
 		return false
+	
 	var profile := get_hand_profile(weapon)
 	if profile == null:
 		return false
+	
 	var anim_name := profile.get_animation(&"melee", "fp")
 	if anim_name == StringName():
 		return false
+	
 	if character.has_method("play_hand_animation"):
 		return character.play_hand_animation(anim_name, slot_name, "fp")
+	
 	return false
 
 

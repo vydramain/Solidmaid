@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://d10uph0oxrm28"]
+[gd_scene format=3 uid="uid://d10uph0oxrm28"]
 
 [ext_resource type="PackedScene" uid="uid://ddfdvmbmclroc" path="res://resources/objects/character/Character.tscn" id="1_char"]
 [ext_resource type="Texture2D" uid="uid://1fm1h6cggxtp" path="res://assets/textures/outside/Skybox_1.png" id="2_3qsem"]
-[ext_resource type="PackedScene" uid="uid://cvpcf4j63am4o" path="res://assets/models/player/ComfyUI_00015_.glb" id="2_vivjj"]
 [ext_resource type="PackedScene" uid="uid://da130e2hfk42s" path="res://resources/objects/items/brick/Brick.tscn" id="3_brick"]
 [ext_resource type="PackedScene" uid="uid://dleao4a5ojcbi" path="res://resources/objects/items/pipe/Pipe.tscn" id="4_t5isg"]
 
@@ -23,37 +22,41 @@ sky_material = SubResource("PanoramaSkyMaterial_xt2jq")
 background_mode = 2
 sky = SubResource("Sky_csuqi")
 
-[node name="Sandbox" type="Node3D"]
+[node name="Sandbox" type="Node3D" unique_id=2018586027]
 
-[node name="Floor" type="StaticBody3D" parent="."]
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1156224800]
 
-[node name="FloorMesh" type="MeshInstance3D" parent="Floor"]
+[node name="FloorMesh" type="MeshInstance3D" parent="Floor" unique_id=1203594059]
 mesh = SubResource("1")
 
-[node name="FloorCol" type="CollisionShape3D" parent="Floor"]
+[node name="FloorCol" type="CollisionShape3D" parent="Floor" unique_id=378672406]
 shape = SubResource("2")
 
-[node name="Character" parent="." instance=ExtResource("1_char")]
+[node name="Player" parent="." unique_id=1315576382 instance=ExtResource("1_char")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5)
+speed = null
+acceleration = null
+deceleration = null
+sensitivity = null
+gravity = null
+pitch_max = null
+look_pivot_path = null
 
-[node name="BodyComponent" parent="Character" index="2"]
-body_scene = ExtResource("2_vivjj")
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=118526488]
 environment = SubResource("Environment_vnm58")
 
-[node name="Bricks" type="Node3D" parent="."]
+[node name="Items" type="Node3D" parent="." unique_id=782737119]
 
-[node name="BrickA" parent="Bricks" instance=ExtResource("3_brick")]
+[node name="BrickA" parent="Items" unique_id=1662480879 instance=ExtResource("3_brick")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.2, -2)
 
-[node name="BrickB" parent="Bricks" instance=ExtResource("3_brick")]
+[node name="BrickB" parent="Items" unique_id=1862541953 instance=ExtResource("3_brick")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, -1.5)
 
-[node name="Pipe" parent="Bricks" instance=ExtResource("4_t5isg")]
+[node name="Pipe" parent="Items" unique_id=810501988 instance=ExtResource("4_t5isg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24329567, 0)
 
-[editable path="Character"]
-[editable path="Character/VisionRig"]
-[editable path="Character/BodyComponent"]
-[editable path="Character/ControllerSlot"]
+[editable path="Player"]
+[editable path="Player/VisionRig"]
+[editable path="Player/BodyComponent"]
+[editable path="Player/ControllerSlot"]

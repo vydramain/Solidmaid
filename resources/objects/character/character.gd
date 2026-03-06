@@ -39,8 +39,7 @@ func _ready():
 	else:
 		interactor_ready.emit(interactor)
 	update_vision_reference()
-	if controller_slot.controller_scene:
-		attach_controller(controller_slot.controller_scene)
+	controller_slot.attach_to_character(self)
 
 func on_died():
 	for a in abilities.get_children():
@@ -88,13 +87,6 @@ func attach_interactor_to_pivot() -> void:
 		interactor.get_parent().remove_child(interactor)
 	pivot.add_child(interactor)
 	interactor.transform = Transform3D.IDENTITY
-
-
-func attach_controller(controller_scene: PackedScene):
-	controller_slot.get_children().map(func(input_controller): input_controller.queue_free())
-	var c = controller_scene.instantiate()
-	controller_slot.add_child(c)
-	c.init(self)
 
 func get_ability(ability_name) -> Node:
 	if abilities == null:
@@ -147,13 +139,13 @@ func request_throw(slot_name: String = "") -> bool:
 
 func interact_hand(slot_name: StringName, modifier: StringName = HAND_MODIFIER_NONE) -> Dictionary:
 	if carry_slots == null or slot_name == StringName():
-		return build_hand_action(HAND_ACTION_NONE, null)
+		return build_hand_action_object(HAND_ACTION_NONE, null)
 
 	if modifier == HAND_MODIFIER_DROP:
 		var dropped := carry_slots.try_drop(String(slot_name))
 		if dropped:
-			return build_hand_action(HAND_ACTION_DROP, dropped)
-		return build_hand_action(HAND_ACTION_NONE, null)
+			return build_hand_action_object(HAND_ACTION_DROP, dropped)
+		return build_hand_action_object(HAND_ACTION_NONE, null)
 
 	var slot_key := String(slot_name)
 	var held_item := carry_slots.get_item(slot_key)
@@ -170,40 +162,51 @@ func interact_with_held_item(slot_name: String, held_item: Node3D) -> Dictionary
 	if item_has_affordance(held_item, CarrySlots.AFFORDANCE_THROWABLE):
 		var throw_handler: ThrowAbility = get_throw_handler()
 		if throw_handler and throw_handler.perform_throw(self, StringName(slot_name)):
-			return build_hand_action(HAND_ACTION_THROW, held_item)
+			return build_hand_action_object(HAND_ACTION_THROW, held_item)
+	
 	if item_has_affordance(held_item, AFFORDANCE_MELEE):
 		var melee_handler: MeleeAbility = get_melee_handler()
 		if melee_handler and melee_handler.perform_melee(self, held_item, StringName(slot_name)):
-			return build_hand_action(HAND_ACTION_MELEE, held_item)
-	return build_hand_action(HAND_ACTION_NONE, held_item)
+			return build_hand_action_object(HAND_ACTION_MELEE, held_item)
+	
+	return build_hand_action_object(HAND_ACTION_NONE, held_item)
 
 func interact_with_world(slot_name: String) -> Dictionary:
 	var target = get_interactor_target()
 	if target == null:
-		return build_hand_action(HAND_ACTION_NONE, null)
+		return build_hand_action_object(HAND_ACTION_NONE, null)
+	
 	if target is Node3D and item_has_affordance(target, CarrySlots.AFFORDANCE_CARRIABLE):
 		if pickup_holdable(target, slot_name):
-			return build_hand_action(HAND_ACTION_PICKUP, target)
+			return build_hand_action_object(HAND_ACTION_PICKUP, target)
+	
 	if target.has_method("interact"):
 		target.interact(self)
-		return build_hand_action(HAND_ACTION_INTERACT, target)
+		return build_hand_action_object(HAND_ACTION_INTERACT, target)
+	
 	if target is Node and (target as Node).is_in_group("interactable"):
 		(target as Node).emit_signal.call_deferred("interacted", self)
-		return build_hand_action(HAND_ACTION_INTERACT, target)
-	return build_hand_action(HAND_ACTION_NONE, target)
+		return build_hand_action_object(HAND_ACTION_INTERACT, target)
+	
+	return build_hand_action_object(HAND_ACTION_NONE, target)
 
 func item_has_affordance(item: Node, affordance_name: StringName) -> bool:
 	if item == null or affordance_name == StringName():
 		return false
+	
 	if item.has_method("has_affordance"):
 		return item.has_affordance(affordance_name)
+	
 	var affordance_root := item.get_node_or_null("Affordances")
+	
 	if affordance_root:
 		for child in affordance_root.get_children():
 			if child is Affordance and child.provides(affordance_name):
 				return true
+			
 			if child.has_method("provides") and child.provides(affordance_name):
 				return true
+	
 	return false
 
 func get_throw_handler() -> ThrowAbility:
@@ -226,7 +229,7 @@ func get_ability_handler(ability_name: StringName) -> Node:
 	_ability_handlers[ability_name] = handler_instance
 	return handler_instance
 
-func build_hand_action(action: StringName, subject: Node) -> Dictionary:
+func build_hand_action_object(action: StringName, subject: Node) -> Dictionary:
 	return {
 		"action": action,
 		"subject": subject
