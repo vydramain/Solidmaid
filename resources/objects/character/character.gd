@@ -159,6 +159,10 @@ func get_interactor_target():
 	return null
 
 func interact_with_held_item(slot_name: String, held_item: Node3D) -> Dictionary:
+	# PATTERN: High-level interaction routing
+	# Character chooses which ability to invoke based on the held item's affordances.
+	# Keep this layer as the owner of "player intent -> ability selection", but avoid
+	# pushing melee presentation logic down into Character itself.
 	if item_has_affordance(held_item, CarrySlots.AFFORDANCE_THROWABLE):
 		var throw_handler: ThrowAbility = get_throw_handler()
 		if throw_handler and throw_handler.perform_throw(self, StringName(slot_name)):
@@ -246,6 +250,11 @@ func trigger_hitstop(duration: float = -1.0, time_scale_override: float = -1.0, 
 
 
 func play_hand_animation(anim_name: StringName, slot_name: StringName, perspective: String = "fp", speed: float = 1.0) -> bool:
+	# PATTERN: Composition root boundary
+	# Character exposes presentation helpers to abilities, but should remain a gateway,
+	# not the place where melee-specific animation decisions are made.
+	# MeleeAbility can call this method, yet the choice of animation/profile should come
+	# from melee data on the weapon affordance and not be hardcoded here.
 	if hand_animator:
 		return hand_animator.play(anim_name, perspective, speed)
 	return false

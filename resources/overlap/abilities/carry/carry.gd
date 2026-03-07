@@ -2,6 +2,21 @@ extends Node
 class_name CarrySlots
 
 ## Manages character-held slots and uses an aim node (look pivot) for throw direction.
+#
+# PATTERN: Single Responsibility Principle
+# This component should remain responsible for hand logistics only:
+# - attach item to slot
+# - detach item from slot
+# - know which hand holds what
+# - provide throw/drop attachment context
+#
+# REFACTOR RULE
+# Do not make this component the owner of melee animation flow.
+# Carry establishes "item is in hand"; MeleeAbility decides "this held item is used to attack".
+# That separation keeps inventory/attachment logic independent from combat presentation.
+#
+# PATTERN: Component
+# Treat CarrySlots as physical ownership state, not as combat behavior.
 
 const SLOT_RIGHT := "right"
 const SLOT_LEFT := "left"

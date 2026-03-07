@@ -1,6 +1,21 @@
 extends Node
 class_name HandAnimator
 
+# PATTERN: Presentation Adapter
+# This node should stay on the visual side of the architecture.
+# It plays already-selected animations and should not decide gameplay meaning.
+#
+# REFACTOR RULE
+# Let MeleeAbility (or a dedicated presentation coordinator) decide *what* melee
+# presentation to play, while HandAnimator only knows *how* to play the requested
+# hand clip for the requested perspective.
+#
+# FUTURE DIRECTION
+# If melee presentation is unified, this node may expose higher-level methods like:
+# - play_melee(profile, slot_name, perspective)
+# - emit attack phase events for windup / strike / recovery
+# while still remaining presentation-only.
+
 @export_node_path("AnimationPlayer") var animation_player_fp_path: NodePath
 @export_node_path("AnimationPlayer") var animation_player_tp_path: NodePath
 @export var default_perspective: String = "fp"

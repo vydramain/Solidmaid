@@ -1,5 +1,13 @@
 extends Node
 
+# PATTERN: Component + Command surface
+# Base Ability nodes model what an actor can intentionally do.
+# Concrete abilities should expose action entry points and orchestrate downstream systems.
+#
+# ARCHITECTURE RULE
+# Ability answers "what actions can this owner initiate?".
+# It should not encode the target item's concrete data; that belongs to affordances/resources.
+
 @export var ability_name: StringName
 @export var ability_aliases: Array[StringName] = []
 @export var ability_scene: PackedScene
