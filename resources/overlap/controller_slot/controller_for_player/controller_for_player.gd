@@ -1,6 +1,7 @@
 extends Node
 
 const HUD_SCENE := preload("uid://cp1xgv8y1d6im")
+const HEAVY_HOLD_SECONDS := 0.5
 
 var character
 var loco
@@ -8,6 +9,7 @@ var wants_capture := true
 var vision_rig
 var vision_camera: Camera3D
 var hud: CanvasLayer
+var _queued_hand_presses := {}
 
 
 func _ready() -> void:
@@ -46,15 +48,63 @@ func _physics_process(_dt):
 	loco.set_move_input(move)
 	var drop_modifier := Input.is_action_pressed("drop_modifier")
 	
-	var right_hand_pressed := Input.is_action_just_pressed("hand_right")
-	if right_hand_pressed:
-		var modifier := Character.HAND_MODIFIER_DROP if drop_modifier else Character.HAND_MODIFIER_NONE
-		handle_hand_slot(CarrySlots.SLOT_RIGHT, modifier)
+	process_hand_input(CarrySlots.SLOT_RIGHT, "hand_right", drop_modifier)
+	process_hand_input(CarrySlots.SLOT_LEFT, "hand_left", drop_modifier)
+
+
+func resolve_hand_modifier(drop_modifier: bool, heavy_modifier: bool) -> StringName:
+	if drop_modifier:
+		return Character.HAND_MODIFIER_DROP
+	if heavy_modifier:
+		return Character.HAND_MODIFIER_HEAVY
+	return Character.HAND_MODIFIER_NONE
+
+
+func process_hand_input(slot_name: String, action_name: StringName, drop_modifier: bool) -> void:
+	if character == null:
+		return
 	
-	var left_hand_pressed := Input.is_action_just_pressed("hand_left")
-	if left_hand_pressed:
-		var modifier := Character.HAND_MODIFIER_DROP if drop_modifier else Character.HAND_MODIFIER_NONE
-		handle_hand_slot(CarrySlots.SLOT_LEFT, modifier)
+	var just_pressed := Input.is_action_just_pressed(action_name)
+	var pressed := Input.is_action_pressed(action_name)
+	var just_released := Input.is_action_just_released(action_name)
+	
+	if just_pressed:
+		if should_charge_heavy(slot_name, drop_modifier):
+			_queued_hand_presses[slot_name] = {
+				"started_at": Time.get_ticks_msec(),
+				"heavy_fired": false,
+			}
+		else:
+			handle_hand_slot(slot_name, resolve_hand_modifier(drop_modifier, false))
+			return
+	
+	if pressed and _queued_hand_presses.has(slot_name):
+		var state: Dictionary = _queued_hand_presses[slot_name]
+		if not bool(state.get("heavy_fired", false)):
+			var started_at := int(state.get("started_at", 0))
+			var held_for := (Time.get_ticks_msec() - started_at) / 1000.0
+			if held_for >= HEAVY_HOLD_SECONDS:
+				handle_hand_slot(slot_name, Character.HAND_MODIFIER_HEAVY)
+				state["heavy_fired"] = true
+				_queued_hand_presses[slot_name] = state
+	
+	if just_released and _queued_hand_presses.has(slot_name):
+		var state: Dictionary = _queued_hand_presses[slot_name]
+		if not bool(state.get("heavy_fired", false)):
+			handle_hand_slot(slot_name, Character.HAND_MODIFIER_NONE)
+		_queued_hand_presses.erase(slot_name)
+
+
+func should_charge_heavy(slot_name: String, drop_modifier: bool) -> bool:
+	if drop_modifier or character == null:
+		return false
+	var carry_slots: CarrySlots = character.get_carry_slots()
+	if carry_slots == null:
+		return false
+	var held_item := carry_slots.get_item(slot_name)
+	if held_item == null:
+		return false
+	return character.item_has_affordance(held_item, Character.AFFORDANCE_MELEE)
 
 
 func handle_hand_slot(slot_name: String, modifier: StringName = Character.HAND_MODIFIER_NONE) -> bool:

@@ -9,7 +9,7 @@ class_name PipeSwingTool
 		animated_node_path = value
 		queue_rebuild()
 
-@export var animation_name: StringName = &"swing_horizontal":
+@export var animation_name: StringName = &"melee_attack_horizontal":
 	set(value):
 		animation_name = value
 		queue_rebuild()

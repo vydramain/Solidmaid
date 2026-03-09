@@ -12,6 +12,7 @@ const HAND_ACTION_DROP := &"drop"
 const AFFORDANCE_MELEE := &"melee"
 const HAND_MODIFIER_NONE := &"none"
 const HAND_MODIFIER_DROP := &"drop"
+const HAND_MODIFIER_HEAVY := &"heavy"
 
 var body := self
 var vision_camera: Camera3D
@@ -150,7 +151,7 @@ func interact_hand(slot_name: StringName, modifier: StringName = HAND_MODIFIER_N
 	var slot_key := String(slot_name)
 	var held_item := carry_slots.get_item(slot_key)
 	if held_item:
-		return interact_with_held_item(slot_key, held_item)
+		return interact_with_held_item(slot_key, held_item, modifier)
 	return interact_with_world(slot_key)
 
 func get_interactor_target():
@@ -158,7 +159,7 @@ func get_interactor_target():
 		return interactor.get_current_target()
 	return null
 
-func interact_with_held_item(slot_name: String, held_item: Node3D) -> Dictionary:
+func interact_with_held_item(slot_name: String, held_item: Node3D, modifier: StringName = HAND_MODIFIER_NONE) -> Dictionary:
 	# PATTERN: High-level interaction routing
 	# Character chooses which ability to invoke based on the held item's affordances.
 	# Keep this layer as the owner of "player intent -> ability selection", but avoid
@@ -170,7 +171,8 @@ func interact_with_held_item(slot_name: String, held_item: Node3D) -> Dictionary
 	
 	if item_has_affordance(held_item, AFFORDANCE_MELEE):
 		var melee_handler: MeleeAbility = get_melee_handler()
-		if melee_handler and melee_handler.perform_melee(self, held_item, StringName(slot_name)):
+		var attack_id := &"heavy" if modifier == HAND_MODIFIER_HEAVY else &"default"
+		if melee_handler and melee_handler.perform_melee(self, held_item, StringName(slot_name), attack_id):
 			return build_hand_action_object(HAND_ACTION_MELEE, held_item)
 	
 	return build_hand_action_object(HAND_ACTION_NONE, held_item)
